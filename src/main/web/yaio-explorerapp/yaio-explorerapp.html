@@ -193,12 +193,12 @@ yaioAppBase.config.resBaseUrl = yaioAppBase.get('DataUtils').getBaseRefFromUrl(w
 yaioAppBase.config.initResBasedUrls();
 
 // configure datasource
+var datasourceKey = 'YaioStaticNodeDBDriver';
 // CONFIGUREDATASOURCES_SNIP
 yaioAppBase.config.datasources.push('YaioStaticNodeDBDriver');
 yaioAppBase.config.datasources.push('YaioFileNodeDBDriver');
 // CONFIGUREDATASOURCES_SNAP
 var myUrl = window.location.href;
-var datasourceKey = 'YaioStaticNodeDBDriver';
 if (myUrl.search('dsn=YaioStaticNodeDBDriver') > 0 || window.yaioUseStaticJson) {
     // load static
     datasourceKey = 'YaioStaticNodeDBDriver';
