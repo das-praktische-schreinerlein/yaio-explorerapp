@@ -5,8 +5,7 @@ yaio-explorerapp - Le petit D'Artagnan ExplorerApp
 The "Your-All-In-One" or "Le petit D'Artagnan" ExplorerApp is the prototype of the GUI for my 
 collaboration-softwareproject: "D'Artagnan - Dein persönlicher Software-Musketier".
 
-Originally part of my project-management software [Your-All-In-One](https://github.com/das-praktische-schreinerlein/your-all-in-one) its now an stand-alone project. 
-More information about the prototype at [http://www.your-all-in-one.de/yaio/static/lepetit](http://www.your-all-in-one.de/yaio/static/lepetit )
+Originally part of my project-management software [Your-All-In-One](https://github.com/das-praktische-schreinerlein/your-all-in-one) its now a stand-alone project. 
 
 # Installation
 Quite simple: download, build, run

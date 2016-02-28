@@ -1,7 +1,7 @@
 {
-  "name": "yaio",
+  "name": "yaio-explorerapp",
   "description": "YourAllInOne D'Artagnan",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "authors": [
     {
       "name": "Michael Schreiner",
