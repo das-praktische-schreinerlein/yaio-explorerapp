@@ -29,10 +29,14 @@ firefox build/yaio-explorerapp/yaio-explorerapp.html
 
 # Todos for me
 - [ ] use and optimize it :-)
+- **and a lot more to implement - take a look at [YAIO-Masterproject resources/docs/Roadmap.md](https://github.com/das-praktische-schreinerlein/your-all-in-one/blob/master/resources/docs/Roadmap.md)**
 
 # History and milestones
+- **see details on [YAIO-Masterproject resources/docs/Changelog.md](https://github.com/das-praktische-schreinerlein/your-all-in-one/blob/master/resources/docs/Changelog.md)**
 - 2016
    - spin off of [Your-All-In-One](https://github.com/das-praktische-schreinerlein/your-all-in-one)
+   - and it take another spin-off: I extracted the MarkdownEditor to [Your-Markdown-Fellow](https://github.com/das-praktische-schreinerlein/your-markdown-fellow)
+   
 
 # Thanks to
 - **Build-Tools**
