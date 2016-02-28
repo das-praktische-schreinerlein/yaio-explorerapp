@@ -1,13 +1,13 @@
 <!---BOX jsh-md-background-info--->
 # Der "abgespeckte" D'Artagnan sagt Guten Tag...
 <!---CONTAINER links--->
-Du stehst hier im Angesicht der **abgespeckten Version von D'Artagnan**. Entweder war jemand so gütig die einen statischen Daten-Snapshot eines D'Artagnan-Installation zur Ansicht der Daten zu übergeben (Herzlichen Glückwunsch) oder hast das Glück eine statische Demo-Version von D'Artganan ansehen zu können. Beides schön :-)
+Du stehst hier im Angesicht der **abgespeckten Version von D'Artagnan**. Entweder war jemand so gütig Dir einen statischen Daten-Snapshot einer D'Artagnan-Installation zur Ansicht der Daten zu übergeben (Herzlichen Glückwunsch) oder hast das Glück eine statische Demo-Version von D'Artganan ansehen zu können. Beides schön :-)
 
 Aber ohne den D'Artganan-Server stehen Dir leider in dieser Version nicht alle Funktionen zur Verfügung:
 
 - Du kannst die Änderungen nur in einer Datei abspeichern und nicht mit den anderen Kollegen auf dem zentralen D'Artagnan-Server
 - Du kannst keine Dateien hochladen, Webshots erzeugen oder Texte aus den Dokumente extrahieren
-- Status/Stand/Plan/ist-Daten usw. werden in der "abgespeckten" Version ohne Server leider nicht automatische berechnet -> du musst das hier schon alles selbst machen :-(
+- Status/Stand/Plan/Ist-Daten usw. werden in der "abgespeckten" Version ohne Server leider nicht automatische berechnet -> du musst das hier schon alles selbst machen :-(
 - die ganzen schönen Im/Exporte stehen nicht zur Verfügung
 - und so weiter und so fort...
 
