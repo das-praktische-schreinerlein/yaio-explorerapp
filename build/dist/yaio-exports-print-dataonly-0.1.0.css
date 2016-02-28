@@ -1,0 +1,117 @@
+/*! yaio-v0.1.0 exports-0.1.0 */
+
+/*! ymf-v0.1.0 app-0.1.0 */
+
+
+@media print {
+    body {
+        width: 700px;
+    }
+    @page {
+        size: portrait;
+    }
+
+    /*****************************************
+     *****************************************
+     * layout
+     *****************************************
+     *****************************************/
+    .box {
+        width: 660px;
+    }
+    .globtoc {
+        width: 660px;
+    }
+
+    .container-yaio-tree {
+        width: 660px;
+    }
+
+    .container-yaio-tree-table {
+        width: 650px;
+    }
+    .container_nodeline {
+        width: 650px;
+    }
+    .block_nodedata {
+        display: block;
+    }
+    .container_data_table {
+        width: 150px;
+    }
+    .container_data_row {
+        width: 150px;
+    }
+    .block_nodegantt {
+        display: none;
+    }
+    .container_gantt_table {
+        width: 150px;
+    }
+    .container_gantt_row {
+        width: 150px;
+    }
+    .field_nodeDesc {
+        width: 560px;
+    }
+    .fieldtype_additionaldata {
+        display: none;
+    }
+
+    /*****************************************
+     *****************************************
+     * documentation
+     *****************************************
+     *****************************************/
+    .p-portdesc {
+        width: 540px;
+    }
+    .p-portdesc-desc {
+        margin-left: 30px;
+        width: 510px;
+    }
+}
+
+@media print and (orientation: landscape) {
+    body {
+        width: 700px;
+    }
+
+    #div_full {
+        width: 650px !important;
+    }
+
+    @page {
+        size: portrait;
+    }
+
+    .box {
+        width: 660px;
+    }
+
+    .globtoc {
+        width: 660px;
+    }
+}
+
+@media print and (orientation: portrait) {
+    body {
+        width: 700px;
+    }
+
+    #div_full {
+        width: 650px !important;
+    }
+
+    @page {
+        size: portrait;
+    }
+
+    .box {
+        width: 660px;
+    }
+
+    .globtoc {
+        width: 660px;
+    }
+}

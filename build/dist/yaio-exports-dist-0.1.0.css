@@ -1,0 +1,313 @@
+/*! yaio-v0.1.0 exports-0.1.0 */
+
+/*****************************************
+ *****************************************
+ * base
+ *****************************************
+ *****************************************/
+body { 
+    background: linear-gradient(to right, #FCEBBF 0%, #FFFFFF 49%, #FCEBBF 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: black; 
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    line-height: 1.3em; 
+    font-size: 11px;
+}
+h1 {
+    color: black;
+}
+h4 {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.pageContent {
+    width: 95%;
+}
+.blockContent {
+    width: 100%;
+}
+.content {
+    width: 100%;
+    padding-left: 0px;
+}
+.blockPageFooter {
+    width: 100%;
+}
+.box-portdesc-data {
+    width: 100%;
+}
+.hidden {
+    display: none;
+}
+.button {
+     display: inline-block;
+     width: auto;
+     height: auto;
+     padding: 1px;
+}
+
+.error-message {
+    display: none;
+}
+.h2-portdesc {
+     text-align: left;
+}
+
+.error {
+    color: red;
+}
+
+select, textarea, input {
+    vertical-align: top;
+}
+
+/*****************************************
+ *****************************************
+ * Common icon definitions
+ *****************************************
+ *****************************************/
+.icon-formrowtoggleroff,
+.icon-formrowtoggleron,
+a.toggler_show,
+a.toggler_hidden {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-image: url("../../dist/vendors-0.1.0/fancytree/skin-lion/icons.gif");
+  background-position: 0px 0px;
+}
+.icon-formrowtoggleroff,
+.icon-formrowtoggleron,
+a.toggler_show,
+a.toggler_hidden {
+  margin-top: 1px;
+}
+
+a.toggler_show, .icon2-toggleroff {
+  margin-left: 3px;
+  background-position: -32px -32px;
+}
+a.toggler_hidden, .icon2-toggleron {
+  margin-left: 3px;
+  background-position: -64px -32px;
+}
+.icon-formrowtoggleroff {
+  margin-left: 3px;
+  background-position: -64px -80px;
+}
+.icon-formrowtoggleron {
+  margin-left: 3px;
+  background-position: -32px -80px;
+}
+
+/*****************************************
+ *****************************************
+ * node state
+ *****************************************
+ *****************************************/
+.node-state-INFO {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-DOKU {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-IDEE {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-HOWTO {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-URLRES {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-FILERES {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-IMAGERES {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-MAILRES {
+    background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
+}
+.node-state-SYMLINK {
+    background-color: #FFC0CB; /*#33CCCC;*/
+}
+.node-state-OPEN {
+    background-color: #ADFF2F; /*#99FF66;*/
+}
+.node-state-OFFEN {
+    background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
+}
+.node-state-RUNNING {
+    background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
+}
+.node-state-LATE {
+    background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
+}
+.node-state-VERSPAETET {
+    background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
+}
+.node-state-SHORT {
+    background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
+}
+.node-state-UEBERFAELLIG {
+    background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
+}
+.node-state-WARNING {
+    background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
+}
+.node-state-DONE {
+    background-color: #E0F2FC; /*#B0E0E6;*/
+}
+.node-state-ERLEDIGT {
+    background-color: #E0F2FC; /*#B0E0E6;*/
+}
+.node-state-CANCELED {
+    background-color: #F5F5F5; /*#CCCCCC;*/
+}
+.node-state-VERWORFEN {
+    background-color: #F5F5F5; /*#CCCCCC;*/
+}
+.node-state-UNKNOWN {
+    background-color: #FFFFFF;
+}
+.node-state-UNBEKANNT {
+    background-color: #FFFFFF;
+}
+
+.node-state-EVENT_PLANED {
+    background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
+}
+.node-state-EVENT_GEPLANT {
+    background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
+}
+.node-state-EVENT_OPEN {
+    background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
+}
+.node-state-EVENT_OFFEN {
+    background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
+}
+.node-state-EVENT_RUNNING {
+    background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
+}
+.node-state-EVENT_LATE {
+    background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
+}
+.node-state-EVENT_VERSPAETET {
+    background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
+}
+.node-state-EVENT_SHORT {
+    background-color: #FF6347; /* #FF6347; /* #FCD2C9; /*#FF9966;*/
+}
+.node-state-EVENT_UEBERFAELLIG {
+    background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
+}
+.node-state-EVENT_WARNING {
+    background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
+}
+.node-state-EVENT_DONE {
+    background-color: #E0F2FC; /*#B0E0E6;*/
+}
+.node-state-EVENT_ERLEDIGT {
+    background-color: #E0F2FC; /*#B0E0E6;*/
+}
+.node-state-EVENT_CANCELED {
+    background-color: #F5F5F5; /*#CCCCCC;*/
+}
+.node-state-EVENT_VERWORFEN {
+    background-color: #F5F5F5; /*#CCCCCC;*/
+}
+
+/*****************************************
+ *****************************************
+ * help
+ *****************************************
+ *****************************************/
+#help-iframe {
+    width: 750px;
+    height: 500px;
+    overflow: auto;
+}
+#help-box {
+    width: 800px;
+    height: 550px;
+}
+
+/*****************************************
+ *****************************************
+ * download
+ *****************************************
+ *****************************************/
+#download-iframe {
+    width: 670px;
+    height: 500px;
+    overflow: auto;
+}
+#download-box {
+    width: 700px;
+    height: 550px;
+}
+
+/*****************************************
+ *****************************************
+ * clipboard
+ *****************************************
+ *****************************************/
+#clipboard-content {
+    width: 670px;
+    height: 600px;
+    overflow: auto;
+}
+#clipboard-box {
+    width: 750px;
+    height: 650px;
+}
+
+/*****************************************
+ *****************************************
+ * starter
+ *****************************************
+ *****************************************/
+.starter-box{
+    background-color: #8CACD3;
+    border: 2px solid #FFFFFF;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 150px;
+    padding: 5px;
+    text-align: left;
+    width: 600px;
+}
+.starter-ue {
+    color: #FCF1B5;
+    font-size: 25px;
+    padding-bottom: 20px;
+    padding-top: 15px;
+    text-align: center;
+    line-height: 1.5em;
+}    
+.starter-hint {
+    color: #FFFFFF;
+    font-size: 12px;
+    padding-bottom: 0;
+    padding-left: 20px;
+    text-align: left;
+}
+.starter-msg {
+    color: #FFFFFF;
+    font-size: 16px;
+    padding-bottom: 0;
+    text-align: center;
+}
+.starter-msg2 {
+    color: #FFFFFF;
+    font-size: 18px;
+    padding-top: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+.starter-nomore {
+   text-decoration: line-through;
+}
