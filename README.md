@@ -7,6 +7,8 @@ collaboration-softwareproject: "D'Artagnan - Dein persönlicher Software-Musketi
 
 Originally part of my project-management software [Your-All-In-One](https://github.com/das-praktische-schreinerlein/your-all-in-one) its now a stand-alone project. 
 
+A demo can be found at [http://your-all-in-one.de/demos/yaio-explorerapp/](http://your-all-in-one.de/demos/yaio-explorerapp/).
+
 # Installation
 Quite simple: download, build, run
 
