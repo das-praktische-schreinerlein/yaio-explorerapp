@@ -13,6 +13,13 @@
  */
 
 window.Yaio = {};
+
+/**
+ * the appBase for the YaioApp
+ * @returns {YaioAppBase}       an appBase-instance
+ * @augments JsHelferlein.AppBase
+ * @constructor
+ */
 window.YaioAppBase = function() {
     'use strict';
 

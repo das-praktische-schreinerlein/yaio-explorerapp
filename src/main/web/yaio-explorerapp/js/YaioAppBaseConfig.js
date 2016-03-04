@@ -12,6 +12,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+/**
+ * the Config for the YaioAppBase
+ * @returns {YaioAppBaseConfig}         an config-instance
+ * @augments JsHelferlein.AppBaseConfig
+ * @constructor
+ */
 window.YaioAppBaseConfig = function() {
     'use strict';
 

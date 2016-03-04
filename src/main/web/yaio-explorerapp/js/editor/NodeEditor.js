@@ -23,11 +23,13 @@
  */
 
 
-/*****************************************
- *****************************************
- * Service-Funktions (editor)
- *****************************************
- *****************************************/
+/**
+ * service-functions to manage/control the node-editor
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.NodeEditor}                      an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
+ */
 Yaio.NodeEditor = function(appBase) {
     'use strict';
 

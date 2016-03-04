@@ -12,21 +12,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * FileLoader-servicefunctions
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for file-lading (documentation...)
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.FileLoader}       an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
-/*****************************************
- *****************************************
- * Service-Funktions (file)
- *****************************************
- *****************************************/
 Yaio.FileLoader = function(appBase) {
     'use strict';
 

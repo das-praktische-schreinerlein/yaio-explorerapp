@@ -13,10 +13,8 @@
  */
 
 /** 
- * the controller for dashboard-elements
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+ * angular-controller for serving page-element: dashboard-search-elements
+ * @controller
  */
 yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioUtils) {
     'use strict';

@@ -12,17 +12,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * controller for the treeview
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
- */
-
-
 /*****************************************
  *****************************************
  * Configuration
@@ -30,11 +19,13 @@
  *****************************************/
 var treeInstances = [];
 
-/*****************************************
- *****************************************
- * YAIO-Treefunctions
- *****************************************
- *****************************************/
+/**
+ * service-functions to initialize/control the explorer-tree (instances of FancyTree)
+ * @param {YaioAppBase} appBase               the appbase to get other services
+ * @returns {Yaio.ExplorerTree}               an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
+ */
 Yaio.ExplorerTree = function(appBase) {
     'use strict';
 

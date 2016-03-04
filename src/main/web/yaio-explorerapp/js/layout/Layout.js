@@ -12,16 +12,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * servicefunctions for layout
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for special layout-features
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.Layout}           an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
 Yaio.Layout = function(appBase) {
     'use strict';
 

@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * the controller to load login-page
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving pages: login/logout
+ * @controller
  */
 yaioApp.controller('AuthController', function($rootScope, $scope, $location, $routeParams,
                                               setFormErrors, OutputOptionsEditor, authorization, yaioUtils) {

@@ -12,12 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * configures $translateProvider - international app
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $translateProvider
- * @FeatureKeywords              GUI Configuration
- * @param $translateProvider     the $translateProvider to get text-resources
+/**
+ * angular-config: configures $translateProvider - international app to get text-resources
+ * @config
  */
 yaioApp.config(function ($translateProvider) {
     'use strict';

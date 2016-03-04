@@ -13,13 +13,11 @@
  */
 
 /**
- * servicefunctions for markdown-rendering
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+ * service-functions to extend the JsHelferlein.MarkdownRenderer
+ * @param {YaioAppBase} appBase               the appbase to get other services
+ * @returns {Yaio.MarkdownRenderer}           an service-instance
+ * @augments JsHelferlein.MarkdownRenderer
+ * @constructor
  */
 Yaio.MarkdownRenderer = function(appBase) {
     'use strict';

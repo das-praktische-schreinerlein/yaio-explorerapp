@@ -13,7 +13,8 @@
  */
 
 /** 
- * adds the new tag-directive 'state' to output formated node-state
+ * angular-directive: adds the new tag-directive 'state' to output formated node-state
+ * @directive
  */
 yaioApp.directive('state', function(){
     'use strict';

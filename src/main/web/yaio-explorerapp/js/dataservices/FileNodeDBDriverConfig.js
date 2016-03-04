@@ -12,6 +12,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+/**
+ * default-configuration for current Yaio.FileNodeDBDriver-datasource
+ * @param {String} urlBase                   desc of the current datasource (to connect if url)
+ * @param {String} name                      name of the current datasource
+ * @param {String} desc                      desc of the current datasource
+ * @returns {Yaio.FileNodeDBDriverConfig}    an config-instance
+ * @augments JsHelferlein.ConfigBase
+ * @constructor
+ */
 Yaio.FileNodeDBDriverConfig = function(urlBase, name, desc) {
     'use strict';
 

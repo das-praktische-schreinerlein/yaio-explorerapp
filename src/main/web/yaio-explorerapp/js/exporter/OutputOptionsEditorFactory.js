@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * new functions to control the outputoptions
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new function
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-factory for serving export-form-functions
+ * @service
  */
 yaioApp.factory('OutputOptionsEditor', function(yaioUtils) {
     'use strict';

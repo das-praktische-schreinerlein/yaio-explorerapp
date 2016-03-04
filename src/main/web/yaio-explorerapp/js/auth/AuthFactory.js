@@ -13,10 +13,8 @@
  */
 
 /** 
- * the factory to check the authorization
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new authorisation-obj
- * @FeatureKeywords              GUI Configuration
+ * angular-factory for serving authentification-services
+ * @service
  */
 yaioApp.factory('authorization', function ($rootScope, yaioUtils) {
     'use strict';

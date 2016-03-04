@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * the controller for Imports
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+/**
+ * angular-controller for serving page-element: import-form
+ * @controller
  */
 yaioApp.controller('ImporterCtrl', function($rootScope, $scope, $location, $routeParams,
                                             setFormErrors, authorization, yaioUtils) {

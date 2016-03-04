@@ -12,14 +12,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to get actions, urls, flags... available and configured for the current server-datasource
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.ServerAccessManager}             an service-instance
+ * @augments Yaio.AccessManager
+ * @constructor
  */
 Yaio.ServerAccessManager = function(appBase, config, defaultConfig) {
     'use strict';

@@ -12,24 +12,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * controller for the yaio-gui
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * angular-module for serving yaio
+ * @module
  */
 var yaioApp = angular.module('yaioExplorerApp', ['ngAnimate', 'ngRoute', 'pascalprecht.translate']);
 
-/** 
- * configures the routing for the app
- * add new routes to the $routeProvider-instance
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $routeProvider
- * @FeatureKeywords              GUI Routing Configuration
- * @param $routeProvider         the $routeProvider-instance to add the new routes
+/**
+ * angular-config: configures the routing for the app, add new routes to the $routeProvider-instance
+ * @config
  */
 yaioApp.config(function($routeProvider) {
     'use strict';
@@ -89,12 +80,9 @@ yaioApp.config(function($routeProvider) {
         .otherwise({ redirectTo: '/'});
 });
 
-/** 
- * configures $sceDelegateProvider - adds resourcewhitelist
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $sceDelegateProvider
- * @FeatureKeywords              GUI Configuration
- * @param $sceDelegateProvider   the $sceDelegateProvider to change the resource-whitelist...
+/**
+ * angular-config: configures $sceDelegateProvider - adds resourcewhitelist
+ * @config
  */
 yaioApp.config(function($sceDelegateProvider) {
     'use strict';
@@ -117,13 +105,10 @@ yaioApp.config(function($sceDelegateProvider) {
         $sceDelegateProvider.resourceUrlWhitelist(whitelist);
     }
 });
-    
-/** 
- * configures $httpProvider - adds default-headers for patch-requests
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $httpProvider
- * @FeatureKeywords              GUI Configuration
- * @param $httpProvider          the $httpProvider to change the default-headers
+
+/**
+ * angular-config: configures $httpProvider - adds default-headers for patch-requests
+ * @config
  */
 yaioApp.config(['$httpProvider', function($httpProvider) {
     'use strict';

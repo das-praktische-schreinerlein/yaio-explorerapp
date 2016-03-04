@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * the controller to load the frontpage
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page: node-editor
+ * @controller
  */
 yaioApp.controller('FrontPageCtrl', function($rootScope, $scope, $location, $routeParams,
                                              setFormErrors, OutputOptionsEditor, authorization, yaioUtils) {

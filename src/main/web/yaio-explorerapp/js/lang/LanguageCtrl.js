@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * the controller to change language
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page-element: language-switch
+ * @controller
  */
 yaioApp.controller('LanguageCtrl', ['$translate', '$scope', function ($translate, $scope, yaioUtils) {
     'use strict';

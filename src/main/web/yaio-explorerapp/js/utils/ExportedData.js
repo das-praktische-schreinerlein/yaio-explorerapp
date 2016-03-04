@@ -12,14 +12,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * servicefunctions for exported documentations
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions available in html-export (documentation...)
+ * @param {YaioAppBase} appBase           the appbase to get other services
+ * @returns {Yaio.ExportedData}           an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.ExportedData = function(appBase) {
     'use strict';

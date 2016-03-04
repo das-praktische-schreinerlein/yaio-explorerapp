@@ -12,6 +12,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+/**
+ * default-configuration for current Yaio.StaticNodeDBDriver-datasource
+ * @param {String} urlBase                   unused
+ * @param {String} name                      name of the current datasource
+ * @param {String} desc                      desc of the current datasource
+ * @returns {Yaio.StaticNodeDBDriverConfig}  an config-instance
+ * @augments JsHelferlein.ConfigBase
+ * @constructor
+ */
 Yaio.StaticNodeDBDriverConfig = function(urlBase, name, desc) {
     'use strict';
 

@@ -18,9 +18,11 @@
  ***************************************
  ***************************************/
 
-/** 
+/**
+ * angular-factory for serving form-validation-services
  * new function to set form-errors when using input-elements with attribute 'witherrors'
  * and element 'fielderrors' to show the corresponding errors
+ * @service
  */
 yaioApp.factory('setFormErrors', function() {
     'use strict';

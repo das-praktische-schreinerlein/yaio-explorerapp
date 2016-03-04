@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * the controller to load the nodes for url-params and register the yaio-functions
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+/**
+ * angular-controller for serving page: explorer-page
+ * @controller
  */
 yaioApp.controller('NodeShowCtrl', function($rootScope, $scope, $location, $routeParams,
                                             setFormErrors, OutputOptionsEditor, authorization, yaioUtils) {

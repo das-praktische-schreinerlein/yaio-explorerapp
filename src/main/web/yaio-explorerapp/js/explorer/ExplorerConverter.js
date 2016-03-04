@@ -13,13 +13,11 @@
  */
 
 /**
- * servicefunctions for converting explorer-content to markdown/jira...
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+ * service-functions for converting explorer-content to markdown/jira...
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.ExplorerConverter}               an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.ExplorerConverter = function(appBase) {
     'use strict';

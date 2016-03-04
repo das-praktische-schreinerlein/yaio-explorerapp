@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * the controller to load the sourceselector
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page-element: datasource-selector
+ * @controller
  */
 yaioApp.controller('SourceSelectorCtrl', function($rootScope, $scope, $location, $routeParams, yaioUtils) {
     'use strict';

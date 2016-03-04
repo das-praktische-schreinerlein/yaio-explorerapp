@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * the controller to load the dashboard
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page: dashoard-page
+ * @controller
  */
 yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $routeParams, setFormErrors,
                                              OutputOptionsEditor, authorization, yaioUtils) {

@@ -12,11 +12,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * factory to create yaioUtils with util-functions
- * @FeatureDomain                Utils
- * @FeatureResult                returns new yaioUtils obj
- * @FeatureKeywords              Utils
+/**
+ * angular-factory for serving yaioUtils-services - create yaioUtils with util-functions
+ * @service
  */
 yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function ($location, $http, $rootScope, $q) {
     'use strict';

@@ -12,14 +12,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/** 
- * servicefunctions for explorer-actions
- *
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to handle the explorer-commands
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.ExplorerCommands}                an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.ExplorerCommands = function(appBase) {
     'use strict';
