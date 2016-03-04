@@ -104,6 +104,12 @@
          jMATService.getJMSServiceObj().appendHtml(html, parentId, 'blockToggler');
       };
      
+/**
+ * the Config for the YaioAppBase
+ * @returns {YaioAppBaseConfig}         an config-instance
+ * @augments JsHelferlein.AppBaseConfig
+ * @constructor
+ */
 window.YaioAppBaseConfig = function() {
     'use strict';
 
@@ -256,6 +262,13 @@ window.YaioAppBaseConfig = function() {
     return me;
 };
 window.Yaio = {};
+
+/**
+ * the appBase for the YaioApp
+ * @returns {YaioAppBase}       an appBase-instance
+ * @augments JsHelferlein.AppBase
+ * @constructor
+ */
 window.YaioAppBase = function() {
     'use strict';
 
@@ -361,16 +374,13 @@ window.YaioAppBase = function() {
 
     return me;
 };
-/** 
- * servicefunctions basics
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to simulate promises
+ * @param {YaioAppBase} appBase           the appbase to get other services
+ * @returns {Yaio.PromiseHelper}          an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
 Yaio.PromiseHelper = function(appBase) {
     'use strict';
 
@@ -434,16 +444,13 @@ Yaio.PromiseHelper = function(appBase) {
     return me;
 };
 
-/** 
- * servicefunctions basics
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for special needs :-)
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.Base}             an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
 Yaio.Base = function(appBase) {
     'use strict';
 
@@ -479,21 +486,13 @@ Yaio.Base = function(appBase) {
 
     return me;
 };
-/** 
- * FileLoader-servicefunctions
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for file-lading (documentation...)
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.FileLoader}       an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
-/*****************************************
- *****************************************
- * Service-Funktions (file)
- *****************************************
- *****************************************/
 Yaio.FileLoader = function(appBase) {
     'use strict';
 
@@ -622,11 +621,13 @@ Yaio.FileLoader = function(appBase) {
  */
 
 
-/*****************************************
- *****************************************
- * Service-Funktions (editor)
- *****************************************
- *****************************************/
+/**
+ * service-functions to manage/control the node-editor
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.NodeEditor}                      an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
+ */
 Yaio.NodeEditor = function(appBase) {
     'use strict';
 
@@ -1143,16 +1144,13 @@ Yaio.NodeEditor = function(appBase) {
     
     return me;
 };
-/** 
- * servicefunctions for layout
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for special layout-features
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.Layout}           an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
 Yaio.Layout = function(appBase) {
     'use strict';
 
@@ -1435,13 +1433,11 @@ Yaio.Layout = function(appBase) {
  
 
 /**
- * servicefunctions for markdown-rendering
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+ * service-functions to extend the JsHelferlein.MarkdownRenderer
+ * @param {YaioAppBase} appBase               the appbase to get other services
+ * @returns {Yaio.MarkdownRenderer}           an service-instance
+ * @augments JsHelferlein.MarkdownRenderer
+ * @constructor
  */
 Yaio.MarkdownRenderer = function(appBase) {
     'use strict';
@@ -1489,14 +1485,12 @@ Yaio.MarkdownRenderer = function(appBase) {
     return me;
 };
 
-/** 
- * servicefunctions for exported documentations
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions available in html-export (documentation...)
+ * @param {YaioAppBase} appBase           the appbase to get other services
+ * @returns {Yaio.ExportedData}           an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.ExportedData = function(appBase) {
     'use strict';
@@ -1896,14 +1890,12 @@ Yaio.ExportedData = function(appBase) {
 };
  
 
-/** 
- * servicefunctions for data-rendering
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to render data-blocks for nodes in explorer
+ * @param {YaioAppBase} appBase      the appbase to get other services
+ * @returns {Yaio.NodeDataRenderer}  an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.NodeDataRenderer = function(appBase) {
     'use strict';
@@ -2588,14 +2580,12 @@ Yaio.NodeDataRenderer = function(appBase) {
     return me;
 };
 
-/** 
- * servicefunctions for gantt-rendering
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to render gantt-blocks for nodes in explorer
+ * @param {YaioAppBase} appBase      the appbase to get other services
+ * @returns {Yaio.NodeDataRenderer}  an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.NodeGanttRenderer = function(appBase) {
     'use strict';
@@ -3021,14 +3011,14 @@ Yaio.NodeGanttRenderer = function(appBase) {
     return me;
 };
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * abstract service-functions connect/save/retrieve data from datasource
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.AbstractNodeDBDriver}            an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
     'use strict';
@@ -3243,14 +3233,14 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to get actions, urls, flags... available and configured for the current datasource
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.AccessManager}                   an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.AccessManager = function(appBase, config, defaultConfig) {
     'use strict';
@@ -3438,14 +3428,14 @@ Yaio.AccessManager = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * datasource manager
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to manage/connect available datasources
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.DataSourceManager}               an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.DataSourceManager = function(appBase, config, defaultConfig) {
     'use strict';
@@ -3516,14 +3506,14 @@ Yaio.DataSourceManager = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to get actions, urls, flags... available and configured for the current uploadfile-datasource
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.FileAccessManager}               an service-instance
+ * @augments Yaio.StaticAccessManager
+ * @constructor
  */
 Yaio.FileAccessManager = function(appBase, config, defaultConfig) {
     'use strict';
@@ -3542,14 +3532,14 @@ Yaio.FileAccessManager = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions connect/save/retrieve data from uploadfile-datasource
+ * @param {YaioAppBase} appBase                        the appbase to get other services
+ * @param {Yaio.FileNodeDBDriverConfig} config         config to use
+ * @param {Yaio.FileNodeDBDriverConfig} defaultConfig  default to merge with config
+ * @returns {Yaio.FileNodeDBDriver}                    an service-instance
+ * @augments Yaio.StaticNodeDBDriver
+ * @constructor
  */
 Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
     'use strict';
@@ -3639,6 +3629,15 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
     return me;
 };
 
+/**
+ * default-configuration for current Yaio.FileNodeDBDriver-datasource
+ * @param {String} urlBase                   desc of the current datasource (to connect if url)
+ * @param {String} name                      name of the current datasource
+ * @param {String} desc                      desc of the current datasource
+ * @returns {Yaio.FileNodeDBDriverConfig}    an config-instance
+ * @augments JsHelferlein.ConfigBase
+ * @constructor
+ */
 Yaio.FileNodeDBDriverConfig = function(urlBase, name, desc) {
     'use strict';
 
@@ -3654,14 +3653,14 @@ Yaio.FileNodeDBDriverConfig = function(urlBase, name, desc) {
 
     return me;
 };
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to connect/load/save... to current node-datasource
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.NodeRepository}                   an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.NodeRepository = function(appBase, config, defaultConfig) {
     'use strict';
@@ -3959,14 +3958,14 @@ Yaio.NodeRepository = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to get actions, urls, flags... available and configured for the current server-datasource
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.ServerAccessManager}             an service-instance
+ * @augments Yaio.AccessManager
+ * @constructor
  */
 Yaio.ServerAccessManager = function(appBase, config, defaultConfig) {
     'use strict';
@@ -4047,14 +4046,14 @@ Yaio.ServerAccessManager = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions connect/save/retrieve data from yaio-server-datasource
+ * @param {YaioAppBase} appBase                          the appbase to get other services
+ * @param {Yaio.ServerNodeDBDriverConfig} config         config to use
+ * @param {Yaio.ServerNodeDBDriverConfig} defaultConfig  default to merge with config
+ * @returns {Yaio.ServerNodeDBDriver}                    an service-instance
+ * @augments Yaio.AbstractNodeDBDriver
+ * @constructor
  */
 Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
     'use strict';
@@ -4538,6 +4537,15 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
     return me;
 };
 
+/**
+ * default-configuration for current Yaio.ServerNodeDBDriver-datasource
+ * @param {String} urlBase                   desc of the current datasource (to connect if url)
+ * @param {String} name                      name of the current datasource
+ * @param {String} desc                      desc of the current datasource
+ * @returns {Yaio.ServerNodeDBDriverConfig}  an config-instance
+ * @augments JsHelferlein.ConfigBase
+ * @constructor
+ */
 Yaio.ServerNodeDBDriverConfig = function(urlBase, name, desc) {
     'use strict';
 
@@ -4588,14 +4596,14 @@ Yaio.ServerNodeDBDriverConfig = function(urlBase, name, desc) {
     
     return me;
 };
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to get actions, urls, flags... available and configured for the current static-datasource
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.StaticAccessManager}             an service-instance
+ * @augments Yaio.AccessManager
+ * @constructor
  */
 Yaio.StaticAccessManager = function(appBase, config, defaultConfig) {
     'use strict';
@@ -4644,14 +4652,14 @@ Yaio.StaticAccessManager = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * servicefunctions for data-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions connect/save/retrieve data from static-datasource ({Object} window.yaioStaticJSON)
+ * @param {YaioAppBase} appBase                          the appbase to get other services
+ * @param {Yaio.ServerNodeDBDriverConfig} config         config to use
+ * @param {Yaio.ServerNodeDBDriverConfig} defaultConfig  default to merge with config
+ * @returns {Yaio.StaticNodeDBDriver}                    an service-instance
+ * @augments Yaio.AbstractNodeDBDriver
+ * @constructor
  */
 Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     'use strict';
@@ -5080,6 +5088,15 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     return me;
 };
 
+/**
+ * default-configuration for current Yaio.StaticNodeDBDriver-datasource
+ * @param {String} urlBase                   unused
+ * @param {String} name                      name of the current datasource
+ * @param {String} desc                      desc of the current datasource
+ * @returns {Yaio.StaticNodeDBDriverConfig}  an config-instance
+ * @augments JsHelferlein.ConfigBase
+ * @constructor
+ */
 Yaio.StaticNodeDBDriverConfig = function(urlBase, name, desc) {
     'use strict';
 
@@ -5095,14 +5112,14 @@ Yaio.StaticNodeDBDriverConfig = function(urlBase, name, desc) {
 
     return me;
 };
-/** 
- * servicefunctions for datastore-services
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to load/save... to node-data from a local static inmemory-datastore
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @param {JsHelferlein.ConfigBase} config         config to use
+ * @param {JsHelferlein.ConfigBase} defaultConfig  default to merge with config
+ * @returns {Yaio.StaticNodeDataStore}                   an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
     'use strict';
@@ -5510,14 +5527,12 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
     return me;
 };
 
-/** 
- * servicefunctions for explorer-actions
- *
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to handle the explorer-commands
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.ExplorerCommands}                an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.ExplorerCommands = function(appBase) {
     'use strict';
@@ -6095,13 +6110,11 @@ Yaio.ExplorerCommands = function(appBase) {
 };
 
 /**
- * servicefunctions for converting explorer-content to markdown/jira...
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+ * service-functions for converting explorer-content to markdown/jira...
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.ExplorerConverter}               an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.ExplorerConverter = function(appBase) {
     'use strict';
@@ -6304,17 +6317,6 @@ Yaio.ExplorerConverter = function(appBase) {
     return me;
 };
 
-/** 
- * controller for the treeview
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
- */
-
-
 /*****************************************
  *****************************************
  * Configuration
@@ -6322,11 +6324,13 @@ Yaio.ExplorerConverter = function(appBase) {
  *****************************************/
 var treeInstances = [];
 
-/*****************************************
- *****************************************
- * YAIO-Treefunctions
- *****************************************
- *****************************************/
+/**
+ * service-functions to initialize/control the explorer-tree (instances of FancyTree)
+ * @param {YaioAppBase} appBase               the appbase to get other services
+ * @returns {Yaio.ExplorerTree}               an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
+ */
 Yaio.ExplorerTree = function(appBase) {
     'use strict';
 
@@ -6941,24 +6945,15 @@ Yaio.ExplorerTree = function(appBase) {
     return me;
 };
 
-/** 
- * controller for the yaio-gui
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * angular-module for serving yaio
+ * @module
  */
 var yaioApp = angular.module('yaioExplorerApp', ['ngAnimate', 'ngRoute', 'pascalprecht.translate']);
 
-/** 
- * configures the routing for the app
- * add new routes to the $routeProvider-instance
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $routeProvider
- * @FeatureKeywords              GUI Routing Configuration
- * @param $routeProvider         the $routeProvider-instance to add the new routes
+/**
+ * angular-config: configures the routing for the app, add new routes to the $routeProvider-instance
+ * @config
  */
 yaioApp.config(function($routeProvider) {
     'use strict';
@@ -7018,12 +7013,9 @@ yaioApp.config(function($routeProvider) {
         .otherwise({ redirectTo: '/'});
 });
 
-/** 
- * configures $sceDelegateProvider - adds resourcewhitelist
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $sceDelegateProvider
- * @FeatureKeywords              GUI Configuration
- * @param $sceDelegateProvider   the $sceDelegateProvider to change the resource-whitelist...
+/**
+ * angular-config: configures $sceDelegateProvider - adds resourcewhitelist
+ * @config
  */
 yaioApp.config(function($sceDelegateProvider) {
     'use strict';
@@ -7046,13 +7038,10 @@ yaioApp.config(function($sceDelegateProvider) {
         $sceDelegateProvider.resourceUrlWhitelist(whitelist);
     }
 });
-    
-/** 
- * configures $httpProvider - adds default-headers for patch-requests
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $httpProvider
- * @FeatureKeywords              GUI Configuration
- * @param $httpProvider          the $httpProvider to change the default-headers
+
+/**
+ * angular-config: configures $httpProvider - adds default-headers for patch-requests
+ * @config
  */
 yaioApp.config(['$httpProvider', function($httpProvider) {
     'use strict';
@@ -7096,7 +7085,8 @@ yaioApp.CONST_PATTERN_SEG_CHECKSUM = /^[0-9A-Za-z]$/;
 yaioApp.CONST_PATTERN_SEG_TIME = /^\\d\\d\\:\\d\\d$/;
 
 /** 
- * adds the new tag-directive 'state' to output formated node-state
+ * angular-directive: adds the new tag-directive 'state' to output formated node-state
+ * @directive
  */
 yaioApp.directive('state', function(){
     'use strict';
@@ -7117,9 +7107,11 @@ yaioApp.directive('state', function(){
  ***************************************
  ***************************************/
 
-/** 
+/**
+ * angular-factory for serving form-validation-services
  * new function to set form-errors when using input-elements with attribute 'witherrors'
  * and element 'fielderrors' to show the corresponding errors
+ * @service
  */
 yaioApp.factory('setFormErrors', function() {
     'use strict';
@@ -7276,11 +7268,9 @@ yaioApp.directive('fielderrors', function() {
     };
 });
 
-/** 
- * factory to create yaioUtils with util-functions
- * @FeatureDomain                Utils
- * @FeatureResult                returns new yaioUtils obj
- * @FeatureKeywords              Utils
+/**
+ * angular-factory for serving yaioUtils-services - create yaioUtils with util-functions
+ * @service
  */
 yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function ($location, $http, $rootScope, $q) {
     'use strict';
@@ -7392,10 +7382,8 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
 }]);
 
 /** 
- * the factory to check the authorization
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new authorisation-obj
- * @FeatureKeywords              GUI Configuration
+ * angular-factory for serving authentification-services
+ * @service
  */
 yaioApp.factory('authorization', function ($rootScope, yaioUtils) {
     'use strict';
@@ -7427,11 +7415,9 @@ yaioApp.factory('authorization', function ($rootScope, yaioUtils) {
     };
 });
 
-/** 
- * the controller to load login-page
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving pages: login/logout
+ * @controller
  */
 yaioApp.controller('AuthController', function($rootScope, $scope, $location, $routeParams,
                                               setFormErrors, OutputOptionsEditor, authorization, yaioUtils) {
@@ -7504,12 +7490,9 @@ yaioApp.controller('AuthController', function($rootScope, $scope, $location, $ro
 });
 
 
-/** 
- * configures $translateProvider - international app
- * @FeatureDomain                Configuration
- * @FeatureResult                updates $translateProvider
- * @FeatureKeywords              GUI Configuration
- * @param $translateProvider     the $translateProvider to get text-resources
+/**
+ * angular-config: configures $translateProvider - international app to get text-resources
+ * @config
  */
 yaioApp.config(function ($translateProvider) {
     'use strict';
@@ -7535,11 +7518,9 @@ yaioApp.config(function ($translateProvider) {
     $('#button_lang_' + langKey).removeClass('button-lang-inactive').addClass('button-lang-active');
 });
 
-/** 
- * the controller to change language
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page-element: language-switch
+ * @controller
  */
 yaioApp.controller('LanguageCtrl', ['$translate', '$scope', function ($translate, $scope, yaioUtils) {
     'use strict';
@@ -7578,11 +7559,9 @@ yaioApp.controller('LanguageCtrl', ['$translate', '$scope', function ($translate
     $scope._init();
 }]);
 
-/** 
- * the controller to load the frontpage
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page: node-editor
+ * @controller
  */
 yaioApp.controller('FrontPageCtrl', function($rootScope, $scope, $location, $routeParams,
                                              setFormErrors, OutputOptionsEditor, authorization, yaioUtils) {
@@ -7623,11 +7602,9 @@ yaioApp.controller('FrontPageCtrl', function($rootScope, $scope, $location, $rou
     $scope._init();
 });
 
-/** 
- * the controller to load the dashboard
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page: dashoard-page
+ * @controller
  */
 yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $routeParams, setFormErrors,
                                              OutputOptionsEditor, authorization, yaioUtils) {
@@ -7656,10 +7633,8 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
 });
 
 /** 
- * the controller for dashboard-elements
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+ * angular-controller for serving page-element: dashboard-search-elements
+ * @controller
  */
 yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioUtils) {
     'use strict';
@@ -7787,11 +7762,9 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
     $scope._init();
 });
 
-/** 
- * the controller to edit nodes
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+/**
+ * angular-controller for serving page-element: node-editor
+ * @controller
  */
 yaioApp.controller('NodeEditorCtrl', function($rootScope, $scope, $location, $routeParams,
                                               setFormErrors, authorization, yaioUtils) {
@@ -8179,11 +8152,9 @@ yaioApp.controller('NodeEditorCtrl', function($rootScope, $scope, $location, $ro
     $scope._init();
 });
 
-/** 
- * the controller for Imports
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+/**
+ * angular-controller for serving page-element: import-form
+ * @controller
  */
 yaioApp.controller('ImporterCtrl', function($rootScope, $scope, $location, $routeParams,
                                             setFormErrors, authorization, yaioUtils) {
@@ -8249,11 +8220,9 @@ yaioApp.controller('ImporterCtrl', function($rootScope, $scope, $location, $rout
     $scope._init();
 });
 
-/** 
- * the controller to load the outputoptions register the yaio-functions
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+/**
+ * angular-controller for serving page-element: export-form
+ * @controller
  */
 yaioApp.controller('OutputOptionsCtrl', function($rootScope, $scope, $location, $routeParams,
                                                  setFormErrors, OutputOptionsEditor, yaioUtils) {
@@ -8280,11 +8249,9 @@ yaioApp.controller('OutputOptionsCtrl', function($rootScope, $scope, $location, 
 });
 
 
-/** 
- * new functions to control the outputoptions
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new function
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-factory for serving export-form-functions
+ * @service
  */
 yaioApp.factory('OutputOptionsEditor', function(yaioUtils) {
     'use strict';
@@ -8381,11 +8348,9 @@ yaioApp.factory('OutputOptionsEditor', function(yaioUtils) {
     };
 });
 
-/** 
- * the controller to load the nodes for url-params and register the yaio-functions
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+/**
+ * angular-controller for serving page: explorer-page
+ * @controller
  */
 yaioApp.controller('NodeShowCtrl', function($rootScope, $scope, $location, $routeParams,
                                             setFormErrors, OutputOptionsEditor, authorization, yaioUtils) {
@@ -8695,11 +8660,9 @@ yaioApp.controller('NodeShowCtrl', function($rootScope, $scope, $location, $rout
     $scope._init();
 });
 
-/** 
- * the controller to search nodes for url-params and register the yaio-functions
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration BusinessLogic
+/**
+ * angular-controller for serving page: node-search
+ * @controller
  */
 yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $routeParams,
                                               setFormErrors, authorization, yaioUtils) {
@@ -8999,11 +8962,9 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     $scope._init();
 });
 
-/** 
- * the controller to load the sourceselector
- * @FeatureDomain                Configuration
- * @FeatureResult                returns new controller
- * @FeatureKeywords              GUI Configuration
+/**
+ * angular-controller for serving page-element: datasource-selector
+ * @controller
  */
 yaioApp.controller('SourceSelectorCtrl', function($rootScope, $scope, $location, $routeParams, yaioUtils) {
     'use strict';

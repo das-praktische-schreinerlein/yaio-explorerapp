@@ -104,6 +104,12 @@
          jMATService.getJMSServiceObj().appendHtml(html, parentId, 'blockToggler');
       };
      
+/**
+ * the Config for the YaioAppBase
+ * @returns {YaioAppBaseConfig}         an config-instance
+ * @augments JsHelferlein.AppBaseConfig
+ * @constructor
+ */
 window.YaioAppBaseConfig = function() {
     'use strict';
 
@@ -256,6 +262,13 @@ window.YaioAppBaseConfig = function() {
     return me;
 };
 window.Yaio = {};
+
+/**
+ * the appBase for the YaioApp
+ * @returns {YaioAppBase}       an appBase-instance
+ * @augments JsHelferlein.AppBase
+ * @constructor
+ */
 window.YaioAppBase = function() {
     'use strict';
 
@@ -361,16 +374,13 @@ window.YaioAppBase = function() {
 
     return me;
 };
-/** 
- * servicefunctions basics
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions to simulate promises
+ * @param {YaioAppBase} appBase           the appbase to get other services
+ * @returns {Yaio.PromiseHelper}          an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
 Yaio.PromiseHelper = function(appBase) {
     'use strict';
 
@@ -434,16 +444,13 @@ Yaio.PromiseHelper = function(appBase) {
     return me;
 };
 
-/** 
- * servicefunctions basics
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for special needs :-)
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.Base}             an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
 Yaio.Base = function(appBase) {
     'use strict';
 
@@ -479,21 +486,13 @@ Yaio.Base = function(appBase) {
 
     return me;
 };
-/** 
- * FileLoader-servicefunctions
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for file-lading (documentation...)
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.FileLoader}       an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
-/*****************************************
- *****************************************
- * Service-Funktions (file)
- *****************************************
- *****************************************/
 Yaio.FileLoader = function(appBase) {
     'use strict';
 
@@ -622,11 +621,13 @@ Yaio.FileLoader = function(appBase) {
  */
 
 
-/*****************************************
- *****************************************
- * Service-Funktions (editor)
- *****************************************
- *****************************************/
+/**
+ * service-functions to manage/control the node-editor
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.NodeEditor}                      an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
+ */
 Yaio.NodeEditor = function(appBase) {
     'use strict';
 
@@ -1143,16 +1144,13 @@ Yaio.NodeEditor = function(appBase) {
     
     return me;
 };
-/** 
- * servicefunctions for layout
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions for special layout-features
+ * @param {YaioAppBase} appBase     the appbase to get other services
+ * @returns {Yaio.Layout}           an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
-
 Yaio.Layout = function(appBase) {
     'use strict';
 
@@ -1435,13 +1433,11 @@ Yaio.Layout = function(appBase) {
  
 
 /**
- * servicefunctions for markdown-rendering
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+ * service-functions to extend the JsHelferlein.MarkdownRenderer
+ * @param {YaioAppBase} appBase               the appbase to get other services
+ * @returns {Yaio.MarkdownRenderer}           an service-instance
+ * @augments JsHelferlein.MarkdownRenderer
+ * @constructor
  */
 Yaio.MarkdownRenderer = function(appBase) {
     'use strict';
@@ -1489,14 +1485,12 @@ Yaio.MarkdownRenderer = function(appBase) {
     return me;
 };
 
-/** 
- * servicefunctions for exported documentations
- *  
- * @FeatureDomain                WebGUI
- * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
- * @category                     collaboration
- * @copyright                    Copyright (c) 2014, Michael Schreiner
- * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+/**
+ * service-functions available in html-export (documentation...)
+ * @param {YaioAppBase} appBase           the appbase to get other services
+ * @returns {Yaio.ExportedData}           an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
  */
 Yaio.ExportedData = function(appBase) {
     'use strict';
