@@ -307,7 +307,7 @@ Yaio.NodeEditor = function(appBase) {
         me.appBase.DataUtils.callUpdateTriggerForElement(element);
     };
 
-    /** 
+    /**
      * handler for drag&drop-dragover - show copy-hint
      * @param {Event} evt                    Drag&Drop-event
      */
@@ -315,7 +315,9 @@ Yaio.NodeEditor = function(appBase) {
         // Explicitly show this is a copy.
         evt.stopPropagation();
         evt.preventDefault();
-        evt.dataTransfer.dropEffect = 'copy';
+        if (!me.appBase.DataUtils.isUndefined(evt.dataTransfer)) {
+            evt.dataTransfer.dropEffect = 'copy';
+        }
     };
 
     /**
@@ -329,26 +331,30 @@ Yaio.NodeEditor = function(appBase) {
         evt.preventDefault();
 
         // get files
-        var files = evt.dataTransfer.files;
-        var file = files[0];
-        var parentSysUID = evt.target.getAttribute('data-parentsysuid');
+        if (!me.appBase.DataUtils.isUndefined(evt.dataTransfer) &&
+            !me.appBase.DataUtils.isUndefined(evt.dataTransfer.files) &&
+            evt.dataTransfer.files.length > 0) {
+            var files = evt.dataTransfer.files;
+            var file = files[0];
+            var parentSysUID = evt.target.getAttribute('data-parentsysuid');
 
-        // check data
-        if (!parentSysUID || !file) {
-            me.appBase.get('Logger').logError('error: parentSysUID and file required', false);
+            // check data
+            if (!parentSysUID || !file) {
+                me.appBase.get('Logger').logError('error: parentSysUID and file required', false);
+            }
+            var baseNode = {
+                sysUID: parentSysUID,
+                className: 'UrlResNode',
+                type: 'FILERES',
+                name: file.name,
+                resLocRef: file.name,
+                resLocName: file.name,
+                uploadFile: file
+            };
+
+            // open Editor
+            me.openNodeEditorForNode(baseNode, 'createuploadurlresnode', baseNode);
         }
-        var baseNode = {
-            sysUID: parentSysUID,
-            className: 'UrlResNode',
-            type: 'FILERES',
-            name: file.name,
-            resLocRef: file.name,
-            resLocName: file.name,
-            uploadFile: file
-        };
-
-        // open Editor
-        me.openNodeEditorForNode(baseNode, 'createuploadurlresnode', baseNode);
     };
 
     /** 
