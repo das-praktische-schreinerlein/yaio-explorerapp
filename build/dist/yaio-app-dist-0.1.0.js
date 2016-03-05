@@ -3489,7 +3489,9 @@ Yaio.DataSourceManager = function(appBase, config, defaultConfig) {
         } else {
             me.currentConnection = me.connections[key];
         }
-        me.appBase.configureService('YaioAccessManager', me.currentConnection.getAccessManager());
+        me.appBase.configureService('YaioAccessManager', function () {
+            return me.currentConnection.getAccessManager();
+        });
         return me.currentConnection.connectService();
     };
 
