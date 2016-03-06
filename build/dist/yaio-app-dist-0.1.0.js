@@ -906,6 +906,38 @@ Yaio.NodeEditor = function(appBase) {
     };
 
     /**
+     * initialize the dropzone for UrlResNode-UploadFiles - add dragover and drop - eventlistener
+     * @param {String} selector          selector to use as JQuery-Filter
+     */
+    me.initUploadFileUrlResNodeDropZone = function(selector) {
+        // aad event if not exists on jQuery
+        jQuery.event.props.push('dataTransfer');
+
+        var $dropZone = me.$(selector);
+        if (!$dropZone || $dropZone.length !== 1) {
+            console.error('initdragdrop failed dropzone not exists:', $dropZone);
+            return;
+        }
+
+        console.log('initdragdrop before init :', me.$._data( $dropZone[0], 'events'));
+        if (!me.$._data( $dropZone[0], 'events') ||
+                me.$._data( $dropZone[0], 'events').dragover === undefined) {
+            $dropZone.bind('dragover', function (event) {
+                //console.log('dragover:', event);
+                me.handleUploadFileUrlResNodeDragOver(event);
+            });
+        }
+        if (!me.$._data( $dropZone[0], 'events') ||
+                me.$._data( $dropZone[0], 'events').drop === undefined) {
+            $dropZone.bind('drop', function (event) {
+                //console.log('drop:', event);
+                me.handleUploadFileUrlResNodeSelect(event);
+            });
+        }
+        console.log('initdragdrop after init :', me.$._data( $dropZone[0], 'events'));
+    };
+
+    /**
      * handler for drag&drop-dragover - show copy-hint
      * @param {Event} evt                    Drag&Drop-event
      */
@@ -8653,15 +8685,10 @@ yaioApp.controller('NodeShowCtrl', function($rootScope, $scope, $location, $rout
      * @param {String} divId          id of the drag&drop-html-element
      */
     $scope.initDragDropFileUploader = function(divId) {
-        // TODO change to https://www.npmjs.com/package/angular-draganddrop
-        // Setup the Uploadfile-Listener
-        var dropZone = document.getElementById(divId);
-        dropZone.addEventListener('dragover', function (event) {
-            console.log('dragover:', event); yaioUtils.getService('YaioNodeEditor').handleUploadFileUrlResNodeDragOver(event);
-        }, false);
-        dropZone.addEventListener('drop', function (event) {
-            console.log('drop:', event); yaioUtils.getService('YaioNodeEditor').handleUploadFileUrlResNodeSelect(event);
-        }, false);
+        // Setup the Uploadfile-Listener after 1 second because Angular is removing event-listener: after 2. page loading
+        setTimeout(function() {
+            yaioUtils.getService('YaioNodeEditor').initUploadFileUrlResNodeDropZone('#' + divId);
+        }, 1000);
     };
 
     // init

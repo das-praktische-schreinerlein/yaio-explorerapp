@@ -906,6 +906,38 @@ Yaio.NodeEditor = function(appBase) {
     };
 
     /**
+     * initialize the dropzone for UrlResNode-UploadFiles - add dragover and drop - eventlistener
+     * @param {String} selector          selector to use as JQuery-Filter
+     */
+    me.initUploadFileUrlResNodeDropZone = function(selector) {
+        // aad event if not exists on jQuery
+        jQuery.event.props.push('dataTransfer');
+
+        var $dropZone = me.$(selector);
+        if (!$dropZone || $dropZone.length !== 1) {
+            console.error('initdragdrop failed dropzone not exists:', $dropZone);
+            return;
+        }
+
+        console.log('initdragdrop before init :', me.$._data( $dropZone[0], 'events'));
+        if (!me.$._data( $dropZone[0], 'events') ||
+                me.$._data( $dropZone[0], 'events').dragover === undefined) {
+            $dropZone.bind('dragover', function (event) {
+                //console.log('dragover:', event);
+                me.handleUploadFileUrlResNodeDragOver(event);
+            });
+        }
+        if (!me.$._data( $dropZone[0], 'events') ||
+                me.$._data( $dropZone[0], 'events').drop === undefined) {
+            $dropZone.bind('drop', function (event) {
+                //console.log('drop:', event);
+                me.handleUploadFileUrlResNodeSelect(event);
+            });
+        }
+        console.log('initdragdrop after init :', me.$._data( $dropZone[0], 'events'));
+    };
+
+    /**
      * handler for drag&drop-dragover - show copy-hint
      * @param {Event} evt                    Drag&Drop-event
      */
