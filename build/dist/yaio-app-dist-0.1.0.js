@@ -2151,7 +2151,7 @@ Yaio.NodeDataRenderer = function(appBase) {
                 .addClass('field_sysChangeDate')
         );
         $block.append(
-            me.$('<div lang="tech" />').html(' (V ' + basenode.sysChangeCount + ')')
+            me.$('<div lang="tech" />').html(' (V ' + svcDataUtils.formatNumbers(basenode.sysChangeCount, 0, '') + ')')
                 .addClass('container_field')
                 .addClass('fieldtype_basedata')
                 .addClass('fieldtype_sysChangeCount')
@@ -2165,11 +2165,11 @@ Yaio.NodeDataRenderer = function(appBase) {
                 .addClass('field_sysCreateDate')
         );
         $block.append(
-            me.$('<div lang="tech" />').html('Kinder: ' + basenode.statChildNodeCount +
-                    ' Workflows: ' + basenode.statWorkflowCount +
-                    ' ToDos: ' + basenode.statWorkflowTodoCount +
-                    ' Urls: ' + basenode.statUrlResCount +
-                    ' Info: ' + basenode.statInfoCount)
+            me.$('<div lang="tech" />').html('Kinder: ' + svcDataUtils.formatNumbers(basenode.statChildNodeCount, 0, '') +
+                    ' Workflows: ' + svcDataUtils.formatNumbers(basenode.statWorkflowCount, 0, '') +
+                    ' ToDos: ' + svcDataUtils.formatNumbers(basenode.statWorkflowTodoCount, 0, '') +
+                    ' Urls: ' + svcDataUtils.formatNumbers(basenode.statUrlResCount, 0, '') +
+                    ' Infos: ' + svcDataUtils.formatNumbers(basenode.statInfoCount, 0, ''))
                 .addClass('container_field')
                 .addClass('fieldtype_basedata')
                 .addClass('fieldtype_statistik')
