@@ -52,6 +52,7 @@
     "common.select.className.SymLinkNode": "link",
     "common.select.className.TaskNode": "task",
     "common.select.className.UrlResNode": "resource",
+    "common.select.docLayoutTagCommand.DESCONLY": "onl desc (no heading)",
     "common.select.docLayoutTagCommand.DIV": "block start",
     "common.select.docLayoutTagCommand.UE": "Heading",
     "common.select.docLayoutTagCommand.P": "line",

@@ -52,6 +52,7 @@
     "common.select.className.SymLinkNode": "Verknüpfung",
     "common.select.className.TaskNode": "Aufgabe",
     "common.select.className.UrlResNode": "Ressource",
+    "common.select.docLayoutTagCommand.DESCONLY": "Nur Beschreibung (ohne Ue)",
     "common.select.docLayoutTagCommand.DIV": "Block starten",
     "common.select.docLayoutTagCommand.UE": "Überschrift",
     "common.select.docLayoutTagCommand.P": "Textzeile",
