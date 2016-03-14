@@ -253,6 +253,7 @@
 @media print {
     body {
         width: 1200px !important;
+        background: none;
     }
 
     /*****************************************
