@@ -1,0 +1,242 @@
+/**
+ * export-styles: documentation
+ */
+
+h1, h2, h3, h4, h5, h6, h7, h8 {
+    color: black;
+    padding-top: 5px;
+    border-top: 1px dotted green;
+    clear: both;
+}
+
+
+
+/* headings */
+.h1-portdesc {
+}
+
+.h2-portdesc {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.h3-portdesc {
+    margin-left: 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
+.h4-portdesc {
+    margin-left: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.h5-portdesc {
+    margin-left: 30px;
+    font-size: 10px;
+    font-weight: bold;
+}
+.h6-portdesc {
+    margin-left: 35px;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+/* paragraphs */
+.p-portdesc {
+    margin-left: 20px;
+    line-height: 15px;
+    float: left;
+    clear: both;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.p-portdesc-ue {
+    display: inline-block;
+    width: 150px;
+    text-align: left;
+    float: left;
+    clear: both;
+}
+.p-portdesc-desc {
+    display: inline-block;
+    width: 510px;
+    vertical-align: top;
+}
+.p-portdesc-descdetail {
+    clear: both;
+    display: inline-block;
+    width: 510px;
+    vertical-align: top;
+    font-style:italic;
+    float: left;
+    clear: both;
+    font-size: 9px;
+}
+.p-portdesc-desc-full {
+    display: inline-block;
+    margin-left: 30px;
+    width: 640px;
+    vertical-align: top;
+}
+
+/* lists */
+.li-portdesc {
+    margin-left: 10px;
+    list-style: none outside none;
+}
+.li-portdesc-ue {
+    text-align: left;
+    display: inline-block;
+    width: 200px;
+    float: left;
+    clear: both;
+}
+.li-portdesc-desc {
+    display: inline-block;
+    width: 400px;
+    vertical-align: top;
+}
+.li-portdesc-descdetail {
+    display: inline-block;
+    width: 400px;
+    vertical-align: top;
+    font-style:italic;
+    float: left;
+    clear: both;
+    font-size: 9px;
+}
+
+/* tables */
+.table-portdesc {
+    border: 1px solid #8CACD3;
+    margin-left: 30px;
+}
+.tr-portdesc-ue {
+    font-weight: bold;
+    background: #8CACD3;
+}
+.tr-portdesc-datenue {
+    font-weight: bold;
+    background: #8CACD3;
+}
+.tr-portdesc-gesamt {
+    font-weight: bold;
+    background: #DEE9EF;
+}
+.td-portdesc {
+    border: 1px solid #8CACD3;
+}
+
+/**
+ * special cases
+ **/
+
+.h3-portdesc-intro {
+    margin-left: 0px;
+    font-size: 15px;
+    font-weight: bold;
+}
+.p-portdesc-ue {
+    display: none;
+}
+.p-portdesc-desc {
+    margin-left: 30px;
+    display: inline-block;
+    width: 640px;
+    vertical-align: top;
+}
+
+
+/* Documentation */
+/** specials **/
+.a-biglink {
+    font-size: 15px;
+    font-weight: bold;
+}
+.p-portdesc-desc-biglink {
+    text-align: center;
+    margin-left: 0px;
+}
+
+
+
+/** Styles der Faehigkeiten **/
+.li-portdesc-faehigkeiten {
+    margin: 0;
+    list-style: none;
+    width: 30%;
+    float: left;
+    border-right: 1px dotted #008000;
+    border-top: 0px;
+    border-bottom: 0px;
+    height: 120px;
+}
+.li-portdesc-faehigkeiten:nth-of-type(1) {
+}
+.li-portdesc-faehigkeiten:last-child {
+    border-right:0px;
+}
+.li-portdesc-ue-faehigkeiten {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: top;
+    width: 100%;
+}
+.li-portdesc-ue-faehigkeiten a {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: top;
+    width: 100%;
+}
+.li-portdesc-desc-faehigkeiten {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    width: 100%;
+}
+/** Styles fuer Management **/
+.box-portdesc-management {
+    background: #DEE9EF;
+}
+
+.li-portdesc-management {
+    list-style: none;
+    margin-left: 40px;
+}
+.li-portdesc-ue-management {
+    color: black;
+    display: inline-block;
+    text-align: left;
+    width: 150px;
+    font-weight: bold;
+}
+.li-portdesc-desc-management {
+    display: inline-block;
+    width: 450px;
+    vertical-align: top;
+    line-height: 15px;
+}
+
+/** Features **/
+.li-portdesc-ue-istohne {
+    font-weight: bold;
+}
+.li-portdesc-ue-bereiche {
+    font-weight: bold;
+}
+.li-portdesc-ue-features {
+    font-weight: bold;
+}
+.li-portdesc-ue-ausgabeformate {
+    font-weight: bold;
+}
+.li-portdesc-ue-sichten {
+    font-weight: bold;
+}
+
+

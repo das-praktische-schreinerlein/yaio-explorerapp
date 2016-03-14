@@ -1,0 +1,108 @@
+/*
+########################
+## Footer-Menue
+########################
+*/
+.menueFooter {
+    clear: both;
+    text-align: center;
+    float: left;
+    display: inline; /* fix IE-Bug */
+    border: 4px solid #8CACD3;
+    border-radius: 2px;
+    background-color: #8CACD3;
+    width: 580px;
+    padding: 3px;
+    padding-bottom: 2px;
+    position: fixed;
+    bottom: 0px;
+}
+
+.menueFooterDummy {
+    height: 50px;
+}
+
+
+.menueFooterBox {
+    clear: both;
+    text-align: center;
+    padding-bottom: 2px;
+    z-index: 21;
+}
+
+ul.ulMenueFooter {
+    float: left;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #1650B0;
+    background: #1650b0; /* Old browsers */
+    background: -moz-linear-gradient(top, #1650b0 0%, #2989d8 50%, #468ec9 51%, #1650b0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1650b0), color-stop(50%,#2989d8), color-stop(51%,#468ec9), color-stop(100%,#1650b0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #1650b0 0%,#2989d8 50%,#468ec9 51%,#1650b0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #1650b0 0%,#2989d8 50%,#468ec9 51%,#1650b0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #1650b0 0%,#2989d8 50%,#468ec9 51%,#1650b0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #1650b0 0%,#2989d8 50%,#468ec9 51%,#1650b0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1650b0', endColorstr='#1650b0',GradientType=0 ); /* IE6-9 */
+    width: 100%;
+}
+
+ul.ulMenueFooter li {
+    list-style: none;
+    float: left;
+    margin: 1px;
+    padding-left: 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 2px;
+    font-size: 14px;
+}
+
+ul.ulMenueFooter li a {
+    color: white;
+}
+
+.menueFooterMasterLink {
+}
+
+.menueFooterMasterLinkActive {
+    background-color: #FF9933;
+}
+
+.icon-menufooter {
+    width: 13px;
+    height: 13px;
+}
+
+.a-menue-footer-norm {
+    font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.menueFooter {
+    z-index: 20;
+}
+
+/*  my own additional print.css  */
+@media print {
+    a[href^="http"]:after, a[href^="file"]:after {
+        content:" <"attr(href)">";
+        color:#888;
+        background-color:inherit;
+        font-style:italic;
+        size: 80%;
+    }
+}
+
+/* set img from markdown without class to 600px */
+img:not([class]) {
+    max-width: 600px;
+    width: auto;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

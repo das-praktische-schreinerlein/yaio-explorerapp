@@ -108,9 +108,8 @@
                     vendorDestBase + 'css/slimbox2/slimbox2.css',
                     vendorDestBase + 'css/select2/select2.min.css',
                     vendorDestBase + 'css/toastr/toastr.css',
+
                     vendorDestBase + 'css/mermaid/mermaid.css',
-                    vendorSrcBase + 'css/yaio/style.css',
-                    vendorSrcBase + 'css/yaio/main.css',
                     // !!!! ymf is vendor but my project
                     vendorDestBase + 'css/ymf/ymf-app-dist.css'
                 ],
@@ -169,6 +168,7 @@
                     srcBase + 'yaio-explorerapp/js/utils/ExportedData.js'
                 ],
                 projectCssFiles: [
+                    srcBase + 'yaio-explorerapp/js/layout/legacy-yaio.css',
                     srcBase + 'yaio-explorerapp/js/layout/base.css',
                     srcBase + 'yaio-explorerapp/js/layout/support.css',
                     srcBase + 'yaio-explorerapp/js/layout/toc.css',
@@ -187,6 +187,10 @@
                     srcBase + 'yaio-explorerapp/js/dashboard/*.css'
                 ],
                 projectSupportCssFiles: [
+                    srcBase + 'yaio-explorerapp/js/layout/legacy-yaio.css',
+                    srcBase + 'exporttemplates/export-common.css',
+                    srcBase + 'exporttemplates/export-projectlayout.css',
+                    srcBase + 'exporttemplates/export-documentation.css',
                     srcBase + 'yaio-explorerapp/js/layout/base.css',
                     srcBase + 'yaio-explorerapp/js/formatter/formatter.css',
                     srcBase + 'yaio-explorerapp/js/layout/support.css'

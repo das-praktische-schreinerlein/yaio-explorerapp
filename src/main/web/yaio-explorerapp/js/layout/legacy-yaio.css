@@ -1,0 +1,439 @@
+/** yaio/style.css**/
+td {
+    font-size: 9px;
+    color: black;
+}
+
+th {
+    font-size: 9px;
+    color: black;
+}
+
+h1 {
+    font-size: 16px;
+    color: white
+}
+
+h2 {
+    font-size: 15px;
+    color: black
+}
+
+option {
+    font-size: 10px;
+}
+
+input:active, input:focus, select:active, select:focus, textarea:active, textarea:focus {
+    background-color: #DEE9EF;
+}
+textarea, input, select {
+    border: 1px solid #8CACD3;
+    border-radius: 4px;
+    margin-bottom: 2px;
+}
+
+/*
+########################
+##
+## Basis
+##
+########################
+*/
+
+/* Flags */
+.flg-display-loading {
+
+}
+
+/* Ausblenden */
+.hide-if-printversion {
+}
+
+.hide-if-printversion-block {
+}
+
+.hide-if-printversion-inline {
+}
+
+/*
+########################
+## Basis: Defaults
+########################
+*/
+body {
+    background-repeat: repeat-x;
+    background-color: #BDBDAD;
+    background-attachment: fixed;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-align: left;
+    color: black;
+}
+
+a {
+    color: #0645AD;
+    text-decoration: none;
+}
+
+.button {
+    height: 25px;
+    width: 150px;
+    padding: 2px;
+    border: 2px solid white; /*#336699;*/
+    border-radius: 4px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    background-color: #8CACD3;
+    background: #8cacd3; /* Old browsers */
+    background: -moz-linear-gradient(top, #8cacd3 0%, #2989d8 50%, #468ec9 51%, #7db9e8 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8cacd3), color-stop(50%,#2989d8), color-stop(51%,#468ec9), color-stop(100%,#7db9e8)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #8cacd3 0%,#2989d8 50%,#468ec9 51%,#7db9e8 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #8cacd3 0%,#2989d8 50%,#468ec9 51%,#7db9e8 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #8cacd3 0%,#2989d8 50%,#468ec9 51%,#7db9e8 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #8cacd3 0%,#2989d8 50%,#468ec9 51%,#7db9e8 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8cacd3', endColorstr='#7db9e8',GradientType=0 ); /* IE6-9 */
+}
+
+/*
+########################
+## Basis Box: allgmein
+########################
+*/
+.box {
+    clear: both;
+    float: left;
+    border: 2px solid #8CACD3; /*#FCEFB7; #336699;*/
+    border-radius: 10px;
+    width: 100%;
+    padding: 5px;
+    background-color: white; /* #FFFFCCwhite:*/
+    margin-top: 3px;
+    text-align: left;
+}
+
+.boxline {
+    clear: both;
+    float: left;
+    width: 100%;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.boxline-ue2 {
+    float: left;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+/*
+########################
+# Loading
+########################
+*/
+.box-loading {
+    height: 150px;
+    width: 582px;
+    border: 2px solid #FF9933; /*#FCEFB7;*/
+    border-radius: 2px;
+    text-align: center;
+    background-color: white;
+    top: 150px;
+    position: fixed;
+    font-weight: bold;
+}
+
+.box-loading-gif {
+    position: relative;
+    top: 50px;
+}
+
+.box-loading-msg {
+    position: relative;
+    top: 90px;
+    display: block;
+}
+
+.box-actioncontextmenue  {
+    display: none;
+    position: absolute;
+    float: right;
+    width: 200px;
+    z-index: 9;
+}
+
+/*
+########################
+# Toggler
+########################
+*/
+.blockToggler {
+    float: right;
+    display: block;
+}
+
+.togglecontainer {
+    float: left;
+}
+
+.icon-blocktoggler {
+    border: none;
+    width: 19px;
+}
+
+
+.formrowToggler {
+    display: inline;
+}
+
+.icon-formrowtoggler {
+    border: none;
+    width: 12px;
+}
+
+
+/*
+########################
+##
+## Copyright usw.
+##
+########################
+*/
+.txt-copyrights {
+    width: 100%;
+    font-size: 10px;
+    color: black;
+    text-align: center;
+}
+
+.txt-copyrights a {
+    font-size: 10px;
+}
+
+.txt-lastupdate {
+    width: 100%;
+    font-size: 10px;
+    color: black;
+    text-align: center;
+}
+
+.a-lastupdate {
+    font-size: 10px;
+    color: #0645AD;
+}
+
+/*
+########################
+##
+## Page
+##
+########################
+*/
+.pageContent {
+    clear: both;
+    width: 890px;
+    text-align: left;
+    /*   font-size: 11px;*/
+    color: black
+}
+
+.blockContent {
+    text-align: left;
+    width: 600px;
+    padding-left: 10px;
+    padding-right: 10px;
+    float: left;
+    display: inline; /* fix IE-Bug */
+}
+
+.blockQRCode {
+    float: right;
+    background: white
+}
+
+.blockPageFooter {
+    clear: both;
+}
+
+/*
+########################
+## Top-Menue
+########################
+*/
+.menueTop {
+    clear: both;
+    text-align: center;
+    float: left;
+    display: inline; /* fix IE-Bug */
+    border: 4px solid #8CACD3;
+    border-radius: 2px;
+    background-color: #8CACD3;
+    width: 100%;
+    padding: 3px;
+    padding-bottom: 2px;
+}
+
+/*
+########################
+##
+## Content
+##
+########################
+*/
+.content {
+    clear: both;
+    float: left;
+    width: 580px;
+    padding: 3px;
+}
+
+/* Alt */
+.txt-content {
+    font-size: 11px;
+    color: black;
+    z-index: 1;
+    clear: both;
+}
+
+.txt-lastupdate {
+    font-size: 12px;
+    color: black;
+    text-align: center;
+}
+
+/** yaio/main.css**/
+h1, h2, h3, h4, h5 {
+    padding-top: 5px;
+    border-top: 1px dotted green;
+}
+
+.txt-content {
+    font-size: 11px;
+}
+.pageContent {
+    width: 890px;
+}
+.blockContent {
+    width: 732px;
+}
+.content {
+    width: 712px;
+}
+.blockPageFooter {
+    clear: both;
+    float: left;
+    padding-top: 50px;
+}
+
+
+
+/** Top **/
+.menueTop {
+    margin-left: 3px;
+    border: 2px solid #8CACD3;
+    border-radius: 10px;
+}
+.ue1MenueTop {
+    font-size: 25px;
+    color: #FCF1B5;
+    padding-bottom: 20px;
+    padding-top: 15px;
+    text-align: center;
+}
+.ue2MenueTop {
+    font-size: 16px;
+    color: white;
+    padding-bottom: 0px;
+    text-align: center;
+}
+.ue3MenueTop {
+    width: 100px;
+    margin: 0;
+    padding: 0;
+    float: right;
+}
+.ulTopKontakt {
+    padding: 0;
+    margin: 0;
+}
+.liTopKontakt {
+    list-style: none outside none;
+    float: right;
+    display: inline-block;
+    height: 26px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    white-space: nowrap;
+    width: 26px;
+}
+.liTopKontaktTwitter {
+    background: url("../../images/twitter-24x24.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.liTopKontaktXing {
+    background: url("../../images/xing-24x24.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.liTopKontaktEmail {
+    background: url("../../images/email-24x24.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.liTopKontakt a {
+    color: #333333;
+    display: inline-block;
+    height: 26px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    text-indent: -99em;
+    white-space: nowrap;
+    width: 26px;
+}
+
+/**
+ * Basistyles: Content
+ **/
+.boxline-ue2 {
+    color: #FF9933;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.h2-portdesc {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/**
+ * Toggler
+ **/
+.blockToggler {
+    float: none;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+
+
+img.icon-blocktogglerof,
+img.icon-blocktoggleron {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: top;
+    background-repeat: no-repeat;
+    background-image: url("/dist/vendors.vendorversion/fancytree/skin-lion/icons.gif");
+    background-position: 0px 0px;
+    border: none;
+}
+img.icon-blocktogglerof {
+    background-position: -32px -80px;
+}
+
+img.icon-blocktoggleron {
+    background-position: -64px -80px;
+}
