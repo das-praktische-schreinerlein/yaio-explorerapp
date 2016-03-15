@@ -106,6 +106,17 @@ ul.ulMenueFooter li {
     padding: 4px 2px 4px 2px;
 }
 
+/*  my own additional print.css  */
+@media print {
+    a[href^="http"]:after, a[href^="file"]:after {
+        content:" <"attr(href)">";
+        color:#888;
+        background-color:inherit;
+        font-style:italic;
+        size: 80%;
+    }
+}
+
 
     </style>
 
