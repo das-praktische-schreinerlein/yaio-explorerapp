@@ -839,6 +839,17 @@ ul.ulMenueFooter li a {
 }
 
 
+.yaio-pj-node-a-symlink {
+    color: blue;
+    font-weight: bold;
+}
+.yaio-pj-node-a-urlres {
+    color: blue;
+    font-weight: bold;
+}
+
+
+
 /** markdowndesc-styles **/
 div.yaio-pj-node-block-desc-set {
     white-space: normal;
