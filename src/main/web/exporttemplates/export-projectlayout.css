@@ -2,27 +2,27 @@
  * export-styles: projectplan
  */
 
-.node-block {
+.yaio-pj-node-block {
     width: 100%;
     clear: both;
     float: left;
 }
-.node-block-leaf {
+.yaio-pj-node-block-leaf {
 }
-.node-block-leaf1 {
+.yaio-pj-node-block-leaf1 {
 }
-.node-block-twig {
+.yaio-pj-node-block-twig {
 }
-.node-block-twig1 {
+.yaio-pj-node-block-twig1 {
     border: 2px solid #D3D3D3
 }
-.node-line-ue {
+.yaio-pj-node-line-ue {
     width: 100%;
     clear: both;
     float: left;
 }
 
-.node-style-ue {
+.yaio-pj-node-style-ue {
     font-weight: bold;
     font-size: 12px;
 }
@@ -31,29 +31,29 @@
 /**
  * Node-Styles
  */
-.node-style-ue1 {
+.yaio-pj-node-style-ue1 {
 }
 
-.node-style-list {
+.yaio-pj-node-style-list {
 }
 
-.node-style-list1 {
+.yaio-pj-node-style-list1 {
 }
 
-.node-line-trenner {
+.yaio-pj-node-line-trenner {
     border: none;
     height: 1px;
     font-size: 1px;
     line-height: 1px;
 }
 
-.node-trenner-area-state {
+.yaio-pj-node-trenner-area-state {
 }
 
-.node-trenner-area-name {
+.yaio-pj-node-trenner-area-name {
 }
 
-.node-trenner-area-intend {
+.yaio-pj-node-trenner-area-intend {
     background: lightgrey;
     width: 100%;
 }
@@ -62,68 +62,68 @@
 /**
  * Node-Elemente
  */
-.node-data-block {
+.yaio-pj-node-data-block {
 }
-.node-area-stateshort {
+.yaio-pj-node-area-stateshort {
     vertical-align: top;
     width: 30px;
     float: left;
 }
-.node-area-name-container {
+.yaio-pj-node-area-name-container {
     vertical-align: top;
     width: 600px;
     float: left;
 }
-.node-area-name-container2 {
+.yaio-pj-node-area-name-container2 {
     border-left: 1px solid black;
 }
-.node-area-name {
+.yaio-pj-node-area-name {
     vertical-align: top;
     display: inline;
     float: left;
     width: 90%;
 }
-.node-area-state {
+.yaio-pj-node-area-state {
     vertical-align: top;
     width: 80px;
     float: left;
 }
 
-.node-area-istplan {
+.yaio-pj-node-area-istplan {
     vertical-align: top;
     width: 620px;
     float: left;
 }
 
-.node-block-ist {
+.yaio-pj-node-block-ist {
     vertical-align: top;
     width: 330px;
     float: left;
 }
-.node-block-istcalcsum {
+.yaio-pj-node-block-istcalcsum {
     vertical-align: top;
     width: 330px;
     float: left;
 }
 
-.node-block-plan {
+.yaio-pj-node-block-plan {
     vertical-align: top;
     width: 290px;
     float: left;
 }
-.node-block-plancalcsum {
+.yaio-pj-node-block-plancalcsum {
     vertical-align: top;
     width: 290px;
     float: left;
 }
 
-.node-container-desc {
+.yaio-pj-node-container-desc {
     width: 100%;
     clear: both;
     float: left;
 }
 
-.node-block-desc {
+.yaio-pj-node-block-desc {
     width: 100%;
     clear: both;
     float: left;
@@ -131,13 +131,13 @@
 }
 
 
-.node-container-children {
+.yaio-pj-node-container-children {
     width: 100%;
     clear: both;
     float: left;
 }
 
-.node-block-children {
+.yaio-pj-node-block-children {
     width: 100%;
     clear: both;
     float: left;
@@ -146,58 +146,58 @@
 /**
  * Node-Typ
  */
-.node-type-leaf {
+.yaio-pj-node-type-leaf {
     border-top: 1px dotted #D3D3D3
 }
 
-.node-type-leaf1 {
+.yaio-pj-node-type-leaf1 {
 }
 
-.node-type-twig {
+.yaio-pj-node-type-twig {
     font-weight: bold;
     border-top: 2px solid #D3D3D3
 }
 
-.node-type-twig1 {
+.yaio-pj-node-type-twig1 {
 }
 
 /**
  * Node-Level
  */
-.node-level1 {
+.yaio-pj-node-level1 {
     margin-left: 30px;
 }
-.node-level2 {
+.yaio-pj-node-level2 {
     margin-left: 60px;
 }
-.node-level3 {
+.yaio-pj-node-level3 {
     margin-left: 90px;
 }
-.node-level4 {
+.yaio-pj-node-level4 {
     margin-left: 120px;
 }
-.node-level5 {
+.yaio-pj-node-level5 {
     margin-left: 150px;
 }
-.node-level6 {
+.yaio-pj-node-level6 {
     margin-left: 180px;
 }
-.node-level7 {
+.yaio-pj-node-level7 {
     margin-left: 210px;
 }
-.node-level8 {
+.yaio-pj-node-level8 {
     margin-left: 240px;
 }
-.node-level9 {
+.yaio-pj-node-level9 {
     margin-left: 270px;
 }
-.node-level10 {
+.yaio-pj-node-level10 {
     margin-left: 300px;
 }
-.node-level11 {
+.yaio-pj-node-level11 {
     margin-left: 330px;
 }
-.node-level12 {
+.yaio-pj-node-level12 {
     margin-left: 360px;
 }
 
@@ -205,133 +205,133 @@
 /**
  * Node-Stati
  */
-.node-state-INFO {
+.yaio-node-state-INFO {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-DOKU {
+.yaio-node-state-DOKU {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-IDEE {
+.yaio-node-state-IDEE {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-HOWTO {
+.yaio-node-state-HOWTO {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-URLRES {
+.yaio-node-state-URLRES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-IMAGERES {
+.yaio-node-state-IMAGERES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-FILERES {
+.yaio-node-state-FILERES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-MAILRES {
+.yaio-node-state-MAILRES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-SYMLINK {
+.yaio-node-state-SYMLINK {
     background-color: #FFC0CB; /*#33CCCC;*/
 }
-.node-state-OPEN {
+.yaio-node-state-OPEN {
     background-color: #ADFF2F; /* CFF9BB #99FF66;*/
 }
-.node-state-OFFEN {
+.yaio-node-state-OFFEN {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-RUNNING {
+.yaio-node-state-RUNNING {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-LATE {
+.yaio-node-state-LATE {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-VERSPAETET {
+.yaio-node-state-VERSPAETET {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-SHORT {
+.yaio-node-state-SHORT {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-UEBERFAELLIG {
+.yaio-node-state-UEBERFAELLIG {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-WARNING {
+.yaio-node-state-WARNING {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-DONE {
+.yaio-node-state-DONE {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-ERLEDIGT {
+.yaio-node-state-ERLEDIGT {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-CANCELED {
+.yaio-node-state-CANCELED {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }
-.node-state-VERWORFEN {
+.yaio-node-state-VERWORFEN {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }
-.node-state-UNKNOWN {
+.yaio-node-state-UNKNOWN {
     background-color: #FFFFFF;
 }
-.node-state-UNBEKANNT {
+.yaio-node-state-UNBEKANNT {
     background-color: #FFFFFF;
 }
 
-.node-state-EVENT_PLANED {
+.yaio-node-state-EVENT_PLANED {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_GEPLANT {
+.yaio-node-state-EVENT_GEPLANT {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_OPEN {
+.yaio-node-state-EVENT_OPEN {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_OFFEN {
+.yaio-node-state-EVENT_OFFEN {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_RUNNING {
+.yaio-node-state-EVENT_RUNNING {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_LATE {
+.yaio-node-state-EVENT_LATE {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-EVENT_VERSPAETET {
+.yaio-node-state-EVENT_VERSPAETET {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-EVENT_SHORT {
+.yaio-node-state-EVENT_SHORT {
     background-color: #FF6347; /* #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-EVENT_UEBERFAELLIG {
+.yaio-node-state-EVENT_UEBERFAELLIG {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-EVENT_WARNING {
+.yaio-node-state-EVENT_WARNING {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-EVENT_DONE {
+.yaio-node-state-EVENT_DONE {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-EVENT_ERLEDIGT {
+.yaio-node-state-EVENT_ERLEDIGT {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-EVENT_CANCELED {
+.yaio-node-state-EVENT_CANCELED {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }
-.node-state-EVENT_VERWORFEN {
+.yaio-node-state-EVENT_VERWORFEN {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }
 
 
 /** markdowndesc-styles **/
-div.node-block-desc-set {
+div.yaio-pj-node-block-desc-set {
     white-space: normal;
     word-wrap: normal;
 }
-div.node-block-desc-set > h1,
-div.node-block-desc-set > h2,
-div.node-block-desc-set > h3,
-div.node-block-desc-set > h4,
-div.node-block-desc-set > h5,
-div.node-block-desc-set > h6,
-div.node-block-desc-set > h7,
-div.node-block-desc-set > h8 {
+div.yaio-pj-node-block-desc-set > h1,
+div.yaio-pj-node-block-desc-set > h2,
+div.yaio-pj-node-block-desc-set > h3,
+div.yaio-pj-node-block-desc-set > h4,
+div.yaio-pj-node-block-desc-set > h5,
+div.yaio-pj-node-block-desc-set > h6,
+div.yaio-pj-node-block-desc-set > h7,
+div.yaio-pj-node-block-desc-set > h8 {
     color: black;
 }
 pre {
