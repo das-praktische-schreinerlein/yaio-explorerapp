@@ -305,7 +305,7 @@ Yaio.NodeGanttRenderer = function(appBase) {
     me.renderGanttBlock = function(basenode, fancynode) {
         // extract nodedata
         var nodestate = basenode.state;
-        var statestyle = 'node-state-' + nodestate;
+        var statestyle = 'yaio-node-state-' + nodestate;
     
         var msg = 'ganttblock for node:' + basenode.sysUID;
         console.log('renderGanttBlock START: ' + msg);

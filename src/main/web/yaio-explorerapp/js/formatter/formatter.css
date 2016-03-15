@@ -17,115 +17,115 @@
  * node state
  *****************************************
  *****************************************/
-.node-state-INFO {
+.yaio-node-state-INFO {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-DOKU {
+.yaio-node-state-DOKU {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-IDEE {
+.yaio-node-state-IDEE {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-HOWTO {
+.yaio-node-state-HOWTO {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-URLRES {
+.yaio-node-state-URLRES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-FILERES {
+.yaio-node-state-FILERES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-IMAGERES {
+.yaio-node-state-IMAGERES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-MAILRES {
+.yaio-node-state-MAILRES {
     background-color: #AFEEEE; /*#E8FEFF; #33CCCC;*/
 }
-.node-state-SYMLINK {
+.yaio-node-state-SYMLINK {
     background-color: #FFC0CB; /*#33CCCC;*/
 }
-.node-state-OPEN {
+.yaio-node-state-OPEN {
     background-color: #ADFF2F; /*#99FF66;*/
 }
-.node-state-OFFEN {
+.yaio-node-state-OFFEN {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-RUNNING {
+.yaio-node-state-RUNNING {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-LATE {
+.yaio-node-state-LATE {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-VERSPAETET {
+.yaio-node-state-VERSPAETET {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-SHORT {
+.yaio-node-state-SHORT {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-UEBERFAELLIG {
+.yaio-node-state-UEBERFAELLIG {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-WARNING {
+.yaio-node-state-WARNING {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-DONE {
+.yaio-node-state-DONE {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-ERLEDIGT {
+.yaio-node-state-ERLEDIGT {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-CANCELED {
+.yaio-node-state-CANCELED {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }
-.node-state-VERWORFEN {
+.yaio-node-state-VERWORFEN {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }
-.node-state-UNKNOWN {
+.yaio-node-state-UNKNOWN {
     background-color: #FFFFFF;
 }
-.node-state-UNBEKANNT {
+.yaio-node-state-UNBEKANNT {
     background-color: #FFFFFF;
 }
 
-.node-state-EVENT_PLANED {
+.yaio-node-state-EVENT_PLANED {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_GEPLANT {
+.yaio-node-state-EVENT_GEPLANT {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_OPEN {
+.yaio-node-state-EVENT_OPEN {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_OFFEN {
+.yaio-node-state-EVENT_OFFEN {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_RUNNING {
+.yaio-node-state-EVENT_RUNNING {
     background-color: #ADFF2F; /* #CFF9BB #99FF66;*/
 }
-.node-state-EVENT_LATE {
+.yaio-node-state-EVENT_LATE {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-EVENT_VERSPAETET {
+.yaio-node-state-EVENT_VERSPAETET {
     background-color: #FFD700; /*#F6F9AE; #FFFF66;*/
 }
-.node-state-EVENT_SHORT {
+.yaio-node-state-EVENT_SHORT {
     background-color: #FF6347; /* #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-EVENT_UEBERFAELLIG {
+.yaio-node-state-EVENT_UEBERFAELLIG {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-EVENT_WARNING {
+.yaio-node-state-EVENT_WARNING {
     background-color: #FF6347; /* #FCD2C9; /*#FF9966;*/
 }
-.node-state-EVENT_DONE {
+.yaio-node-state-EVENT_DONE {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-EVENT_ERLEDIGT {
+.yaio-node-state-EVENT_ERLEDIGT {
     background-color: #E0F2FC; /*#B0E0E6;*/
 }
-.node-state-EVENT_CANCELED {
+.yaio-node-state-EVENT_CANCELED {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }
-.node-state-EVENT_VERWORFEN {
+.yaio-node-state-EVENT_VERWORFEN {
     background-color: #F5F5F5; /*#CCCCCC;*/
 }

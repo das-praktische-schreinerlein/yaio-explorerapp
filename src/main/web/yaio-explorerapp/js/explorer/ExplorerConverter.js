@@ -179,7 +179,7 @@ Yaio.ExplorerConverter = function(appBase) {
             // iterate all matchers
             for (var idx2 in matchers) {
                 // check for matcher in style
-                if (block.hasClass('node-state-' + matchers[idx2])) {
+                if (block.hasClass('yaio-node-state-' + matchers[idx2])) {
                     return idx;
                 }
             }

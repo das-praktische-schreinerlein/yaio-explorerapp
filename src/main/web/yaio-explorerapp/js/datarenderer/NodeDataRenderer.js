@@ -52,7 +52,7 @@ Yaio.NodeDataRenderer = function(appBase) {
         var node = data.node;
         var basenode = node.data.basenode;
         var nodestate = basenode.state;
-        var statestyle = 'node-state-' + nodestate;
+        var statestyle = 'yaio-node-state-' + nodestate;
     
         var colName = 0, colData = 1, colGantt = 2, colActions = 3;
         
@@ -382,7 +382,7 @@ Yaio.NodeDataRenderer = function(appBase) {
 
         // extract nodedata
         var nodestate = basenode.state;
-        var statestyle = 'node-state-' + nodestate;   
+        var statestyle = 'yaio-node-state-' + nodestate;
     
         var msg = 'datablock for node:' + basenode.sysUID;
         console.log('renderBaseDataBlock START: ' + msg);

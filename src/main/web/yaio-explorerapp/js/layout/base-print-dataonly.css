@@ -72,10 +72,10 @@
      * documentation
      *****************************************
      *****************************************/
-    .p-portdesc {
+    .yaio-doc-p {
         width: 540px;
     }
-    .p-portdesc-desc {
+    .yaio-doc-p-desc {
         margin-left: 30px;
         width: 510px;
     }

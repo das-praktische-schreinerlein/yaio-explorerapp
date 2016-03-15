@@ -17,13 +17,13 @@
  * sourceselector
  *****************************************
  *****************************************/
-.box-portdesc-nextactions {
+.yaio-box-nextactions {
     background: none repeat scroll 0 0 #dee9ef;
 }
-.box-portdesc-nextactions .togglecontainer {
+.yaio-box-nextactions .togglecontainer {
     max-width: 100%;
 }
-.box-portdesc-nextactions li {
+.yaio-box-nextactions li {
     margin: 0;
     list-style: none;
     width: 23%;
@@ -34,7 +34,7 @@
     font-size: 12px;
     text-align: center;
 } 
-.box-portdesc-nextactions li a {
+.yaio-box-nextactions li a {
     font-size: 15px;
     font-weight: bold;
 }

@@ -1968,7 +1968,7 @@ Yaio.NodeDataRenderer = function(appBase) {
         var node = data.node;
         var basenode = node.data.basenode;
         var nodestate = basenode.state;
-        var statestyle = 'node-state-' + nodestate;
+        var statestyle = 'yaio-node-state-' + nodestate;
     
         var colName = 0, colData = 1, colGantt = 2, colActions = 3;
         
@@ -2298,7 +2298,7 @@ Yaio.NodeDataRenderer = function(appBase) {
 
         // extract nodedata
         var nodestate = basenode.state;
-        var statestyle = 'node-state-' + nodestate;   
+        var statestyle = 'yaio-node-state-' + nodestate;
     
         var msg = 'datablock for node:' + basenode.sysUID;
         console.log('renderBaseDataBlock START: ' + msg);
@@ -2911,7 +2911,7 @@ Yaio.NodeGanttRenderer = function(appBase) {
     me.renderGanttBlock = function(basenode, fancynode) {
         // extract nodedata
         var nodestate = basenode.state;
-        var statestyle = 'node-state-' + nodestate;
+        var statestyle = 'yaio-node-state-' + nodestate;
     
         var msg = 'ganttblock for node:' + basenode.sysUID;
         console.log('renderGanttBlock START: ' + msg);
@@ -6316,7 +6316,7 @@ Yaio.ExplorerConverter = function(appBase) {
             // iterate all matchers
             for (var idx2 in matchers) {
                 // check for matcher in style
-                if (block.hasClass('node-state-' + matchers[idx2])) {
+                if (block.hasClass('yaio-node-state-' + matchers[idx2])) {
                     return idx;
                 }
             }
