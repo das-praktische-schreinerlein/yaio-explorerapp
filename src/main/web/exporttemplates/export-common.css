@@ -85,24 +85,3 @@ ul.ulMenueFooter li a {
 .menueFooter {
     z-index: 20;
 }
-
-/*  my own additional print.css  */
-@media print {
-    a[href^="http"]:after, a[href^="file"]:after {
-        content:" <"attr(href)">";
-        color:#888;
-        background-color:inherit;
-        font-style:italic;
-        size: 80%;
-    }
-}
-
-/* set img from markdown without class to 600px */
-img:not([class]) {
-    max-width: 600px;
-    width: auto;
-    height: auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
