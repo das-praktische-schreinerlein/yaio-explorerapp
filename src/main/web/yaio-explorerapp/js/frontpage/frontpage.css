@@ -90,3 +90,18 @@
 #front-content-right .sidebartoc {
     top: 200px;
 }
+
+
+#front-content-intro li.list-nextactions {
+    text-align: center;
+    font-size: 13px;
+}
+
+#front-content-intro a.list-nextactions {
+    font-weight: bold;
+}
+
+#front-content-intro a.list-nextactions::before {
+    content: "\A\A";
+    white-space: pre;
+}
