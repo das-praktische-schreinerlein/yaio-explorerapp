@@ -24,13 +24,26 @@
                   <option value="DOKU" translate="common.select.InfoType.DOKU">Dokumentation
                   <option value="IDEE" translate="common.select.InfoType.IDEE">Idee
                   <option value="HOWTO" translate="common.select.InfoType.HOWTO">Howto
-              </select> 
+              </select>
+
+              <!-- show select -->
+              <label for="inputMetaNodeSubTypeInfoNode" translate="editor.common.label.metaNodeSubType">metaNodeSubType</label>
+              <select type="text" name="type" class="inputtype_subtype" ng-model="nodeForEdit.metaNodeSubType" id="inputMetaNodeSubTypeInfoNode" required>
+                  <option value="" translate="common.select.pleaseselect">Bitte wählen
+                  <option value="InfoNodeMetaNodeSubType.INFONODE" translate="common.select.InfoNodeMetaNodeSubType.INFONODE">Infonode
+                  <option value="InfoNodeMetaNodeSubType.CONTAINER" translate="common.select.InfoNodeMetaNodeSubType.CONTAINER">Infocontainer
+                  <option value="InfoNodeMetaNodeSubType.SNAPSHOT" translate="common.select.InfoNodeMetaNodeSubType.SNAPSHOT">Snapshot
+              </select>
+
+              <fielderrors for="type"></fielderrors>
+              <fielderrors for="metaNodeSubType"></fielderrors>
+
+              <br />
 
               <!-- show textfield -->
               <label for="name" translate="editor.common.label.name">Titel</label> 
               <textarea name="name" class="textareatype_name" ng-model="nodeForEdit.name" id="inputNameInfoNode" required ng-change=""></textarea> 
 
-              <fielderrors for="type"></fielderrors>
               <fielderrors for="name"></fielderrors>
             </fieldset>
       
@@ -76,6 +89,27 @@
               <button ng-click="save('nodeFormInfoNode')" ng-disabled="nodeFormInfoNode.$invalid" class="btn btn-primary"translate="common.buttonSave">Save</button>
               <button ng-click="discard()" class="btn btn-primary" translate="common.buttonDiscard">Discard</button>
             </fieldset>
+
+            <fieldset>
+                <legend id="legendMetaInfoForm"><span translate="editor.common.legend.Meta">Meta</span></legend>
+                <div class="formrow filter_MetaInfoNode flg-hide-if-inputvalue-empty" id="formrow_inputMetaInfoNode" inputids="inputMetaNodeTypeTagsInfoNode">
+                    <select type="text" name="type" class="inputtype_tags" ng-model="nodeForEdit.metaNodeTypeTags" id="inputMetaNodeTypeTagsInfoNode" multiple="multiple">
+                    </select>
+                </div>
+            </fieldset>
+            <script type="text/javascript">
+                // toggler for optional, empty elements
+                jMATService.getPageLayoutService().appendFormrowToggler('legendMetaInfoForm', 'filterMetaInfoForm', 'filter_MetaInfoNode', '&nbsp;');
+
+                window.setTimeout(function () {
+                    yaioAppBase.$('#inputMetaNodeTypeTagsInfoNode').select2({
+                        placeholder: 'Tags...',
+                        allowClear: true,
+                        tags: true,
+                        tokenSeparators: [',', ' ', ';']
+                    });
+                }, 1000);
+            </script>
 
             <fieldset>
               <legend id="legendDescInfoForm"><span translate="editor.common.legend.Details">Details</span></legend>

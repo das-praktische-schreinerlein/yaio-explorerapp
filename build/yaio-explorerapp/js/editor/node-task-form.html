@@ -15,7 +15,28 @@
 
             <fieldset>
               <legend translate="editor.common.legend.Stammdaten">Stammdaten</legend>
-              
+
+              <!-- show select -->
+              <label for="inputMetaNodeSubTypeTaskNode" translate="editor.common.label.metaNodeSubType">metaNodeSubType</label>
+              <select type="text" name="type" class="inputtype_subtype" ng-model="nodeForEdit.metaNodeSubType" id="inputMetaNodeSubTypeTaskNode" required>
+                <option value="" translate="common.select.pleaseselect">Bitte wählen
+                <option value="TaskNodeMetaNodeSubType.DEPARTMENT" translate="common.select.TaskNodeMetaNodeSubType.DEPARTMENT">Bereich
+                <option value="TaskNodeMetaNodeSubType.SECTION" translate="common.select.TaskNodeMetaNodeSubType.SECTION">Abteilung
+                <option value="TaskNodeMetaNodeSubType.WIP" translate="common.select.TaskNodeMetaNodeSubType.WIP">WorkInProgress
+                <option value="TaskNodeMetaNodeSubType.BACKLOG" translate="common.select.TaskNodeMetaNodeSubType.BACKLOG">Backlog-Container
+                <option value="TaskNodeMetaNodeSubType.ARCHIV" translate="common.select.TaskNodeMetaNodeSubType.ARCHIV">Archiv-Container
+                <option value="TaskNodeMetaNodeSubType.PROJECT" translate="common.select.TaskNodeMetaNodeSubType.PROJECT">Project
+                <option value="TaskNodeMetaNodeSubType.SUBPROJECT" translate="common.select.TaskNodeMetaNodeSubType.SUBPROJECT">SubProject
+                <option value="TaskNodeMetaNodeSubType.TASK" translate="common.select.TaskNodeMetaNodeSubType.TASK">Task
+                <option value="TaskNodeMetaNodeSubType.SUBTASK" translate="common.select.TaskNodeMetaNodeSubType.SUBTASK">SubTask
+                <option value="TaskNodeMetaNodeSubType.TODO" translate="common.select.TaskNodeMetaNodeSubType.TODO">Simple Todo
+                <option value="TaskNodeMetaNodeSubType.CONTAINER" translate="common.select.TaskNodeMetaNodeSubType.CONTAINER">Container
+              </select>
+
+              <fielderrors for="metaNodeSubType"></fielderrors>
+
+              <br />
+
               <!-- show textfield -->
               <label for="name" translate="editor.common.label.name">Titel</label> 
               <input type="text" name="name" class="inputtype_name" ng-model="nodeForEdit.name" id="inputNameTaskNode" required ng-change=""> 
@@ -91,6 +112,28 @@
               <button ng-click="save('nodeFormTaskNode')" ng-disabled="nodeFormTaskNode.$invalid" class="btn btn-primary"translate="common.buttonSave">Save</button>
               <button ng-click="discard()" class="btn btn-primary" translate="common.buttonDiscard">Discard</button>
             </fieldset>
+
+            <fieldset>
+              <legend id="legendMetaTaskForm"><span translate="editor.common.legend.Meta">Meta</span></legend>
+              <div class="formrow filter_MetaTaskNode flg-hide-if-inputvalue-empty" id="formrow_inputMetaTaskNode" inputids="inputMetaNodeTypeTagsTaskNode">
+                <select type="text" name="type" class="inputtype_tags" ng-model="nodeForEdit.metaNodeTypeTags" id="inputMetaNodeTypeTagsTaskNode" multiple="multiple">
+                </select>
+              </div>
+            </fieldset>
+            <script type="text/javascript">
+              // toggler for optional, empty elements
+              jMATService.getPageLayoutService().appendFormrowToggler('legendMetaTaskForm', 'filterMetaTaskForm', 'filter_MetaTaskNode', '&nbsp;');
+
+
+              window.setTimeout(function () {
+                  yaioAppBase.$('#inputMetaNodeTypeTagsTaskNode').select2({
+                    placeholder: 'Tags...',
+                    allowClear: true,
+                    tags: true,
+                    tokenSeparators: [',', ' ', ';']
+                  });
+              }, 1000);
+            </script>
 
             <fieldset>
               <legend id="legendDescTaskForm"><span translate="editor.common.legend.Details">Details</span></legend>

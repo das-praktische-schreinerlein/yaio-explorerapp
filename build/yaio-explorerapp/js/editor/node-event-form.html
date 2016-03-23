@@ -15,13 +15,26 @@
 
             <fieldset>
               <legend translate="editor.common.legend.Stammdaten">Stammdaten</legend>
-              
+
+              <!-- show select -->
+              <label for="inputMetaNodeSubTypeEventNode" translate="editor.common.label.metaNodeSubType">metaNodeSubType</label>
+              <select type="text" name="metaNodeSubType" class="inputtype_subtype" ng-model="nodeForEdit.metaNodeSubType" id="inputMetaNodeSubTypeEventNode" required>
+                <option value="" translate="common.select.pleaseselect">Bitte wählen
+                <option value="EventNodeMetaNodeSubType.EVENT" translate="common.select.EventNodeMetaNodeSubType.EVENT">Event
+                <option value="EventNodeMetaNodeSubType.DEADLINE" translate="common.select.EventNodeMetaNodeSubType.DEADLINE">Deadline
+                <option value="EventNodeMetaNodeSubType.TIMEFRAME" translate="common.select.EventNodeMetaNodeSubType.TIMEFRAME">Timeframe
+              </select>
+
+              <fielderrors for="metaNodeSubType"></fielderrors>
+
+              <br />
+
               <!-- show textfield -->
-              <label for="name" translate="editor.common.label.name">Titel</label> 
+              <label for="inputNameEventNode" translate="editor.common.label.name">Titel</label>
               <input type="text" name="name" class="inputtype_name" ng-model="nodeForEdit.name" id="inputNameEventNode" required ng-change=""> 
 
               <!-- show select -->
-              <label for="type" translate="editor.formEventNode.label.type">Status</label> 
+              <label for="inputTypeEventNode" translate="editor.formEventNode.label.type">Status</label>
               <select type="text" name="type" class="inputtype_type" ng-model="nodeForEdit.type" id="inputTypeEventNode" required ng-change="doTypeChanged()"> 
                   <option value="" translate="common.select.pleaseselect">Bitte wählen
                   <option value="EVENT_NOTPLANED" translate="common.select.EventNodeType.EVENT_NOTPLANED">ungeplant
@@ -93,6 +106,28 @@
               <button ng-click="save('nodeFormEventNode')" ng-disabled="nodeFormEventNode.$invalid" class="btn btn-primary"translate="common.buttonSave">Save</button>
               <button ng-click="discard()" class="btn btn-primary" translate="common.buttonDiscard">Discard</button>
             </fieldset>
+
+            <fieldset>
+              <legend id="legendMetaEventForm"><span translate="editor.common.legend.Meta">Meta</span></legend>
+              <div class="formrow filter_MetaEventNode flg-hide-if-inputvalue-empty" id="formrow_inputMetaEventNode" inputids="inputMetaNodeTypeTagsEventNode">
+                <select type="text" name="type" class="inputtype_tags" ng-model="nodeForEdit.metaNodeTypeTags" id="inputMetaNodeTypeTagsEventNode" multiple="multiple">
+                </select>
+              </div>
+            </fieldset>
+            <script type="text/javascript">
+              // toggler for optional, empty elements
+              jMATService.getPageLayoutService().appendFormrowToggler('legendMetaEventForm', 'filterMetaEventForm', 'filter_MetaEventNode', '&nbsp;');
+
+
+              window.setTimeout(function () {
+                yaioAppBase.$('#inputMetaNodeTypeTagsEventNode').select2({
+                  placeholder: 'Tags...',
+                  allowClear: true,
+                  tags: true,
+                  tokenSeparators: [',', ' ', ';']
+                });
+              }, 1000);
+            </script>
 
             <fieldset>
               <legend id="legendDescEventForm"><span translate="editor.common.legend.Details">Details</span></legend>

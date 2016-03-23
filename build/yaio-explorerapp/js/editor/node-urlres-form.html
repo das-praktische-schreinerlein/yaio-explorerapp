@@ -12,6 +12,7 @@
             <input class="hidden" type="text" name="sysUID" ng-model="nodeForEdit.sysUID" id="inputSysUIDUrlResNode" required ng-change="">
             <input class="hidden" type="text" name="className" ng-model="nodeForEdit.className" id="inputClassNameUrlResNode" required ng-change="">
             <input class="hidden" type="text" name="mode" ng-model="nodeForEdit.mode" id="inputModeUrlResNode" required ng-change="">
+            <input class="hidden" type="text" name="metaNodeSubType" ng-model="nodeForEdit.metaNodeSubType" id="inputMetaNodeSubTypeUrlResNode" value="UrlResNodeMetaNodeSubType.RESOURCE" required ng-change="">
 
             <fieldset>
               <legend translate="editor.common.legend.Stammdaten">Stammdaten</legend>
@@ -134,6 +135,27 @@
               <button ng-click="save('nodeFormUrlResNode')" ng-disabled="nodeFormUrlResNode.$invalid" class="btn btn-primary" translate="common.buttonSave">Save</button>
               <button ng-click="discard()" class="btn btn-primary" translate="common.buttonDiscard">Discard</button>
             </fieldset>
+
+            <fieldset>
+                <legend id="legendMetaUrlResForm"><span translate="editor.common.legend.Meta">Meta</span></legend>
+                <div class="formrow filter_MetaUrlResNode flg-hide-if-inputvalue-empty" id="formrow_inputMetaUrlResNode" inputids="inputMetaNodeTypeTagsUrlResNode">
+                    <select type="text" name="type" class="inputtype_tags" ng-model="nodeForEdit.metaNodeTypeTags" id="inputMetaNodeTypeTagsUrlResNode" multiple="multiple">
+                    </select>
+                </div>
+            </fieldset>
+            <script type="text/javascript">
+                // toggler for optional, empty elements
+                jMATService.getPageLayoutService().appendFormrowToggler('legendMetaUrlResForm', 'filterMetaUrlResForm', 'filter_MetaUrlResNode', '&nbsp;');
+
+                window.setTimeout(function () {
+                    yaioAppBase.$('#inputMetaNodeTypeTagsUrlResNode').select2({
+                        placeholder: 'Tags...',
+                        allowClear: true,
+                        tags: true,
+                        tokenSeparators: [',', ' ', ';']
+                    });
+                }, 1000);
+            </script>
 
             <fieldset>
               <legend id="legendDescUrlResForm"><span translate="editor.common.legend.Details">Details</span></legend>

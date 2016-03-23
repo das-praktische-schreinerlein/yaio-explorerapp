@@ -12,6 +12,7 @@
             <input class="hidden" type="text" name="sysUID" ng-model="nodeForEdit.sysUID" id="inputSysUIDSymLinkNode" required ng-change="">
             <input class="hidden" type="text" name="className" ng-model="nodeForEdit.className" id="inputClassNameSymLinkNode" required ng-change="">
             <input class="hidden" type="text" name="type" ng-model="nodeForEdit.type" id="inputTypeSymLinkNode" value="SYMLINK" required ng-change="">
+            <input class="hidden" type="text" name="metaNodeSubType" ng-model="nodeForEdit.metaNodeSubType" id="inputMetaNodeSubTypeSymLinkNode" value="SymLinkNodeMetaNodeSubType.SYMLINK" required ng-change="">
             <input class="hidden" type="text" name="mode" ng-model="nodeForEdit.mode" id="inputModeSymLinkNode" required ng-change="">
 
             <fieldset>
@@ -51,6 +52,27 @@
               <button ng-click="save('nodeFormSymLinkNode')" ng-disabled="nodeFormSymLinkNode.$invalid" class="btn btn-primary" translate="common.buttonSave">Save</button>
               <button ng-click="discard()" class="btn btn-primary" translate="common.buttonDiscard">Discard</button>
             </fieldset>
+
+            <fieldset>
+              <legend id="legendMetaSymLinkForm"><span translate="editor.common.legend.Meta">Meta</span></legend>
+              <div class="formrow filter_MetaSymLinkNode flg-hide-if-inputvalue-empty" id="formrow_inputMetaSymLinkNode" inputids="inputMetaNodeTypeTagsSymLinkNode">
+                <select type="text" name="type" class="inputtype_tags" ng-model="nodeForEdit.metaNodeTypeTags" id="inputMetaNodeTypeTagsSymLinkNode" multiple="multiple">
+                </select>
+              </div>
+            </fieldset>
+            <script type="text/javascript">
+              // toggler for optional, empty elements
+              jMATService.getPageLayoutService().appendFormrowToggler('legendMetaSymLinkForm', 'filterMetaSymLinkForm', 'filter_MetaSymLinkNode', '&nbsp;');
+
+              window.setTimeout(function () {
+                yaioAppBase.$('#inputMetaNodeTypeTagsSymLinkNode').select2({
+                  placeholder: 'Tags...',
+                  allowClear: true,
+                  tags: true,
+                  tokenSeparators: [',', ' ', ';']
+                });
+              }, 1000);
+            </script>
 
             <fieldset>
               <legend id="legendDescSymLinkForm"><span translate="editor.common.legend.Details">Details</span></legend>
