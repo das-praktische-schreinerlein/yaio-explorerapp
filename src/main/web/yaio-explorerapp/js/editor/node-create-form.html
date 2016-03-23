@@ -36,7 +36,7 @@
               <legend translate="editor.common.legend.template">Template benutzen</legend>
               
               <!-- show textfield -->
-              <label for="state" translate="editor.formCreate.label.template">Template</label> 
+              <label for="inputCreateFromTemplate" translate="editor.formCreate.label.template">Template</label>
               <select type="text" name="createFromTemplate" class="inputtype_type" id="inputCreateFromTemplate" required ng-model="nodeForEdit.createFromTemplate"> 
                   <option value="" translate="common.select.pleaseselect">Bitte wählen
                   <option ng-repeat="node in availiableSystemTemplates" value="{{node.sysUID}}">System: {{node.name}}
