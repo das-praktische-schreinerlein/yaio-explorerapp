@@ -400,7 +400,11 @@ Yaio.NodeDataRenderer = function(appBase) {
             .addClass('field_metanummer')
         );
 
-        $row.append(me.$('<div lang="tech" />').html(basenode.className)
+        var typeData = basenode.className;
+        if (!svcDataUtils.isEmptyStringValue(basenode.metaNodeSubType)) {
+            typeData = basenode.metaNodeSubType;
+        }
+        $row.append(me.$('<div lang="tech" />').html(typeData)
             .addClass('container_field')
             .addClass('fieldtype_basedata')
             .addClass('fieldtype_type')
