@@ -176,6 +176,7 @@ Yaio.NodeEditor = function(appBase) {
                     sysUID: origBasenode.sysUID,
                     name: 'Symlink auf: "' + origBasenode.name + '"',
                     type: 'SYMLINK',
+                    metaNodeSubType: 'SymLinkNodeMetaNodeSubType.SYMLINK',
                     state: 'SYMLINK',
                     className: 'SymLinkNode',
                     symLinkRef: origBasenode.metaNodePraefix + '' + origBasenode.metaNodeNummer
@@ -194,6 +195,7 @@ Yaio.NodeEditor = function(appBase) {
                 name: newNode.name,
                 className: 'UrlResNode',
                 type: 'FILERES',
+                metaNodeSubType: 'UrlResNodeMetaNodeSubType.RESOURCE',
                 state: 'FILERES',
                 resLocRef: newNode.resLocRef,
                 resLocName: newNode.resLocName,
@@ -213,6 +215,7 @@ Yaio.NodeEditor = function(appBase) {
                     sysUID: origBasenode.sysUID,
                     name: 'Snapshot für: "' + origBasenode.name + '" vom ' + svcDataUtils.formatGermanDateTime((new Date()).getTime()),
                     type: 'INFO',
+                    metaNodeSubType: 'InfoNodeMetaNodeSubType.SNAPSHOT',
                     state: 'INFO',
                     className: 'InfoNode',
                     nodeDesc: newNode.nodeDesc
@@ -252,25 +255,35 @@ Yaio.NodeEditor = function(appBase) {
         // create Elements if not exists
         svcYaioLayout.createTogglerIfNotExists('legendIstTaskForm', 'filterIstTaskForm', 'filter_IstTaskNode');
         svcYaioLayout.createTogglerIfNotExists('legendDescTaskForm', 'filterDescTaskForm', 'filter_DescTaskNode');
+        svcYaioLayout.createTogglerIfNotExists('legendMetaTaskForm', 'filterMetaTaskForm', 'filter_MetaTaskNode');
         svcYaioLayout.createTogglerIfNotExists('legendIstEventForm', 'filterIstEventForm', 'filter_IstEventNode');
         svcYaioLayout.createTogglerIfNotExists('legendDescEventForm', 'filterDescEventForm', 'filter_DescEventNode');
+        svcYaioLayout.createTogglerIfNotExists('legendMetaEventForm', 'filterMetaEventForm', 'filter_MetaEventNode');
         svcYaioLayout.createTogglerIfNotExists('legendLayoutInfoForm', 'filterLayoutInfoForm', 'filter_LayoutInfoNode');
         svcYaioLayout.createTogglerIfNotExists('legendDescInfoForm', 'filterDescInfoForm', 'filter_DescInfoNode');
+        svcYaioLayout.createTogglerIfNotExists('legendMetaInfoForm', 'filterMetaInfoForm', 'filter_MetaInfoNode');
         svcYaioLayout.createTogglerIfNotExists('legendLayoutUrlResForm', 'filterLayoutUrlResForm', 'filter_LayoutUrlResNode');
         svcYaioLayout.createTogglerIfNotExists('legendDescUrlResForm', 'filterDescUrlResForm', 'filter_DescUrlResNode');
+        svcYaioLayout.createTogglerIfNotExists('legendMetaUrlResForm', 'filterMetaUrlResForm', 'filter_MetaUrlResNode');
         svcYaioLayout.createTogglerIfNotExists('legendDescSymLinkForm', 'filterDescSymLinkForm', 'filter_DescSymLinkNode');
-        
+        svcYaioLayout.createTogglerIfNotExists('legendMetaSymLinkForm', 'filterMetaSymLinkForm', 'filter_MetaSymLinkNode');
+
         // hide empty, optional elements
         svcYaioLayout.hideFormRowTogglerIfSet('filterIstTaskForm', 'filter_IstTaskNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterDescTaskForm', 'filter_DescTaskNode', false);
+        svcYaioLayout.hideFormRowTogglerIfSet('filterMetaTaskForm', 'filter_MetaTaskNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterIstEventForm', 'filter_IstEventNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterDescEventForm', 'filter_DescEventNode', false);
+        svcYaioLayout.hideFormRowTogglerIfSet('filterMetaEventForm', 'filter_MetaEventNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterLayoutInfoForm', 'filter_LayoutInfoNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterDescInfoForm', 'filter_DescInfoNode', false);
+        svcYaioLayout.hideFormRowTogglerIfSet('filterMetaInfoForm', 'filter_MetaInfoNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterLayoutUrlResForm', 'filter_LayoutUrlResNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterDescUrlResForm', 'filter_DescUrlResNode', false);
+        svcYaioLayout.hideFormRowTogglerIfSet('filterMetaUrlResForm', 'filter_MetaUrlResNode', false);
         svcYaioLayout.hideFormRowTogglerIfSet('filterDescSymLinkForm', 'filter_DescSymLinkNode', false);
-    
+        svcYaioLayout.hideFormRowTogglerIfSet('filterMetaSymLinkForm', 'filter_MetaSymLinkNode', false);
+
         // create nodeDesc-editor
         svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescTaskNode', 'inputNodeDescTaskNode');
         svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescEventNode', 'inputNodeDescEventNode');
@@ -562,6 +575,20 @@ Yaio.NodeEditor = function(appBase) {
             me.$(fieldNameId).val(value).trigger('input').triggerHandler('change');
         } else if (field.type === 'select') {
             me.$(fieldNameId).val(value).trigger('select').triggerHandler('change');
+        } else if (field.type === 'tagstring') {
+            console.error('tagstring:' + value + ' for ' + fieldNameId);
+            me.$.each(value.split(' '), function (optionIndex, optionValue) {
+                if (me.appBase.DataUtils.isEmptyStringValue(optionValue)) {
+                    return;
+                }
+                me.$(fieldNameId).append($('<option/>', {
+                    value: optionValue,
+                    text : optionValue,
+                    selected: 'selected'
+                }));
+            });
+            me.$(fieldNameId).trigger('select').triggerHandler('change');
+            me.$(fieldNameId).trigger('change');
         } else if (field.type === 'checkbox') {
             if (value) {
                 me.$(fieldNameId).prop('checked', true);

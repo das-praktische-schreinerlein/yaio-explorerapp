@@ -56,6 +56,7 @@ window.YaioAppBaseConfig = function() {
             fields: [
                 { fieldName: 'name', type: 'input'},
                 { fieldName: 'type', type: 'hidden'},
+                { fieldName: 'metaNodeSubType', type: 'hidden'},
                 { fieldName: 'className', type: 'hidden'},
                 { fieldName: 'sysUID', type: 'hidden'},
                 { fieldName: 'resLocRef', type: 'input'},
@@ -74,6 +75,7 @@ window.YaioAppBaseConfig = function() {
             fields: [
                 { fieldName: 'name', type: 'input'},
                 { fieldName: 'type', type: 'hidden'},
+                { fieldName: 'metaNodeSubType', type: 'hidden'},
                 { fieldName: 'className', type: 'hidden'},
                 { fieldName: 'sysUID', type: 'hidden'},
                 { fieldName: 'symLinkRef', type: 'input'},
@@ -86,6 +88,7 @@ window.YaioAppBaseConfig = function() {
             fields: [
                 { fieldName: 'name', type: 'input'},
                 { fieldName: 'type', type: 'hidden'},
+                { fieldName: 'metaNodeSubType', type: 'hidden'},
                 { fieldName: 'className', type: 'hidden'},
                 { fieldName: 'sysUID', type: 'hidden'},
                 { fieldName: 'nodeDesc', type: 'textarea'},
@@ -98,12 +101,14 @@ window.YaioAppBaseConfig = function() {
                 { fieldName: 'sysUID', type: 'hidden'},
                 { fieldName: 'mode', type: 'hidden', intern: true},
                 { fieldName: 'type', type: 'select'},
+                { fieldName: 'metaNodeTypeTags', type: 'tagstring'},
                 { fieldName: 'state', type: 'select'},
                 { fieldName: 'nodeDesc', type: 'textarea'}
             ]
         },
         TaskNode: {
             fields: [
+                { fieldName: 'metaNodeSubType', type: 'select'},
                 { fieldName: 'name', type: 'input'},
                 { fieldName: 'istAufwand', type: 'input'},
                 { fieldName: 'istStand', type: 'input'},
@@ -116,6 +121,7 @@ window.YaioAppBaseConfig = function() {
         },
         EventNode: {
             fields: [
+                { fieldName: 'metaNodeSubType', type: 'select'},
                 { fieldName: 'name', type: 'input'},
                 { fieldName: 'istAufwand', type: 'input'},
                 { fieldName: 'istStand', type: 'input'},
@@ -128,6 +134,7 @@ window.YaioAppBaseConfig = function() {
         },
         InfoNode: {
             fields: [
+                { fieldName: 'metaNodeSubType', type: 'select'},
                 { fieldName: 'name', type: 'textarea'},
                 { fieldName: 'docLayoutTagCommand', type: 'select'},
                 { fieldName: 'docLayoutAddStyleClass', type: 'input'},
@@ -137,6 +144,7 @@ window.YaioAppBaseConfig = function() {
         },
         UrlResNode: {
             fields: [
+                { fieldName: 'metaNodeSubType', type: 'hidden'},
                 { fieldName: 'name', type: 'input'},
                 { fieldName: 'resLocRef', type: 'input'},
                 //{ fieldName: 'resContentDMSState', type: 'checkbox'},
@@ -151,6 +159,7 @@ window.YaioAppBaseConfig = function() {
         },
         SymLinkNode: {
             fields: [
+                { fieldName: 'metaNodeSubType', type: 'hidden'},
                 { fieldName: 'name', type: 'input'},
                 { fieldName: 'type', type: 'hidden'},
                 { fieldName: 'symLinkRef', type: 'input'},

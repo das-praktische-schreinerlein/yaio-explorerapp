@@ -89,14 +89,19 @@ yaioApp.controller('NodeEditorCtrl', function($rootScope, $scope, $location, $ro
         // special fields
         if (className === 'SymLinkNode') {
             $scope.nodeForEdit.type = 'SYMLINK';
+            $scope.nodeForEdit.metaNodeSubType = 'SymLinkNodeMetaNodeSubType.SYMLINK';
         } else if (className === 'InfoNode') {
             $scope.nodeForEdit.type = 'INFO';
+            $scope.nodeForEdit.metaNodeSubType = 'InfoNodeMetaNodeSubType.INFONODE';
         } else if (className === 'UrlResNode') {
             $scope.nodeForEdit.type = 'URLRES';
+            $scope.nodeForEdit.metaNodeSubType = 'UrlResNodeMetaNodeSubType.RESOURCE';
         } else if (className === 'TaskNode') {
             $scope.nodeForEdit.type = 'OFFEN';
+            $scope.nodeForEdit.metaNodeSubType = 'TaskNodeMetaNodeSubType.TASK';
         } else if (className === 'EventNode') {
             $scope.nodeForEdit.type = 'EVENT_PLANED';
+            $scope.nodeForEdit.metaNodeSubType = 'EventNodeMetaNodeSubType.EVENT';
         }
 
         // set mode
@@ -256,6 +261,9 @@ yaioApp.controller('NodeEditorCtrl', function($rootScope, $scope, $location, $ro
                 continue;
             } if (field.type === 'checkbox' && ! value) {
                 value = '';
+            } if (field.type === 'tagstring') {
+                value = value || [];
+                value = value.join(' ');
             }
             
             // convert values
