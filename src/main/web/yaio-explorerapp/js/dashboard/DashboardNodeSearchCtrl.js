@@ -122,26 +122,36 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
                 $scope.yaioUtils.renderNodeLine(node, '#tr' + domId, true);
                 console.log('renderNodeLine: done to:' + '#tr' + domId + $('#detail_sys_' + domId).length);
 
-                // render hierarchy
-                var parentNode = node.parentNode;
-                var parentStr = node.name;
-                while (!yaioUtils.getService('DataUtils').isEmptyStringValue(parentNode)) {
-                    parentStr = parentNode.name + ' --> ' + parentStr;
-                    parentNode = parentNode.parentNode;
-                }
-                parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
-                
-                // add searchdata
-                console.log('renderNodeLine: add searchdata to:' + '#tr' + domId);
-                var $html = $('<div id="details_parent_' + domId + '"'
-                                + ' class="field_nodeParent">'
-                                + parentStr
-                                + '</div>');
+                var $html = $($scope.createParentHirarchyBlockForNode(node));
                 $('#tr' + domId + ' #detail_sys_' + node.sysUID).after($html);
                 console.log('renderNodeLine: added searchdata to:' +
                     '#detail_sys_' + domId + $('#detail_sys_' + domId).length);
             }, 10);
     };
+
+    /**
+     * create parentHirarchy-Block for node
+     * @param {Object} node          node to render
+     * @returns {String}
+     */
+    $scope.createParentHirarchyBlockForNode = function(node) {
+        // render hierarchy
+        var parentNode = node.parentNode;
+        var parentStr = node.name;
+        while (!yaioUtils.getService('DataUtils').isEmptyStringValue(parentNode)) {
+            parentStr = parentNode.name + ' --> ' + parentStr;
+            parentNode = parentNode.parentNode;
+        }
+        parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
+
+        // add hierarchy
+        var html = '<div id="details_parent_' + node.sysUID + '"'
+            + ' class="field_nodeParent">'
+            + parentStr
+            + '</div>';
+        return html;
+    };
+
 
     // init
     $scope._init();
