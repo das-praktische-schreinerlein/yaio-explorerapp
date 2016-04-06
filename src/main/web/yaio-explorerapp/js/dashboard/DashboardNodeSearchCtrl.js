@@ -47,15 +47,16 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
      * @returns {String}              new search-uri
      */
     $scope.createSearchUri = function() {
+        var additionalFilter = 'classFilter=' + $scope.searchOptions.strClassFilter + ';' +
+            'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
+            'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';';
         return '/search'
             + '/' + encodeURI('1')
             + '/' + encodeURI('20')
             + '/' + encodeURI($scope.searchOptions.searchSort)
             + '/' + encodeURI($scope.searchOptions.baseSysUID)
             + '/' + encodeURI($scope.searchOptions.fulltext)
-            + '/' + encodeURI($scope.searchOptions.strClassFilter)
-            + '/' + encodeURI($scope.searchOptions.strWorkflowStateFilter)
-            + '/' + encodeURI($scope.searchOptions.strNotNodePraefix)
+            + '/' + encodeURI(additionalFilter)
             + '/';
     };
     

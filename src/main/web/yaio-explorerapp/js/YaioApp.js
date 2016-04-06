@@ -44,7 +44,7 @@ yaioApp.config(function($routeProvider) {
         .when('/showByAllIds/:nodeByAllId', { 
             controller:  'NodeShowCtrl',
             templateUrl: resBaseUrl + 'js/explorer/node.html' })
-        .when('/search/:curPage?/:pageSize?/:searchSort?/:baseSysUID?/:fulltext?/:strClassFilter?/:strWorkflowStateFilter?/:strNotNodePraefix?/', { 
+        .when('/search/:curPage?/:pageSize?/:searchSort?/:baseSysUID?/:fulltext?/:additionalFilters?/', { 
             controller:  'NodeSearchCtrl',
             templateUrl: resBaseUrl + 'js/search/node-search.html' })
         .when('/search/', { 

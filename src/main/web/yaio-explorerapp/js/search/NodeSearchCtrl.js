@@ -59,15 +59,18 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         if ($routeParams.fulltext) {
             $scope.searchOptions.fulltext = decodeURI($routeParams.fulltext);
         }
-        if ($routeParams.strNotNodePraefix) {
-            $scope.searchOptions.strNotNodePraefix = decodeURI($routeParams.strNotNodePraefix);
+
+        // extract additional-Searchfilter
+        var additionalSearchFilter = $scope.parseAdditionalParameters($routeParams.additionalFilters);
+        if (additionalSearchFilter.notNodePraefix) {
+            $scope.searchOptions.strNotNodePraefix = decodeURI(additionalSearchFilter.notNodePraefix);
         }
-        if ($routeParams.strWorkflowStateFilter) {
-            $scope.searchOptions.strWorkflowStateFilter = decodeURI($routeParams.strWorkflowStateFilter);
+        if (additionalSearchFilter.workflowStateFilter) {
+            $scope.searchOptions.strWorkflowStateFilter = decodeURI(additionalSearchFilter.workflowStateFilter);
             $scope.searchOptions.arrWorkflowStateFilter = $scope.searchOptions.strWorkflowStateFilter.split(',');
         }
-        if ($routeParams.strClassFilter) {
-            $scope.searchOptions.strClassFilter = decodeURI($routeParams.strClassFilter);
+        if (additionalSearchFilter.classFilter) {
+            $scope.searchOptions.strClassFilter = decodeURI(additionalSearchFilter.classFilter);
             $scope.searchOptions.arrClassFilter = $scope.searchOptions.strClassFilter.split(',');
         }
         console.log('NodeSearchCtrl - processing');
@@ -104,8 +107,25 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         console.log('load new Url:' + newUrl);
         $location.path(newUrl);
     };
-    
-    
+
+    /**
+     * parse additionalParameters from String (split by ; and split name=value)
+     * @param additionalParametersStr     source to parse for additionFilter
+     * @returns {Object}                  object with additionalParameters-Strings
+     */
+    $scope.parseAdditionalParameters = function(additionalParametersStr){
+        var additionalParameters = {};
+        if (additionalParametersStr) {
+            var params = additionalParametersStr.split(';');
+            for (var idx = 0; idx < params.length; idx++) {
+                var param = params[idx];
+                var paramData = param.split('=', 2);
+                additionalParameters[paramData[0]] = paramData[1];
+            }
+        }
+        return additionalParameters;
+    };
+
     /** 
      * callbackhandler for fulltextsearch if keyCode=13 (Enter) start doNewFulltextSearch
      * @param {Event} event                  key-pressed event
@@ -140,17 +160,17 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
      * @returns {String}              new search-uri
      */
     $scope.createSearchUri = function(searchOptions, page) {
-        var newUrl = '/search'
+        var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
+            'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
+            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';';
+        return '/search'
             + '/' + encodeURI(page)
             + '/' + encodeURI(searchOptions.pageSize)
             + '/' + encodeURI(searchOptions.searchSort)
             + '/' + encodeURI(searchOptions.baseSysUID)
             + '/' + encodeURI(searchOptions.fulltext)
-            + '/' + encodeURI(searchOptions.arrClassFilter.join(','))
-            + '/' + encodeURI(searchOptions.arrWorkflowStateFilter.join(','))
-            + '/' + encodeURI(searchOptions.strNotNodePraefix)
+            + '/' + encodeURI(additionalFilter)
             + '/';
-        return newUrl;
     };
     
     /** 
