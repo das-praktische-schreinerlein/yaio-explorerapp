@@ -263,9 +263,11 @@ Yaio.ExportedData = function(appBase) {
     
     /* Um einen Volltext-Treffer zu haben, müssen alle Worte im durchsuchten Text vorkommen. */
     me.VolltextTreffer = function(inhalt, suchworte, flgUseWildCards, flgUseOr) {
-        // Wenn keine Suchzeichenkette als gefunden kennzeichnen
-        if (suchworte.length === 0) {
+        if (suchworte.length === 0 || (suchworte.length === 1 && me.appBase.DataUtils.isEmptyStringValue(suchworte[0]))) {
             return true;
+        }
+        if (me.appBase.DataUtils.isEmptyStringValue(inhalt)) {
+            return false;
         }
 
         // alle Suchworte iterieren
@@ -280,7 +282,7 @@ Yaio.ExportedData = function(appBase) {
             suchwortFound = true;
             for (var pi = 0; pi < patterns.length; pi++) {
                 var pattern = patterns[pi];
-                if (me.appBase.DataUtils.isUndefinedStringValue(pattern)) {
+                if (me.appBase.DataUtils.isEmptyStringValue(pattern)) {
                     continue;
                 }
                 // check pattern

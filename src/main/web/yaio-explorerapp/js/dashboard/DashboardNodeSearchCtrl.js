@@ -38,7 +38,9 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             total: 0,
             strNotNodePraefix: yaioUtils.getConfig().excludeNodePraefix,
             strWorkflowStateFilter: '',
-            strClassFilter: ''
+            strClassFilter: '',
+            strMetaNodeTypeTagsFilter: '',
+            strMetaNodeSubTypeFilter: ''
         };
     };
 
@@ -49,7 +51,9 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
     $scope.createSearchUri = function() {
         var additionalFilter = 'classFilter=' + $scope.searchOptions.strClassFilter + ';' +
             'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
-            'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';';
+            'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';' +
+            'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
+            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
         return '/search'
             + '/' + encodeURI('1')
             + '/' + encodeURI('20')

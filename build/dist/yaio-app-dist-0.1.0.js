@@ -1810,9 +1810,11 @@ Yaio.ExportedData = function(appBase) {
     
     /* Um einen Volltext-Treffer zu haben, müssen alle Worte im durchsuchten Text vorkommen. */
     me.VolltextTreffer = function(inhalt, suchworte, flgUseWildCards, flgUseOr) {
-        // Wenn keine Suchzeichenkette als gefunden kennzeichnen
-        if (suchworte.length === 0) {
+        if (suchworte.length === 0 || (suchworte.length === 1 && me.appBase.DataUtils.isEmptyStringValue(suchworte[0]))) {
             return true;
+        }
+        if (me.appBase.DataUtils.isEmptyStringValue(inhalt)) {
+            return false;
         }
 
         // alle Suchworte iterieren
@@ -1827,7 +1829,7 @@ Yaio.ExportedData = function(appBase) {
             suchwortFound = true;
             for (var pi = 0; pi < patterns.length; pi++) {
                 var pattern = patterns[pi];
-                if (me.appBase.DataUtils.isUndefinedStringValue(pattern)) {
+                if (me.appBase.DataUtils.isEmptyStringValue(pattern)) {
                     continue;
                 }
                 // check pattern
@@ -4458,7 +4460,8 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         
         // copy availiable serverSearchOptions
         var serverSearchOptions = {};
-        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 'strNotNodePraefix', 'flgConcreteToDosOnly'];
+        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 
+            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter'];
         var searchField;
         for (var idx = 0; idx < searchFields.length; idx++) {
             searchField = searchFields[idx];
@@ -4469,6 +4472,10 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         if (serverSearchOptions.hasOwnProperty('strNotNodePraefix')) {
             // replace * with sql %
             serverSearchOptions.strNotNodePraefix = serverSearchOptions.strNotNodePraefix.replace(/\*/g, '%');
+        }
+        if (serverSearchOptions.hasOwnProperty('strMetaNodeTypeTagsFilter')) {
+            // replace space with ,
+            serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
         }
 
         // load data
@@ -5480,6 +5487,8 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         var suchworte = searchOptions.fulltext.toLowerCase().split(' ');
         var classes = searchOptions.strClassFilter.split(',');
         var states = searchOptions.strWorkflowStateFilter.split(',');
+        var subTypes = searchOptions.strMetaNodeSubTypeFilter.split(',');
+        var metaNodeTypeTags = searchOptions.strMetaNodeTypeTagsFilter.split(',');
         var notPraefix = searchOptions.strNotNodePraefix.split(' ');
         for (var idx = 0; idx < me.nodeList.length; idx++) {
             nodeId = me.nodeList[idx];
@@ -5494,6 +5503,16 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
             }
             // Classfilter
             if (classes.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.workflowState, classes)) {
+                // words not found
+                continue;
+            }
+            // SubTypes-Filter
+            if (subTypes.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeSubType, subTypes)) {
+                // words not found
+                continue;
+            }
+            // MetaNodeTypeTags-Filter
+            if (metaNodeTypeTags.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeTypeTags, metaNodeTypeTags)) {
                 // words not found
                 continue;
             }
@@ -7738,7 +7757,9 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             total: 0,
             strNotNodePraefix: yaioUtils.getConfig().excludeNodePraefix,
             strWorkflowStateFilter: '',
-            strClassFilter: ''
+            strClassFilter: '',
+            strMetaNodeTypeTagsFilter: '',
+            strMetaNodeSubTypeFilter: ''
         };
     };
 
@@ -7749,7 +7770,9 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
     $scope.createSearchUri = function() {
         var additionalFilter = 'classFilter=' + $scope.searchOptions.strClassFilter + ';' +
             'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
-            'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';';
+            'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';' +
+            'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
+            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
         return '/search'
             + '/' + encodeURI('1')
             + '/' + encodeURI('20')
@@ -8774,7 +8797,10 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             strWorkflowStateFilter: '',
             arrWorkflowStateFilter: [],
             strClassFilter: '',
-            arrClassFilter: []
+            arrClassFilter: [],
+            strMetaNodeTypeTagsFilter: '',
+            strMetaNodeSubTypeFilter: '',
+            arrMetaNodeSubTypeFilter: []
         };
         if ($routeParams.curPage) {
             $scope.searchOptions.curPage = decodeURI($routeParams.curPage);
@@ -8804,6 +8830,13 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         if (additionalSearchFilter.classFilter) {
             $scope.searchOptions.strClassFilter = decodeURI(additionalSearchFilter.classFilter);
             $scope.searchOptions.arrClassFilter = $scope.searchOptions.strClassFilter.split(',');
+        }
+        if (additionalSearchFilter.metaNodeTypeTagsFilter) {
+            $scope.searchOptions.strMetaNodeTypeTagsFilter = decodeURI(additionalSearchFilter.metaNodeTypeTagsFilter);
+        }
+        if (additionalSearchFilter.metaNodeSubTypeFilter) {
+            $scope.searchOptions.strMetaNodeSubTypeFilter = decodeURI(additionalSearchFilter.metaNodeSubTypeFilter);
+            $scope.searchOptions.arrMetaNodeSubTypeFilter = $scope.searchOptions.strMetaNodeSubTypeFilter.split(',');
         }
         console.log('NodeSearchCtrl - processing');
 
@@ -8894,7 +8927,9 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     $scope.createSearchUri = function(searchOptions, page) {
         var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
-            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';';
+            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
+            'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
+            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
         return '/search'
             + '/' + encodeURI(page)
             + '/' + encodeURI(searchOptions.pageSize)
@@ -8913,6 +8948,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         // save lastLocation for login
         $scope.searchOptions.strClassFilter = $scope.searchOptions.arrClassFilter.join(',');
         $scope.searchOptions.strWorkflowStateFilter = $scope.searchOptions.arrWorkflowStateFilter.join(',');
+        $scope.searchOptions.strMetaNodeSubTypeFilter = $scope.searchOptions.arrMetaNodeSubTypeFilter.join(',');
         $rootScope.lastLocation = $scope.createSearchUri($scope.searchOptions, $scope.searchOptions.curPage);
 
         // search data

@@ -144,6 +144,7 @@
     "editor.common.label.istStand": "progress",
     "editor.common.label.istStart": "Start",
     "editor.common.label.metaNodeSubType": "Subtype",
+    "editor.common.label.metaNodeTypeTags": "Tags",
     "editor.common.label.name": "title",
     "editor.common.label.nodeDesc": "Details",
     "editor.common.label.planAufwand": "effort",

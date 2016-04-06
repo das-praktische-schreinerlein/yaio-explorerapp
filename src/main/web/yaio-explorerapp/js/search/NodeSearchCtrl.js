@@ -42,7 +42,10 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             strWorkflowStateFilter: '',
             arrWorkflowStateFilter: [],
             strClassFilter: '',
-            arrClassFilter: []
+            arrClassFilter: [],
+            strMetaNodeTypeTagsFilter: '',
+            strMetaNodeSubTypeFilter: '',
+            arrMetaNodeSubTypeFilter: []
         };
         if ($routeParams.curPage) {
             $scope.searchOptions.curPage = decodeURI($routeParams.curPage);
@@ -72,6 +75,13 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         if (additionalSearchFilter.classFilter) {
             $scope.searchOptions.strClassFilter = decodeURI(additionalSearchFilter.classFilter);
             $scope.searchOptions.arrClassFilter = $scope.searchOptions.strClassFilter.split(',');
+        }
+        if (additionalSearchFilter.metaNodeTypeTagsFilter) {
+            $scope.searchOptions.strMetaNodeTypeTagsFilter = decodeURI(additionalSearchFilter.metaNodeTypeTagsFilter);
+        }
+        if (additionalSearchFilter.metaNodeSubTypeFilter) {
+            $scope.searchOptions.strMetaNodeSubTypeFilter = decodeURI(additionalSearchFilter.metaNodeSubTypeFilter);
+            $scope.searchOptions.arrMetaNodeSubTypeFilter = $scope.searchOptions.strMetaNodeSubTypeFilter.split(',');
         }
         console.log('NodeSearchCtrl - processing');
 
@@ -162,7 +172,9 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     $scope.createSearchUri = function(searchOptions, page) {
         var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
-            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';';
+            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
+            'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
+            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
         return '/search'
             + '/' + encodeURI(page)
             + '/' + encodeURI(searchOptions.pageSize)
@@ -181,6 +193,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         // save lastLocation for login
         $scope.searchOptions.strClassFilter = $scope.searchOptions.arrClassFilter.join(',');
         $scope.searchOptions.strWorkflowStateFilter = $scope.searchOptions.arrWorkflowStateFilter.join(',');
+        $scope.searchOptions.strMetaNodeSubTypeFilter = $scope.searchOptions.arrMetaNodeSubTypeFilter.join(',');
         $rootScope.lastLocation = $scope.createSearchUri($scope.searchOptions, $scope.searchOptions.curPage);
 
         // search data

@@ -82,6 +82,29 @@
                   <option translate="common.select.className.UrlResNode" value="UrlResNode">UrlRes
                   <option translate="common.select.className.SymLinkNode" value="SymLinkNode">Symlink
              </select>
+             <span lang='tech' translate="editor.common.label.metaNodeSubType">Subtype</span>
+             <select name="strMetaNodeSubTypeFilter" class="inputtype_select use_select2 inputtype_select_metaNodeSubtype" id="inputSearchOptionsStrMetaNodeSubTypeFilter" ng-model="searchOptions.arrMetaNodeSubTypeFilter" multiple="multiple">
+                  <option value="" translate="common.select.all">Alle
+                  <option value="EventNodeMetaNodeSubType.EVENT" translate="common.select.EventNodeMetaNodeSubType.EVENT">Event
+                  <option value="EventNodeMetaNodeSubType.DEADLINE" translate="common.select.EventNodeMetaNodeSubType.DEADLINE">Deadline
+                  <option value="EventNodeMetaNodeSubType.TIMEFRAME" translate="common.select.EventNodeMetaNodeSubType.TIMEFRAME">Timeframe
+                  <option value="InfoNodeMetaNodeSubType.INFONODE" translate="common.select.InfoNodeMetaNodeSubType.INFONODE">Infonode
+                  <option value="InfoNodeMetaNodeSubType.CONTAINER" translate="common.select.InfoNodeMetaNodeSubType.CONTAINER">Infocontainer
+                  <option value="InfoNodeMetaNodeSubType.SNAPSHOT" translate="common.select.InfoNodeMetaNodeSubType.SNAPSHOT">Snapshot
+                  <option value="TaskNodeMetaNodeSubType.DEPARTMENT" translate="common.select.TaskNodeMetaNodeSubType.DEPARTMENT">Bereich
+                  <option value="TaskNodeMetaNodeSubType.SECTION" translate="common.select.TaskNodeMetaNodeSubType.SECTION">Abteilung
+                  <option value="TaskNodeMetaNodeSubType.WIP" translate="common.select.TaskNodeMetaNodeSubType.WIP">WorkInProgress
+                  <option value="TaskNodeMetaNodeSubType.BACKLOG" translate="common.select.TaskNodeMetaNodeSubType.BACKLOG">Backlog-Container
+                  <option value="TaskNodeMetaNodeSubType.ARCHIV" translate="common.select.TaskNodeMetaNodeSubType.ARCHIV">Archiv-Container
+                  <option value="TaskNodeMetaNodeSubType.PROJECT" translate="common.select.TaskNodeMetaNodeSubType.PROJECT">Project
+                  <option value="TaskNodeMetaNodeSubType.SUBPROJECT" translate="common.select.TaskNodeMetaNodeSubType.SUBPROJECT">SubProject
+                  <option value="TaskNodeMetaNodeSubType.TASK" translate="common.select.TaskNodeMetaNodeSubType.TASK">Task
+                  <option value="TaskNodeMetaNodeSubType.SUBTASK" translate="common.select.TaskNodeMetaNodeSubType.SUBTASK">SubTask
+                  <option value="TaskNodeMetaNodeSubType.TODO" translate="common.select.TaskNodeMetaNodeSubType.TODO">Simple Todo
+                  <option value="TaskNodeMetaNodeSubType.CONTAINER" translate="common.select.TaskNodeMetaNodeSubType.CONTAINER">Container
+                  <option value="UrlResNodeMetaNodeSubType.RESOURCE" translate="common.select.UrlResNodeMetaNodeSubType.RESOURCE">Resource
+                  <option value="SymLinkNodeMetaNodeSubType.SYMLINK" translate="common.select.SymLinkNodeMetaNodeSubType.SYMLINK">Resource
+             </select>
              <span lang='tech' translate="editor.common.label.state">Status</span>
              <select name="strWorkflowStateFilter" class="inputtype_select use_select2 inputtype_select_state" id="inputSearchOptionsStrWorkflowStateFilter" ng-model="searchOptions.arrWorkflowStateFilter" multiple="multiple">
                   <option value="" translate="common.select.all">Alle
@@ -93,6 +116,11 @@
                   <option value="DONE" translate="common.select.TaskNodeType.ERLEDIGT">Erledigt
                   <option value="CANCELED" translate="common.select.TaskNodeType.VERWORFEN">Verworfen
              </select>
+
+             <br />
+
+             <span lang='tech' translate="editor.common.label.metaNodeTypeTags">Status</span>
+             <input type="text" placeholder="Tags" name="strMetaNodeTypeTagsFilter" maxsize="40" class="inputtype_text" id="inputSearchOptionsStrMetaNodeTypeTagsFilter" ng-model="searchOptions.strMetaNodeTypeTagsFilter">
              <span lang='tech' translate="editor.common.label.notPraefix">Not Praefix</span>
              <input type="text" placeholder="Blacklisted" name="strNotNodePraefix" maxsize="40" class="inputtype_text" id="inputSearchOptionsStrNotNodePraefix" ng-model="searchOptions.strNotNodePraefix">
           </div>
@@ -202,7 +230,6 @@
             yaioAppBase.get('YaioLayout').setupAppSize();
         });
         $('.use_select2').select2();
-
     }, 1000);
     
 </script>

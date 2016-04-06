@@ -300,6 +300,8 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         var suchworte = searchOptions.fulltext.toLowerCase().split(' ');
         var classes = searchOptions.strClassFilter.split(',');
         var states = searchOptions.strWorkflowStateFilter.split(',');
+        var subTypes = searchOptions.strMetaNodeSubTypeFilter.split(',');
+        var metaNodeTypeTags = searchOptions.strMetaNodeTypeTagsFilter.split(',');
         var notPraefix = searchOptions.strNotNodePraefix.split(' ');
         for (var idx = 0; idx < me.nodeList.length; idx++) {
             nodeId = me.nodeList[idx];
@@ -314,6 +316,16 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
             }
             // Classfilter
             if (classes.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.workflowState, classes)) {
+                // words not found
+                continue;
+            }
+            // SubTypes-Filter
+            if (subTypes.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeSubType, subTypes)) {
+                // words not found
+                continue;
+            }
+            // MetaNodeTypeTags-Filter
+            if (metaNodeTypeTags.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeTypeTags, metaNodeTypeTags)) {
                 // words not found
                 continue;
             }

@@ -344,7 +344,8 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         
         // copy availiable serverSearchOptions
         var serverSearchOptions = {};
-        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 'strNotNodePraefix', 'flgConcreteToDosOnly'];
+        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 
+            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter'];
         var searchField;
         for (var idx = 0; idx < searchFields.length; idx++) {
             searchField = searchFields[idx];
@@ -355,6 +356,10 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         if (serverSearchOptions.hasOwnProperty('strNotNodePraefix')) {
             // replace * with sql %
             serverSearchOptions.strNotNodePraefix = serverSearchOptions.strNotNodePraefix.replace(/\*/g, '%');
+        }
+        if (serverSearchOptions.hasOwnProperty('strMetaNodeTypeTagsFilter')) {
+            // replace space with ,
+            serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
         }
 
         // load data

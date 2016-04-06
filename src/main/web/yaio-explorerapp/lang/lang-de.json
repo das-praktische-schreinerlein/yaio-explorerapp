@@ -144,6 +144,7 @@
     "editor.common.label.istStand": "Stand",
     "editor.common.label.istStart": "Start",
     "editor.common.label.metaNodeSubType": "Subtyp",
+    "editor.common.label.metaNodeTypeTags": "Tags",
     "editor.common.label.name": "Titel",
     "editor.common.label.nodeDesc": "Details",
     "editor.common.label.planAufwand": "Aufwand",
