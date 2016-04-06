@@ -136,7 +136,7 @@ Yaio.NodeGanttRenderer = function(appBase) {
      * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
      * @param {String} type                   the type of data to calc (ist, plan, planChildrenSum, istChildrenSum)
      * @param {String} label                  the label to show if aufwand >0
-     * @param {JQuery} $divLine               optional ganttContainer to use - if not set #gantt_' + type + '_container_' + basenode.sysUID will be used
+     * @param {jQuery} $divLine               optional ganttContainer to use - if not set #gantt_' + type + '_container_' + basenode.sysUID will be used
      */
     me._fillGanttBlock = function (basenode, type, label, $divLine) {
         var msg = 'ganttblock for node:' + basenode.sysUID;
@@ -269,7 +269,7 @@ Yaio.NodeGanttRenderer = function(appBase) {
      * @param {String} type                   the type of data to calc (ist, plan, planChildrenSum, istChildrenSum)
      * @param {String} addStyle               optional css-class to add to t-element
      * @param {String} label                  the label to show if aufwand >0
-     * @returns {JQuery}                      JQuery-Html-Object - the rendered ganttblock
+     * @returns {jQuery}                      JQuery-Html-Object - the rendered ganttblock
      */
     me._createGanttBlock = function(basenode, type, addStyle, label) {
         // create line
@@ -300,7 +300,7 @@ Yaio.NodeGanttRenderer = function(appBase) {
      * for basenode and returns a JQuery-Html-Obj.
      * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
      * @param {FancytreeNode} fancynode       the corresponding fancynode
-     * @returns {JQuery}                      JQuery-Html-Object - the rendered ganttblock
+     * @returns {jQuery}                      JQuery-Html-Object - the rendered ganttblock
      */
     me.renderGanttBlock = function(basenode, fancynode) {
         // extract nodedata

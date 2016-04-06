@@ -164,7 +164,7 @@ Yaio.ExplorerConverter = function(appBase) {
 
     /**
      * check block for matchers from checkListConfigs
-     * @param {JQuery} block      block to check
+     * @param {jQuery} block      block to check
      * @return {null|String}      key of checkListConfigs that matches
      */
     me._extractCheckListStatefromStateSpan = function(block) {
