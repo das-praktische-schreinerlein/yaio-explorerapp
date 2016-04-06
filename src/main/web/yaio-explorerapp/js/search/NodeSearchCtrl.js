@@ -251,84 +251,106 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
                 $scope.yaioUtils.renderNodeLine(node, '#tr' + node.sysUID, false);
                 console.log('renderNodeLine: done to:' + '#tr' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
 
-                // render hierarchy
-                var parentNode = node.parentNode;
-                var parentStr = node.name;
-                while (!yaioUtils.getService('DataUtils').isEmptyStringValue(parentNode)) {
-                    parentStr = parentNode.name + ' --> ' + parentStr;
-                    parentNode = parentNode.parentNode;
-                }
-                parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
-                
-                // extract search words
-                var searchExtract = '';
-                if ($scope.searchOptions.fulltext 
-                    && $scope.searchOptions.fulltext.length > 0
-                    && !yaioUtils.getService('DataUtils').isUndefinedStringValue(node.nodeDesc)) {
-                    // split to searchwords
-                    var searchWords = $scope.searchOptions.fulltext.split(' ');
-                    var searchWord, searchResults, splitLength, splitText;
-
-                    var descText = node.nodeDesc;
-                    descText = descText.replace(/<WLBR>/g, '\n');
-                    descText = descText.replace(/<WLESC>/g, '\\');
-                    descText = descText.replace(/<WLTAB>/g, '\t');
-                    descText = descText.toLowerCase();
-                    
-                    for (var idx in searchWords) {
-                        if (!searchWords.hasOwnProperty(idx)) {
-                            continue;
-                        }
-                        searchWord = yaioUtils.getService('DataUtils').escapeRegExp(searchWords[idx]);
-
-                        // split by searchwords
-                        searchResults = descText.toLowerCase().split(searchWord.toLowerCase());
-                        
-                        // add dummy-element if desc start/ends with searchWord 
-                        if (descText.search(searchWord.toLowerCase()) === 0) {
-                            searchResults.insert(' ');
-                        }
-                        if (descText.search(searchWord.toLowerCase()) === (descText.length - searchWord.length)) {
-                            searchResults.push(' ');
-                        }
-
-                        // iterate and show 50 chars before and behind
-                        for (var idx2 = 0; idx2 < searchResults.length; idx2++) {
-//                            console.log('found ' + searchWord + ' after ' + searchResults[idx2]);
-                            if (idx2 > 0) {
-                                splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
-                                splitText = searchResults[idx2].substr(0, splitLength);
-                                console.log('found ' + searchWord + ' after use ' + splitLength + ' extracted:' + splitText);
-                                searchExtract += '<b>'+ searchWord + '</b>'
-                                    + yaioUtils.getService('DataUtils').htmlEscapeText(splitText) + '...';
-                            }
-                            if (idx2 < searchResults.length) {
-                                splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
-                                splitText = searchResults[idx2].substr(
-                                        searchResults[idx2].length - splitLength, 
-                                        searchResults[idx2].length);
-                                console.log('found ' + searchWord + ' before use ' + splitLength + ' extracted:' + splitText);
-                                searchExtract += '...'
-                                    + yaioUtils.getService('DataUtils').htmlEscapeText(splitText);
-                            }
-                        }
-                    }
-                }
-                
-                // add searchdata
-                console.log('renderNodeLine: add searchdata to:' + '#tr' + node.sysUID);
-                var $html = $('<div id="details_parent_' + node.sysUID + '"'
-                                + ' class="field_nodeParent">'
-                                + parentStr
-                                + '</div>'
-                              + '<div id="details_searchdata_' + node.sysUID + '"'
-                                + ' class="field_nodeSearchData">'
-                                + searchExtract
-                                + '</div>');
+                // add pareent+searchdata
+                var $html = $($scope.createParentHirarchyBlockForNode(node) + $scope.createSearchWordsBlockForNode(node));
                 $('#detail_sys_' + node.sysUID).after($html);
-                console.log('renderNodeLine: added searchdata to:' + '#detail_sys_' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+                console.log('renderNodeLine: added parent+searchdata to:' + '#detail_sys_' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+
             }, 10);
     };
+
+    /**
+     * create parentHirarchy-Block for node
+     * @param {Object} node          node to render
+     * @returns {String}
+     */
+    $scope.createParentHirarchyBlockForNode = function(node) {
+        // render hierarchy
+        var parentNode = node.parentNode;
+        var parentStr = node.name;
+        while (!yaioUtils.getService('DataUtils').isEmptyStringValue(parentNode)) {
+            parentStr = parentNode.name + ' --> ' + parentStr;
+            parentNode = parentNode.parentNode;
+        }
+        parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
+
+        // add hierarchy
+        var html = '<div id="details_parent_' + node.sysUID + '"'
+            + ' class="field_nodeParent">'
+            + parentStr
+            + '</div>';
+        return html;
+    };
+
+    /**
+     * create searchWords-Block for node
+     * @param {Object} node          node to render
+     * @returns {String}
+     */
+    $scope.createSearchWordsBlockForNode = function(node) {
+        // extract search words
+        var searchExtract = '';
+        if ($scope.searchOptions.fulltext
+            && $scope.searchOptions.fulltext.length > 0
+            && !yaioUtils.getService('DataUtils').isUndefinedStringValue(node.nodeDesc)) {
+            // split to searchwords
+            var searchWords = $scope.searchOptions.fulltext.split(' ');
+            var searchWord, searchResults, splitLength, splitText;
+
+            var descText = node.nodeDesc;
+            descText = descText.replace(/<WLBR>/g, '\n');
+            descText = descText.replace(/<WLESC>/g, '\\');
+            descText = descText.replace(/<WLTAB>/g, '\t');
+            descText = descText.toLowerCase();
+
+            for (var idx in searchWords) {
+                if (!searchWords.hasOwnProperty(idx)) {
+                    continue;
+                }
+                searchWord = yaioUtils.getService('DataUtils').escapeRegExp(searchWords[idx]);
+
+                // split by searchwords
+                searchResults = descText.toLowerCase().split(searchWord.toLowerCase());
+
+                // add dummy-element if desc start/ends with searchWord
+                if (descText.search(searchWord.toLowerCase()) === 0) {
+                    searchResults.insert(' ');
+                }
+                if (descText.search(searchWord.toLowerCase()) === (descText.length - searchWord.length)) {
+                    searchResults.push(' ');
+                }
+
+                // iterate and show 50 chars before and behind
+                for (var idx2 = 0; idx2 < searchResults.length; idx2++) {
+//                            console.log('found ' + searchWord + ' after ' + searchResults[idx2]);
+                    if (idx2 > 0) {
+                        splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
+                        splitText = searchResults[idx2].substr(0, splitLength);
+                        console.log('found ' + searchWord + ' after use ' + splitLength + ' extracted:' + splitText);
+                        searchExtract += '<b>'+ searchWord + '</b>'
+                            + yaioUtils.getService('DataUtils').htmlEscapeText(splitText) + '...';
+                    }
+                    if (idx2 < searchResults.length) {
+                        splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
+                        splitText = searchResults[idx2].substr(
+                            searchResults[idx2].length - splitLength,
+                            searchResults[idx2].length);
+                        console.log('found ' + searchWord + ' before use ' + splitLength + ' extracted:' + splitText);
+                        searchExtract += '...'
+                            + yaioUtils.getService('DataUtils').htmlEscapeText(splitText);
+                    }
+                }
+            }
+        }
+
+        // add searchdata
+        var html = '<div id="details_searchdata_' + node.sysUID + '"'
+            + ' class="field_nodeSearchData">'
+            + searchExtract
+            + '</div>';
+        return html;
+    };
+
 
     /** 
      * recalc ganttblocks for all $scope.nodes
