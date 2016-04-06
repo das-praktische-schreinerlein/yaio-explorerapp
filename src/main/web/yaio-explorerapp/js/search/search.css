@@ -181,10 +181,46 @@
   float: left
 }
 
-.pager .disabled>a,.pager .disabled>a:hover,.pager .disabled>a:focus,.pager .disabled>span
-  {
+.pager .disabled>a,.pager .disabled>a:hover,.pager .disabled>a:focus,.pager .disabled>span {
   color: #999;
   background-color: #fff;
   cursor: not-allowed
 }
 
+div.yaio-nodecard {
+    float: left;
+    width: 30%;
+    border: 2px solid #8cacd3;
+    border-radius: 10px;
+    margin-top: 3px;
+    padding: 5px;
+}
+
+div.yaio-nodecard div.field_name{
+    width: 100%;
+}
+
+div.yaio-nodecard span.fancytree-title-list {
+    width: auto;
+    display: inline;
+}
+
+div.yaio-nodecard span.fancytree-title {
+    width: auto;
+    display: inline;
+}
+
+div.yaio-nodecard div.container_data_table {
+    width: 100%;
+}
+
+div.yaio-nodecard div.field_nodeParent {
+    font-size: 9px;
+    width: auto;
+    display: block;
+    left: auto;
+    line-height: normal;
+    overflow-x: hidden;
+    position: inherit;
+    clear: both;
+}

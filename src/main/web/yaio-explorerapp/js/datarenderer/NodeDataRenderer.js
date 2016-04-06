@@ -153,6 +153,110 @@ Yaio.NodeDataRenderer = function(appBase) {
     };
 
     /**
+     * render a nodecard
+     * @param {Object} basenode    yaio-node to render
+     * @param {String} filter      the filter to append data
+     */
+    me.renderNodeCard = function(basenode, filter) {
+        var svcDataUtils = me.appBase.get('DataUtils');
+
+        // extract nodedata
+        var nodestate = basenode.state;
+        var statestyle = 'yaio-node-state-' + nodestate;
+
+        var colName = 0, colData = 1;
+
+        // get tdlist
+        var $divList = me.$(filter).find('>div');
+
+        // replace checkbox by center-command
+        var $expanderEle = $divList.eq(colName).find('span.fancytree-expander');
+        $expanderEle.attr('data-tooltip', 'tooltip.command.NodeShow');
+        $expanderEle.attr('lang', 'tech');
+        $expanderEle.attr('id', 'expander' + basenode.sysUID);
+
+        // replace checkbox by center-command
+        var $checkEle = $divList.eq(colName).find('span.fancytree-checkbox');
+        $checkEle.html('<a href="#/show/' + basenode.sysUID + '"' +
+            ' class="yaio-icon-center"' +
+            ' lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>');
+        $checkEle.removeClass('fancytree-checkbox').addClass('command-center');
+
+        // manipulate name-column
+        $divList.eq(colName).addClass('container_field')
+            .addClass('fieldtype_name')
+            .addClass('field_name');
+
+        // define name
+        var name = basenode.name;
+        if (me.appBase.DataUtils.isUndefinedStringValue(name)) {
+            if (basenode.className === 'UrlResNode') {
+                name = basenode.resLocName;
+            } else if (basenode.className === 'SymLinkNode') {
+                name = basenode.symLinkName;
+            }
+        }
+
+        // insert state before name-span
+        var $nameEle = $divList.eq(colName).find('span.fancytree-title');
+        var $div = me.$('<div style="display: inline" />')
+            .append(me.$('<span class="' + statestyle + ' fancytree-title-state" lang="de" id="titleState' + basenode.sysUID + '"/>')
+                .html(basenode.state + ' '))
+            .append('&nbsp;')
+            .append(me.$('<span class="fancytree-title2" id="title' + basenode.sysUID + '">' +
+                svcDataUtils.htmlEscapeText(name) + '</span>'));
+        $nameEle.html($div);
+
+        // add nodeData
+        var msg = 'datablock for node:' + basenode.sysUID;
+        console.log('renderBaseDataBlock START: ' + msg);
+
+        // current datablock
+        var $table = me.$('<div class="container_data_table"/>');
+        var $row = me.$('<div class="container_data_row"/>');
+        $table.append($row);
+
+        // default fields
+        me._appendTypeDataBlocks(basenode, $row);
+        me._appendMetaDataBlocks(basenode, $row);
+
+        // data
+        $row = me.$('<div class="container_data_row"/>');
+        $table.append($row);
+        if (basenode.className === 'TaskNode' || basenode.className === 'EventNode') {
+            // TaskNode
+            $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Ist:</div></div>');
+            $table.append($row);
+            me._appendWorkflowRawIstDataBlocks(basenode, $row);
+            $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Plan:</div></div>');
+            $table.append($row);
+            me._appendWorkflowRawPlanDataBlocks(basenode, $row);
+        } else if (basenode.className === 'InfoNode' || basenode.className === 'UrlResNode') {
+            // render Info + UrlRes
+
+            // Url only
+            if (basenode.className === 'UrlResNode') {
+                me._appendUrlResDataBlocks(basenode, $row, true);
+            }
+
+            // both
+            if (   basenode.docLayoutTagCommand || basenode.docLayoutShortName
+                || basenode.docLayoutAddStyleClass || basenode.docLayoutFlgCloseDiv) {
+                me._appendDocLayoutBlocks(basenode, $row);
+            }
+        } else if (basenode.className === 'SymLinkNode') {
+            // render SymLinkNode
+            me.appBase.get('YaioNodeRepository').getNodeForSymLink(basenode)
+                .done(function(yaioNodeActionResponse, textStatus, jqXhr ) {
+                    console.log('call successHandler ' + 'datablock for node:' + basenode.sysUID + ' state:' + textStatus);
+                    me._getNodeForSymLinkSuccessHandler(basenode, yaioNodeActionResponse, textStatus, jqXhr);
+                });
+        }
+
+        $divList.eq(colData).html($table).addClass('block_nodedata');
+    };
+
+    /**
      * Shows the DataBlock
      * Toggles DataBlock, GanttBlock and the links #tabTogglerData, #tabTogglerGantt.
      * Show all: td.block_nodedata, th.block_nodedata + #tabTogglerGantt
@@ -179,7 +283,7 @@ Yaio.NodeDataRenderer = function(appBase) {
      * @param {Object} basenode    yaio-node to render
      * @param {Boolean} preventActionsColum    dont replace Action-column
      * @param {Boolean} flgRenderMinimum       render only the minimal subset of data
-     * @returns {JQuery}           html
+     * @returns {jQuery}           html
      */
     me._renderDataBlock = function(basenode, preventActionsColum, flgRenderMinimum) {
         var yaioAppBaseVarName = me.appBase.config.appBaseVarName,
@@ -222,7 +326,7 @@ Yaio.NodeDataRenderer = function(appBase) {
     /**
      * render the sysdata-block for the node
      * @param {Object} basenode    yaio-node to render
-     * @returns {JQuery}           html
+     * @returns {jQuery}           html
      */
     me._renderSysDataBlock = function(basenode) {
         var svcDataUtils = me.appBase.get('DataUtils');
@@ -267,7 +371,7 @@ Yaio.NodeDataRenderer = function(appBase) {
     /**
      * render the desc-block for the node
      * @param {Object} basenode    yaio-node to render
-     * @returns {JQuery}           html
+     * @returns {jQuery}           html
      */
     me._renderDescBlock = function (basenode) {
         var yaioAppBaseVarName = me.appBase.config.appBaseVarName,
@@ -375,11 +479,9 @@ Yaio.NodeDataRenderer = function(appBase) {
      * Renders the BaseDataBlock for basenode and returns a JQuery-Html-Obj.
      * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
      * @param {Boolean} preventActionsColum   dont replace Action-column
-     * @returns {JQuery}                      JQuery-Html-Object - the rendered datablock
+     * @returns {jQuery}                      JQuery-Html-Object - the rendered datablock
      */
     me._renderBaseDataBlock = function(basenode, preventActionsColum) {
-        var svcDataUtils = me.appBase.get('DataUtils');
-
         // extract nodedata
         var nodestate = basenode.state;
         var statestyle = 'yaio-node-state-' + nodestate;
@@ -393,23 +495,9 @@ Yaio.NodeDataRenderer = function(appBase) {
         $table.append($row);
 
         // default fields
-        $row.append(me.$('<div />').html(svcDataUtils.htmlEscapeText(basenode.metaNodePraefix + basenode.metaNodeNummer))
-            .addClass('container_field')
-            .addClass('fieldtype_basedata')
-            .addClass('fieldtype_metanummer')
-            .addClass('field_metanummer')
-        );
+        me._appendMetaDataBlocks(basenode, $row, statestyle);
+        me._appendTypeDataBlocks(basenode, $row, statestyle);
 
-        var typeData = basenode.className;
-        if (!svcDataUtils.isEmptyStringValue(basenode.metaNodeSubType)) {
-            typeData = basenode.metaNodeSubType;
-        }
-        $row.append(me.$('<div lang="tech" />').html(typeData)
-            .addClass('container_field')
-            .addClass('fieldtype_basedata')
-            .addClass('fieldtype_type')
-            .addClass('field_type')
-            .addClass(statestyle));
         if (basenode.className === 'TaskNode' || basenode.className === 'EventNode') {
             // TaskNode
             me._appendWorkflowBlocks(basenode, $row, statestyle);
@@ -418,23 +506,7 @@ Yaio.NodeDataRenderer = function(appBase) {
 
             // Url only
             if (basenode.className === 'UrlResNode') {
-                // url
-                me._appendDownloadBlocks(basenode, $row, preventActionsColum);
-
-                // url-data
-                var resLocData = svcDataUtils.htmlEscapeText(basenode.resLocRef);
-                if (basenode.type === 'URLRES') {
-                    resLocData = '<a href="' + resLocData + '" target="_blank">' + resLocData + '</a>';
-                } else {
-                    resLocData = '<span>' + resLocData + '</span>';
-                }
-                $row.append(
-                    me.$('<div />').html(resLocData)
-                        .addClass('container_field')
-                        .addClass('fieldtype_additionaldata')
-                        .addClass('fieldtype_url')
-                        .addClass('field_resLocRef')
-                );
+                me._appendUrlResDataBlocks(basenode, $row, preventActionsColum);
             }
         
             // both
@@ -446,10 +518,10 @@ Yaio.NodeDataRenderer = function(appBase) {
             // render SymLinkNode
             me.appBase.get('YaioNodeRepository').getNodeForSymLink(basenode)
                 .done(function(yaioNodeActionResponse, textStatus, jqXhr ) {
-                    console.log('call successHandler ' + msg + ' state:' + textStatus);
+                    console.log('call successHandler ' + 'datablock for node:' + basenode.sysUID + ' state:' + textStatus);
                     me._getNodeForSymLinkSuccessHandler(basenode, yaioNodeActionResponse, textStatus, jqXhr);
                 });
-        } 
+        }
     
         console.log('renderDataBlock DONE: ' + msg);
     
@@ -457,12 +529,101 @@ Yaio.NodeDataRenderer = function(appBase) {
     };
 
     /**
+     * append MetaDataBlocks to the row for the node
+     * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {String} statestyle             style for the workflow-state to add to blocks
+     */
+    me._appendMetaDataBlocks = function(basenode, $row, statestyle) {
+        var svcDataUtils = me.appBase.get('DataUtils');
+        $row.append(me.$('<div />').html(svcDataUtils.htmlEscapeText(basenode.metaNodePraefix + basenode.metaNodeNummer))
+            .addClass('container_field')
+            .addClass('fieldtype_basedata')
+            .addClass('fieldtype_metanummer')
+            .addClass('field_metanummer')
+        );
+    };
+
+    /**
+     * append TypeDataBlocks to the row for the node
+     * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {String} statestyle             style for the workflow-state to add to blocks
+     */
+    me._appendTypeDataBlocks = function(basenode, $row, statestyle) {
+        var svcDataUtils = me.appBase.get('DataUtils');
+        var typeData = basenode.className;
+        if (!svcDataUtils.isEmptyStringValue(basenode.metaNodeSubType)) {
+            typeData = basenode.metaNodeSubType;
+        }
+        $row.append(me.$('<div lang="tech" />').html(typeData)
+            .addClass('container_field')
+            .addClass('fieldtype_basedata')
+            .addClass('fieldtype_type')
+            .addClass('field_type')
+            .addClass(statestyle));
+    };
+
+    /**
+     * append SymLinkDataBlocks to the row for the node
+     * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
+     */
+    me._appendSymLinkDataBlocks = function(basenode) {
+        me.appBase.get('YaioNodeRepository').getNodeForSymLink(basenode)
+            .done(function(yaioNodeActionResponse, textStatus, jqXhr ) {
+                console.log('call successHandler ' + 'datablock for node:' + basenode.sysUID + ' state:' + textStatus);
+                me._getNodeForSymLinkSuccessHandler(basenode, yaioNodeActionResponse, textStatus, jqXhr);
+            });
+    };
+
+    /**
+     * append UrlResDataBlocks to the row for the node
+     * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {Boolean} preventActionsColum   dont replace Action-column
+     */
+    me._appendUrlResDataBlocks = function(basenode, $row, preventActionsColum) {
+        var svcDataUtils = me.appBase.get('DataUtils');
+
+        // url
+        me._appendDownloadBlocks(basenode, $row, preventActionsColum);
+
+        // url-data
+        var resLocData = svcDataUtils.htmlEscapeText(basenode.resLocRef);
+        if (basenode.type === 'URLRES') {
+            resLocData = '<a href="' + resLocData + '" target="_blank">' + resLocData + '</a>';
+        } else {
+            resLocData = '<span>' + resLocData + '</span>';
+        }
+        $row.append(
+            me.$('<div />').html(resLocData)
+                .addClass('container_field')
+                .addClass('fieldtype_additionaldata')
+                .addClass('fieldtype_url')
+                .addClass('field_resLocRef')
+        );
+        return $('');
+    };
+
+
+    /**
      * append WorkflowBlocks to the row for the node
      * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
-     * @param {JQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
      * @param {String} statestyle             style for the workflow-state to add to blocks
      */
     me._appendWorkflowBlocks = function(basenode, $row, statestyle) {
+        me._appendWorkflowRawIstDataBlocks(basenode, $row, statestyle);
+        me._appendWorkflowRawPlanDataBlocks(basenode, $row, statestyle);
+    };
+
+    /**
+     * append Ist-WorkflowBlocks to the row for the node
+     * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {String} statestyle             style for the workflow-state to add to blocks
+     */
+    me._appendWorkflowRawIstDataBlocks = function(basenode, $row, statestyle) {
         var svcDataUtils = me.appBase.get('DataUtils');
         $row.append(
             me.$('<div />').html('&nbsp;' + svcDataUtils.formatNumbers(basenode.istChildrenSumStand, 0, '%'))
@@ -489,6 +650,16 @@ Yaio.NodeDataRenderer = function(appBase) {
                 .addClass('field_istChildrenSum')
                 .addClass(statestyle)
         );
+    };
+
+    /**
+     * append Plan-WorkflowBlocks to the row for the node
+     * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {String} statestyle             style for the workflow-state to add to blocks
+     */
+    me._appendWorkflowRawPlanDataBlocks = function(basenode, $row, statestyle) {
+        var svcDataUtils = me.appBase.get('DataUtils');
         $row.append(
             me.$('<div />').html('&nbsp;' + svcDataUtils.formatNumbers(basenode.planChildrenSumAufwand, 1, 'h'))
                 .addClass('container_field')
@@ -511,7 +682,7 @@ Yaio.NodeDataRenderer = function(appBase) {
     /**
      * append DownloadBlocks to the row for the node
      * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
-     * @param {JQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
      * @param {Boolean} preventActionsColum   dont replace Action-column
      */
     me._appendDownloadBlocks = function(basenode, $row, preventActionsColum) {
@@ -572,7 +743,7 @@ Yaio.NodeDataRenderer = function(appBase) {
     /**
      * append DocLayoutBlocks to the row for the node
      * @param {Object} basenode               the nodedata to render (java de.yaio.core.node.BaseNode)
-     * @param {JQuery} $row                   JQuery-Html-Object to append the blockData
+     * @param {jQuery} $row                   JQuery-Html-Object to append the blockData
      */
     me._appendDocLayoutBlocks = function(basenode, $row) {
         var svcDataUtils = me.appBase.get('DataUtils');

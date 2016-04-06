@@ -252,7 +252,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
                 console.log('renderNodeLine: done to:' + '#tr' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
 
                 // add pareent+searchdata
-                var $html = $($scope.createParentHirarchyBlockForNode(node) + $scope.createSearchWordsBlockForNode(node));
+                var $html = $($scope.createParentHirarchyBlockForNode(node, 'tr_') + $scope.createSearchWordsBlockForNode(node));
                 $('#detail_sys_' + node.sysUID).after($html);
                 console.log('renderNodeLine: added parent+searchdata to:' + '#detail_sys_' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
 
@@ -260,11 +260,30 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     };
 
     /**
+     * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
+     * @param {Object} node          node to render
+     */
+    $scope.renderNodeCard = function(node) {
+        // we need a timeout to put the tr into DOM
+        setTimeout(function(){
+            $scope.yaioUtils.renderNodeCard(node, '#card' + node.sysUID);
+            console.log('renderNodeLine: done to:' + '#card' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+
+            // add pareent+searchdata
+            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card_'));
+            $('#card' + node.sysUID).find('div.container_data_row').eq(0).after($html);
+            console.log('renderNodeLine: added parent+searchdata to:' + '#card' + node.sysUID + $('#card' + node.sysUID).length);
+
+        }, 10);
+    };
+
+    /**
      * create parentHirarchy-Block for node
      * @param {Object} node          node to render
+     * @param {String} idPrefix      prefix for html-id
      * @returns {String}
      */
-    $scope.createParentHirarchyBlockForNode = function(node) {
+    $scope.createParentHirarchyBlockForNode = function(node, idPrefix) {
         // render hierarchy
         var parentNode = node.parentNode;
         var parentStr = node.name;
@@ -275,7 +294,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
 
         // add hierarchy
-        var html = '<div id="details_parent_' + node.sysUID + '"'
+        var html = '<div id="' + idPrefix + 'details_parent_' + node.sysUID + '"'
             + ' class="field_nodeParent">'
             + parentStr
             + '</div>';
