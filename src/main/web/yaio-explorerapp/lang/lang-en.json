@@ -256,6 +256,7 @@
     "label.dashboard.todosWarning": "Late todos - not ended yet",
     "label.dashboard.todosLate": "Late todos - not started yet",
     "label.dashboard.lastChanged": "Last changed",
+    "label.dashboard.wipcontainer": "WorkInProgress Container - planned or running",
     "loginform.button.login": "Let the games begin:-)",
     "loginform.field.username": "Username",
     "loginform.field.password": "password",

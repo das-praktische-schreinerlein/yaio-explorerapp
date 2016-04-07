@@ -265,6 +265,7 @@
     "label.dashboard.todosWarning": "Verspätete Aufgaben - Termin überschritten",
     "label.dashboard.todosLate": "Verspätete Aufgaben - noch nicht begonnen",
     "label.dashboard.lastChanged": "Zuletzt geändert",
+    "label.dashboard.wipcontainer": "Laufende Planungscontainer - WorkInProgress",
     "todonext.command.Logout": "Logout vom Server",
     "todonext.command.OpenFrontpage": "Zurück zur Startseite",
     "todonext.command.OpenHelp": "Zur Hilfseite",
