@@ -152,6 +152,39 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
         return html;
     };
 
+    /**
+     * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
+     * @param {Object} node          node to render
+     */
+    $scope.renderNodeCard = function(node) {
+        // we need a timeout to put the tr into DOM
+        setTimeout(function(){
+            $scope.yaioUtils.renderNodeCard(node, '#card' + node.sysUID);
+            console.log('renderNodeLine: done to:' + '#card' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+
+            // add pareent+searchdata
+            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card_'));
+            $('#card' + node.sysUID).find('div.container_data_row').eq(0).after($html);
+            console.log('renderNodeLine: added parent+searchdata to:' + '#card' + node.sysUID + $('#card' + node.sysUID).length);
+
+        }, 10);
+    };
+
+    /**
+     * switch to tableview (hide cardview)
+     */
+    $scope.showTableView = function() {
+        $('div.container-yaio-search-nodecards').css('display', 'none');
+        $('div.container-yaio-search-table').css('display', 'block');
+    };
+
+    /**
+     * switch to cardview (hide tableview)
+     */
+    $scope.showCardView = function() {
+        $('div.container-yaio-search-nodecards').css('display', 'block');
+        $('div.container-yaio-search-table').css('display', 'none');
+    };
 
     // init
     $scope._init();

@@ -16,7 +16,20 @@
 <div class='container-yaio-current' toclabel='Daten' id='box_data'>
     <div id="containerYaioSearch" class="box container-yaio-search">
         <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-form.html'"></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-table.html'"></div>
+        <div ng-if="searchOptions.total > 0" class="container-yaio-search-results">
+            <div class="container-yaio-search-nodecards">
+                <div class="container-yaio-search-nodecards-toggler">
+                    <span style="display: inline-block; width: 150px;" data-tooltip='tooltip.command.ShowTableData' lang="tech">
+                      <a ng-click="showTableView();" id="tabTogglerTable" class="button tabToggler" translate="search.table.headline.tabTogglerTable">TableView</a>
+                    </span>
+                </div>
+                <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-nodecards.html'"></div>
+            </div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-table.html'" class="container-yaio-search-table" style="display: none"></div>
+        </div>
+        <div ng-if="searchOptions.total <= 0" class="container-yaio-search-noresults">
+            Es wurden leider keine Einträge gefunden
+        </div>
     </div>
 </div>
 

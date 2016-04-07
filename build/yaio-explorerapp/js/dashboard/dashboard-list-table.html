@@ -4,24 +4,40 @@
     </div>
     <div class='togglecontainer togglecontainer-dashboard togglecontainer-dashboard-{{searchOptions.praefix}}' ng-init="doFulltextSearch()" id="togglecontainer_dashboard_{{searchOptions.praefix}}">
 
-        <!-- 
-        *****************************
-        *****************************
-        * Current SearchResult
-        *****************************
-        *****************************
-        -->
-        <table id="masterTableLastChanged" class="fancytree-ext-table">
-            <!-- define columngroups -->
-            <colgroup>
-            <col class="container_field fieldtype_name field_name"></col>
-            <col class="block_nodedata"></col>
-            <col class="block_nodegantt"></col>
-            <col class="container_field fieldtype_actions"></col>
-            </colgroup>
-            <tbody ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-table-entries.html'">
-            </tbody>
-        </table>
+        <div ng-if="searchOptions.total > 0" class="container-yaio-search-nodecards">
+            <div class="container-yaio-search-nodecards-toggler">
+                <span style="display: inline-block; width: 150px;" data-tooltip='tooltip.command.ShowTableData' lang="tech">
+                  <a ng-click="showTableView();" id="tabTogglerTable" class="button tabToggler" translate="search.table.headline.tabTogglerTable">TableView</a>
+                </span>
+            </div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-nodecards.html'"></div>
+        </div>
+        <div ng-if="searchOptions.total > 0" class="container-yaio-search-table" style="display: none">
+            <div class="container-yaio-search-nodecards-toggler">
+                <span style="display: inline-block; width: 150px;" data-tooltip='tooltip.command.ShowCardData' lang="tech">
+                  <a ng-click="showCardView();" id="tabTogglerCard" class="button tabToggler" translate="search.table.headline.tabTogglerCard">CardView</a>
+                </span>
+            </div>
+
+            <!--
+            *****************************
+            *****************************
+            * Current SearchResult
+            *****************************
+            *****************************
+            -->
+            <table id="masterTableLastChanged" class="fancytree-ext-table">
+                <!-- define columngroups -->
+                <colgroup>
+                    <col class="container_field fieldtype_name field_name"></col>
+                    <col class="block_nodedata"></col>
+                    <col class="block_nodegantt"></col>
+                    <col class="container_field fieldtype_actions"></col>
+                </colgroup>
+                <tbody ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-table-entries.html'">
+                </tbody>
+            </table>
+        </div>
     </div>
     <div ng-if="searchOptions.total > 0" ng-init="yaioUtils.getService('YaioLayout').jMATService.getPageLayoutService().appendBlockToggler('ue_dashboard_' + searchOptions.praefix, 'togglecontainer_dashboard_' + searchOptions.praefix);">
     </div>

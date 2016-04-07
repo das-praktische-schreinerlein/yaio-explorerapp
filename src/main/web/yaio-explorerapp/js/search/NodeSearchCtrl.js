@@ -384,6 +384,22 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
     };
 
+    /**
+     * switch to tableview (hide cardview)
+     */
+    $scope.showTableView = function() {
+        $('div.container-yaio-search-nodecards').css('display', 'none');
+        $('div.container-yaio-search-table').css('display', 'block');
+    };
+
+    /**
+     * switch to cardview (hide tableview)
+     */
+    $scope.showCardView = function() {
+        $('div.container-yaio-search-nodecards').css('display', 'block');
+        $('div.container-yaio-search-table').css('display', 'none');
+    };
+
     // init
     $scope._init();
 });
