@@ -1,0 +1,3 @@
+    <div ng-init="searchOptions.label = 'label.dashboard.wipcontainer'; searchOptions.praefix = 'wipcontainer'; searchOptions.strMetaNodeSubTypeFilter = 'TaskNodeMetaNodeSubType.WIP'; searchOptions.strWorkflowStateFilter = 'NOTPLANED,OPEN,LATE,RUNNING,WARNING'; searchOptions.searchSort = 'workflowStateDown'; doFulltextSearch()">
+       <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-list-table.html'"></div>
+    </div>
