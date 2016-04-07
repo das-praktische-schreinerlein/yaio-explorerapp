@@ -263,7 +263,7 @@
     "loginform.hint.logindata": "Please login with your login data to <br> If you have no sent, please contact ich@your-all-one.de <br> Have fun !!.. ",
     "loginform.legend.Login": "Login",
     "search.table.headline.tabTogglerCard": "Node-Cards-View",
-    "search.table.headline.tabTogglerCard": "List-View",
+    "search.table.headline.tabTogglerTable": "List-View",
     "sourceselector.desc": "Switch to another datasource to work with YaioApp:",
     "sourceselector.ue": "Select the datasource to work with",
     "todonext.command.OpenFrontpage": "Back to homepage",
