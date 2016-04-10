@@ -7620,6 +7620,131 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             appBase.get('YaioNodeDataRenderer').renderColumnsForNode(null, data, true, flgMinimum);
         },
 
+        /**
+         * render nodeLine for node (adds it as '#tr' + node.sysUID to fancytree)
+         * @param {Object} node          node to render
+         * @param {String} idPrefix      html-prefix for html-id
+         * @param {Object} searchOptions as the name says
+         */
+        renderSearchNodeLine: function(node, idPrefix, searchOptions) {
+            var htmlId = '#tr' + idPrefix + node.sysUID;
+            me.renderNodeLine(node, htmlId, true);
+
+            // add parent+searchdata
+            var $html = $(me.createParentHirarchyBlockForNode(node, 'tr' + idPrefix + '_') +
+                me.createSearchWordsBlockForNode(node, 'tr' + idPrefix + '_', searchOptions));
+            $(htmlId + ' #detail_sys_' + node.sysUID).after($html);
+        },
+
+        /**
+         * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
+         * @param {Object} node          node to render
+         * @param {String} idPrefix      html-prefix for html-id
+         * @param {Object} searchOptions as the name says
+         */
+        renderSearchNodeCard: function(node, idPrefix, searchOptions) {
+            var htmlId = '#card' + idPrefix + node.sysUID;
+            me.getService('YaioNodeDataRenderer').renderNodeCard(
+                node, htmlId, searchOptions.baseSysUID);
+
+            // add pareent+searchdata
+            var $html = $(me.createParentHirarchyBlockForNode(node, 'card' + idPrefix + '_'));
+            $(htmlId).find('div.container_data_row').eq(0).after($html);
+        },
+
+        /**
+         * create parentHirarchy-Block for node
+         * @param {Object} node          node to render
+         * @param {String} idPrefix      prefix for html-id
+         * @returns {String}
+         */
+        createParentHirarchyBlockForNode: function(node, idPrefix) {
+            // render hierarchy
+            var parentNode = node.parentNode;
+            var parentStr = node.name;
+            while (!me.getService('DataUtils').isEmptyStringValue(parentNode)) {
+                parentStr = parentNode.name + ' --> ' + parentStr;
+                parentNode = parentNode.parentNode;
+            }
+            parentStr = '<b>' + me.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
+
+            // add hierarchy
+            var html = '<div id="details_parent_' + idPrefix + node.sysUID + '"'
+                + ' class="field_nodeParent">' + parentStr + '</div>';
+            return html;
+        },
+
+        /**
+         * create searchWords-Block for node
+         * @param {Object} node          node to render
+         * @param {String} idPrefix      html-prefix for html-id
+         * @param {Object} searchOptions as the name says
+         * @returns {String}
+         */
+        createSearchWordsBlockForNode: function(node, idPrefix, searchOptions) {
+            // extract search words
+            var searchExtract = '';
+            if (searchOptions.fulltext
+                && searchOptions.fulltext.length > 0
+                && !me.getService('DataUtils').isUndefinedStringValue(node.nodeDesc)) {
+                // split to searchwords
+                var searchWords = searchOptions.fulltext.split(' ');
+                var searchWord, searchResults, splitLength, splitText;
+
+                var descText = node.nodeDesc;
+                descText = descText.replace(/<WLBR>/g, '\n');
+                descText = descText.replace(/<WLESC>/g, '\\');
+                descText = descText.replace(/<WLTAB>/g, '\t');
+                descText = descText.toLowerCase();
+
+                for (var idx in searchWords) {
+                    if (!searchWords.hasOwnProperty(idx)) {
+                        continue;
+                    }
+                    searchWord = me.getService('DataUtils').escapeRegExp(searchWords[idx]);
+
+                    // split by searchwords
+                    searchResults = descText.toLowerCase().split(searchWord.toLowerCase());
+
+                    // add dummy-element if desc start/ends with searchWord
+                    if (descText.search(searchWord.toLowerCase()) === 0) {
+                        searchResults.insert(' ');
+                    }
+                    if (descText.search(searchWord.toLowerCase()) === (descText.length - searchWord.length)) {
+                        searchResults.push(' ');
+                    }
+
+                    // iterate and show 50 chars before and behind
+                    for (var idx2 = 0; idx2 < searchResults.length; idx2++) {
+    //                            console.log('found ' + searchWord + ' after ' + searchResults[idx2]);
+                        if (idx2 > 0) {
+                            splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
+                            splitText = searchResults[idx2].substr(0, splitLength);
+                            console.log('found ' + searchWord + ' after use ' + splitLength + ' extracted:' + splitText);
+                            searchExtract += '<b>'+ searchWord + '</b>'
+                                + me.getService('DataUtils').htmlEscapeText(splitText) + '...';
+                        }
+                        if (idx2 < searchResults.length) {
+                            splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
+                            splitText = searchResults[idx2].substr(
+                                searchResults[idx2].length - splitLength,
+                                searchResults[idx2].length);
+                            console.log('found ' + searchWord + ' before use ' + splitLength + ' extracted:' + splitText);
+                            searchExtract += '...'
+                                + me.getService('DataUtils').htmlEscapeText(splitText);
+                        }
+                    }
+                }
+            }
+
+            // add searchdata
+            var html = '<div id="details_searchdata_' + idPrefix + node.sysUID + '"'
+                + ' class="field_nodeSearchData">' + searchExtract + '</div>';
+            return html;
+        },
+
+
+
         ganttOptions: {
             ganttRangeStart: ganttRangeStart, 
             ganttRangeEnd: ganttRangeEnd
@@ -8005,19 +8130,15 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
         }
     };
 
-    /** 
-     * callbackhandler to rendernodeLine for node
-     * @param {Object} node      YaioNode render
-     * @param {String} idPrefix  html-prefix for html-id
+    /**
+     * render nodeLine for node (adds it as '#tr' + node.sysUID to fancytree)
+     * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      */
     $scope.renderNodeLine = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
-        setTimeout(function() {
-            var htmlId = '#tr' + idPrefix + node.sysUID;
-            $scope.yaioUtils.renderNodeLine(node, htmlId, true);
-
-            var $html = $($scope.createParentHirarchyBlockForNode(node, idPrefix));
-            $(htmlId + ' #detail_sys_' + node.sysUID).after($html);
+        setTimeout(function(){
+            yaioUtils.renderSearchNodeLine(node, idPrefix, $scope.searchOptions);
         }, 10);
     };
 
@@ -8027,38 +8148,10 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
      * @param {String} idPrefix      html-prefix for html-id
      */
     $scope.renderNodeCard = function(node, idPrefix) {
-        // we need a timeout to put the tr into DOM
+        // we need a timeout to put the div into DOM
         setTimeout(function(){
-            var domId = '#card' + idPrefix + node.sysUID;
-            $scope.yaioUtils.getService('YaioNodeDataRenderer').renderNodeCard(
-                node, domId, $scope.searchOptions.baseSysUID);
-
-            // add parent
-            var $html = $($scope.createParentHirarchyBlockForNode(node, idPrefix));
-            $(domId).find('div.container_data_row').eq(0).after($html);
+            yaioUtils.renderSearchNodeCard(node, idPrefix, $scope.searchOptions);
         }, 10);
-    };
-
-    /**
-     * create parentHirarchy-Block for node
-     * @param {Object} node          node to render
-     * @param {String} idPrefix      html-prefix for html-id
-     * @returns {String}
-     */
-    $scope.createParentHirarchyBlockForNode = function(node, idPrefix) {
-        // render hierarchy
-        var parentNode = node.parentNode;
-        var parentStr = node.name;
-        while (!yaioUtils.getService('DataUtils').isEmptyStringValue(parentNode)) {
-            parentStr = parentNode.name + ' --> ' + parentStr;
-            parentNode = parentNode.parentNode;
-        }
-        parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
-
-        // add hierarchy
-        var html = '<div id="details_parent_' + idPrefix + node.sysUID + '"' +
-            ' class="field_nodeParent">' + parentStr + '</div>';
-        return html;
     };
 
     /**
@@ -9220,13 +9313,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     $scope.renderNodeLine = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
         setTimeout(function(){
-            var htmlId = '#tr' + idPrefix + node.sysUID;
-            $scope.yaioUtils.renderNodeLine(node, htmlId, true);
-
-            // add parent+searchdata
-            var $html = $($scope.createParentHirarchyBlockForNode(node, 'tr' + idPrefix + '_') +
-                $scope.createSearchWordsBlockForNode(node, 'tr' + idPrefix + '_'));
-            $(htmlId + ' #detail_sys_' + node.sysUID).after($html);
+            yaioUtils.renderSearchNodeLine(node, idPrefix, $scope.searchOptions);
         }, 10);
     };
 
@@ -9236,108 +9323,11 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
      * @param {String} idPrefix      html-prefix for html-id
      */
     $scope.renderNodeCard = function(node, idPrefix) {
-        // we need a timeout to put the tr into DOM
+        // we need a timeout to put the div into DOM
         setTimeout(function(){
-            var htmlId = '#card' + idPrefix + node.sysUID;
-            $scope.yaioUtils.getService('YaioNodeDataRenderer').renderNodeCard(
-                node, htmlId, $scope.searchOptions.baseSysUID);
-
-            // add pareent+searchdata
-            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card' + idPrefix + '_'));
-            $(htmlId).find('div.container_data_row').eq(0).after($html);
+            yaioUtils.renderSearchNodeCard(node, idPrefix, $scope.searchOptions);
         }, 10);
     };
-
-    /**
-     * create parentHirarchy-Block for node
-     * @param {Object} node          node to render
-     * @param {String} idPrefix      prefix for html-id
-     * @returns {String}
-     */
-    $scope.createParentHirarchyBlockForNode = function(node, idPrefix) {
-        // render hierarchy
-        var parentNode = node.parentNode;
-        var parentStr = node.name;
-        while (!yaioUtils.getService('DataUtils').isEmptyStringValue(parentNode)) {
-            parentStr = parentNode.name + ' --> ' + parentStr;
-            parentNode = parentNode.parentNode;
-        }
-        parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
-
-        // add hierarchy
-        var html = '<div id="details_parent_' + idPrefix + node.sysUID + '"'
-            + ' class="field_nodeParent">' + parentStr + '</div>';
-        return html;
-    };
-
-    /**
-     * create searchWords-Block for node
-     * @param {Object} node          node to render
-     * @param {String} idPrefix      html-prefix for html-id
-     * @returns {String}
-     */
-    $scope.createSearchWordsBlockForNode = function(node, idPrefix) {
-        // extract search words
-        var searchExtract = '';
-        if ($scope.searchOptions.fulltext
-            && $scope.searchOptions.fulltext.length > 0
-            && !yaioUtils.getService('DataUtils').isUndefinedStringValue(node.nodeDesc)) {
-            // split to searchwords
-            var searchWords = $scope.searchOptions.fulltext.split(' ');
-            var searchWord, searchResults, splitLength, splitText;
-
-            var descText = node.nodeDesc;
-            descText = descText.replace(/<WLBR>/g, '\n');
-            descText = descText.replace(/<WLESC>/g, '\\');
-            descText = descText.replace(/<WLTAB>/g, '\t');
-            descText = descText.toLowerCase();
-
-            for (var idx in searchWords) {
-                if (!searchWords.hasOwnProperty(idx)) {
-                    continue;
-                }
-                searchWord = yaioUtils.getService('DataUtils').escapeRegExp(searchWords[idx]);
-
-                // split by searchwords
-                searchResults = descText.toLowerCase().split(searchWord.toLowerCase());
-
-                // add dummy-element if desc start/ends with searchWord
-                if (descText.search(searchWord.toLowerCase()) === 0) {
-                    searchResults.insert(' ');
-                }
-                if (descText.search(searchWord.toLowerCase()) === (descText.length - searchWord.length)) {
-                    searchResults.push(' ');
-                }
-
-                // iterate and show 50 chars before and behind
-                for (var idx2 = 0; idx2 < searchResults.length; idx2++) {
-//                            console.log('found ' + searchWord + ' after ' + searchResults[idx2]);
-                    if (idx2 > 0) {
-                        splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
-                        splitText = searchResults[idx2].substr(0, splitLength);
-                        console.log('found ' + searchWord + ' after use ' + splitLength + ' extracted:' + splitText);
-                        searchExtract += '<b>'+ searchWord + '</b>'
-                            + yaioUtils.getService('DataUtils').htmlEscapeText(splitText) + '...';
-                    }
-                    if (idx2 < searchResults.length) {
-                        splitLength = (searchResults[idx2].length > 50 ? 50 : searchResults[idx2].length);
-                        splitText = searchResults[idx2].substr(
-                            searchResults[idx2].length - splitLength,
-                            searchResults[idx2].length);
-                        console.log('found ' + searchWord + ' before use ' + splitLength + ' extracted:' + splitText);
-                        searchExtract += '...'
-                            + yaioUtils.getService('DataUtils').htmlEscapeText(splitText);
-                    }
-                }
-            }
-        }
-
-        // add searchdata
-        var html = '<div id="details_searchdata_' + idPrefix + node.sysUID + '"'
-            + ' class="field_nodeSearchData">' + searchExtract + '</div>';
-        return html;
-    };
-
 
     /** 
      * recalc ganttblocks for all $scope.nodes
