@@ -45,7 +45,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             arrClassFilter: [],
             strMetaNodeTypeTagsFilter: '',
             strMetaNodeSubTypeFilter: '',
-            arrMetaNodeSubTypeFilter: []
+            arrMetaNodeSubTypeFilter: [],
+            praefix: ''
         };
         if ($routeParams.curPage) {
             $scope.searchOptions.curPage = decodeURI($routeParams.curPage);
@@ -244,36 +245,36 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     /** 
      * render nodeLine for node (adds it as '#tr' + node.sysUID to fancytree)
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      */
-    $scope.renderNodeLine = function(node) {
+    $scope.renderNodeLine = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
         setTimeout(function(){
-                $scope.yaioUtils.renderNodeLine(node, '#tr' + node.sysUID, false);
-                console.log('renderNodeLine: done to:' + '#tr' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+            var htmlId = '#tr' + idPrefix + node.sysUID;
+            $scope.yaioUtils.renderNodeLine(node, htmlId, true);
 
-                // add pareent+searchdata
-                var $html = $($scope.createParentHirarchyBlockForNode(node, 'tr_') + $scope.createSearchWordsBlockForNode(node));
-                $('#detail_sys_' + node.sysUID).after($html);
-                console.log('renderNodeLine: added parent+searchdata to:' + '#detail_sys_' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
-
-            }, 10);
+            // add parent+searchdata
+            var $html = $($scope.createParentHirarchyBlockForNode(node, 'tr' + idPrefix + '_') +
+                $scope.createSearchWordsBlockForNode(node, 'tr' + idPrefix + '_'));
+            $(htmlId + ' #detail_sys_' + node.sysUID).after($html);
+        }, 10);
     };
 
     /**
      * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      */
-    $scope.renderNodeCard = function(node) {
+    $scope.renderNodeCard = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
         setTimeout(function(){
-            $scope.yaioUtils.renderNodeCard(node, '#card' + node.sysUID);
-            console.log('renderNodeLine: done to:' + '#card' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+            var htmlId = '#card' + idPrefix + node.sysUID;
+            $scope.yaioUtils.getService('YaioNodeDataRenderer').renderNodeCard(
+                node, htmlId, $scope.searchOptions.baseSysUID);
 
             // add pareent+searchdata
-            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card_'));
-            $('#card' + node.sysUID).find('div.container_data_row').eq(0).after($html);
-            console.log('renderNodeLine: added parent+searchdata to:' + '#card' + node.sysUID + $('#card' + node.sysUID).length);
-
+            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card' + idPrefix + '_'));
+            $(htmlId).find('div.container_data_row').eq(0).after($html);
         }, 10);
     };
 
@@ -294,19 +295,18 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
 
         // add hierarchy
-        var html = '<div id="' + idPrefix + 'details_parent_' + node.sysUID + '"'
-            + ' class="field_nodeParent">'
-            + parentStr
-            + '</div>';
+        var html = '<div id="details_parent_' + idPrefix + node.sysUID + '"'
+            + ' class="field_nodeParent">' + parentStr + '</div>';
         return html;
     };
 
     /**
      * create searchWords-Block for node
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      * @returns {String}
      */
-    $scope.createSearchWordsBlockForNode = function(node) {
+    $scope.createSearchWordsBlockForNode = function(node, idPrefix) {
         // extract search words
         var searchExtract = '';
         if ($scope.searchOptions.fulltext
@@ -363,10 +363,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         // add searchdata
-        var html = '<div id="details_searchdata_' + node.sysUID + '"'
-            + ' class="field_nodeSearchData">'
-            + searchExtract
-            + '</div>';
+        var html = '<div id="details_searchdata_' + idPrefix + node.sysUID + '"'
+            + ' class="field_nodeSearchData">' + searchExtract + '</div>';
         return html;
     };
 

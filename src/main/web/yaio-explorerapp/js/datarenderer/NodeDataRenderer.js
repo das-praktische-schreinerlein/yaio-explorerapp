@@ -44,16 +44,16 @@ Yaio.NodeDataRenderer = function(appBase) {
      * @param {Boolean} flgRenderMinimum       render only the minimal subset of data
      */
     me.renderColumnsForNode = function(event, data, preventActionsColum, flgRenderMinimum) {
-        var svcDataUtils = me.appBase.get('DataUtils');
         var svcYaioExplorerCommands = me.appBase.get('YaioExplorerCommands');
         var svcYaioNodeGanttRenderer = me.appBase.get('YaioNodeGanttRenderer');
 
         // extract nodedata
         var node = data.node;
         var basenode = node.data.basenode;
-        var nodestate = basenode.state;
-        var statestyle = 'yaio-node-state-' + nodestate;
-    
+
+        var statestyle = me.calcStateStyle(basenode);
+        var name = me.calcNodeName(basenode);
+
         var colName = 0, colData = 1, colGantt = 2, colActions = 3;
         
         // get tdlist
@@ -67,37 +67,26 @@ Yaio.NodeDataRenderer = function(appBase) {
         $expanderEle.attr('data-tooltip', 'tooltip.command.NodeShow');
         $expanderEle.attr('lang', 'tech');
         $expanderEle.attr('id', 'expander' + basenode.sysUID);
-    
+
         // replace checkbox by center-command
         var $checkEle = $tdList.eq(colName).find('span.fancytree-checkbox');
         $checkEle.html('<a href="#/show/' + basenode.sysUID + '"' +
             ' class="yaio-icon-center"' +
             ' lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>');
         $checkEle.removeClass('fancytree-checkbox').addClass('command-center');
-    
+
         // manipulate name-column
         $tdList.eq(colName).addClass('container_field')
                      .addClass('fieldtype_name')
                      .addClass('field_name');
         
-        // define name
-        var name = basenode.name;
-        if (me.appBase.DataUtils.isUndefinedStringValue(name)) {
-           if (basenode.className === 'UrlResNode') {
-               name = basenode.resLocName;
-           } else if (basenode.className === 'SymLinkNode') {
-               name = basenode.symLinkName;
-           }
-        }
-    
         // insert state before name-span
         var $nameEle = $tdList.eq(colName).find('span.fancytree-title');
         var $div = me.$('<div style="display: inline-block" />')
             .append(me.$('<span class="' + statestyle + ' fancytree-title-state" lang="de" id="titleState' + basenode.sysUID + '"/>')
                 .html(basenode.state + ' '))
             .append('&nbsp;')
-            .append(me.$('<span class="fancytree-title2" id="title' + basenode.sysUID + '">' +
-                svcDataUtils.htmlEscapeText(name) + '</span>'));
+            .append(me.$('<span class="fancytree-title2" id="title' + basenode.sysUID + '">' + name + '</span>'));
         $nameEle.html($div);
 
         // add nodeData
@@ -153,40 +142,22 @@ Yaio.NodeDataRenderer = function(appBase) {
     };
 
     /**
-     * render a nodecard
-     * @param {Object} basenode    yaio-node to render
-     * @param {String} filter      the filter to append data
+     * calc the style for the state of the node
+     * @param {Object} basenode    yaio-node to calc statestyle from
+     * @return {String} stylename
      */
-    me.renderNodeCard = function(basenode, filter) {
-        var svcDataUtils = me.appBase.get('DataUtils');
-
+    me.calcStateStyle = function(basenode) {
         // extract nodedata
         var nodestate = basenode.state;
-        var statestyle = 'yaio-node-state-' + nodestate;
+        return 'yaio-node-state-' + nodestate;
+    };
 
-        var colName = 0, colData = 1;
-
-        // get tdlist
-        var $divList = me.$(filter).find('>div');
-
-        // replace checkbox by center-command
-        var $expanderEle = $divList.eq(colName).find('span.fancytree-expander');
-        $expanderEle.attr('data-tooltip', 'tooltip.command.NodeShow');
-        $expanderEle.attr('lang', 'tech');
-        $expanderEle.attr('id', 'expander' + basenode.sysUID);
-
-        // replace checkbox by center-command
-        var $checkEle = $divList.eq(colName).find('span.fancytree-checkbox');
-        $checkEle.html('<a href="#/show/' + basenode.sysUID + '"' +
-            ' class="yaio-icon-center"' +
-            ' lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>');
-        $checkEle.removeClass('fancytree-checkbox').addClass('command-center');
-
-        // manipulate name-column
-        $divList.eq(colName).addClass('container_field')
-            .addClass('fieldtype_name')
-            .addClass('field_name');
-
+    /**
+     * calc the name for the node
+     * @param {Object} basenode    yaio-node to calc nodename from
+     * @return {String} stylename
+     */
+    me.calcNodeName = function(basenode) {
         // define name
         var name = basenode.name;
         if (me.appBase.DataUtils.isUndefinedStringValue(name)) {
@@ -196,29 +167,64 @@ Yaio.NodeDataRenderer = function(appBase) {
                 name = basenode.symLinkName;
             }
         }
+        name = me.appBase.DataUtils.htmlEscapeText(name);
+        return name;
+    };
 
-        // insert state before name-span
-        var $nameEle = $divList.eq(colName).find('span.fancytree-title');
-        var $div = me.$('<div style="display: inline" />')
-            .append(me.$('<span class="' + statestyle + ' fancytree-title-state" lang="de" id="titleState' + basenode.sysUID + '"/>')
-                .html(basenode.state + ' '))
-            .append('&nbsp;')
-            .append(me.$('<span class="fancytree-title2" id="title' + basenode.sysUID + '">' +
-                svcDataUtils.htmlEscapeText(name) + '</span>'));
-        $nameEle.html($div);
+    /**
+     * calc the metanumber for the node
+     * @param {Object} basenode    yaio-node to calc metanumber from
+     * @return {String} stylename
+     */
+    me.calcMetaNumber = function(basenode) {
+        return me.appBase.DataUtils.htmlEscapeText(basenode.metaNodePraefix + basenode.metaNodeNummer);
+    };
 
+    /**
+     * calc the typeName for the node
+     * @param {Object} basenode    yaio-node to calc typeName from
+     * @return {String} stylename
+     */
+    me.calcTypeName = function(basenode) {
+        var typeData = basenode.className;
+        if (!me.appBase.DataUtils.isEmptyStringValue(basenode.metaNodeSubType)) {
+            typeData = basenode.metaNodeSubType;
+        }
+        return typeData;
+    };
+
+
+    /**
+     * render a nodecard
+     * @param {Object} basenode    yaio-node to render
+     * @param {String} filter      the filter to append data
+     * @param {String} baseSysUID  id of the basenode for this search
+     */
+    me.renderNodeCard = function(basenode, filter, baseSysUID) {
         // add nodeData
         var msg = 'datablock for node:' + basenode.sysUID;
+
+        var stateStyle = me.calcStateStyle(basenode);
+        var name = me.calcNodeName(basenode);
+        var typeName = me.calcTypeName(basenode);
+
         console.log('renderBaseDataBlock START: ' + msg);
+        var $ue = me.$('<div class="jsh-md-infobox-ue ' + stateStyle + '">' +
+            '<a href="#/show/' + baseSysUID + '/activate/' + basenode.sysUID + '/" class="yaio-icon-open"></a>' +
+            '<a href="#/show/' + basenode.sysUID + '" class="yaio-icon-center" lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>' +
+            ' <span lang="tech">' + basenode.state + '</span> ' +
+            ' - <span lang="tech">' + typeName + '</span>' +
+            ' - <span>' + me.calcMetaNumber(basenode) + '</span>' +
+            '</div>');
+        var $actions = me.$('<div class="field_name">' + name + '</div>');
+
+        // get tdlist
+        var $parentDiv = me.$(filter);
 
         // current datablock
         var $table = me.$('<div class="container_data_table"/>');
         var $row = me.$('<div class="container_data_row"/>');
         $table.append($row);
-
-        // default fields
-        me._appendTypeDataBlocks(basenode, $row);
-        me._appendMetaDataBlocks(basenode, $row);
 
         // data
         $row = me.$('<div class="container_data_row"/>');
@@ -253,7 +259,9 @@ Yaio.NodeDataRenderer = function(appBase) {
                 });
         }
 
-        $divList.eq(colData).html($table).addClass('block_nodedata');
+        $parentDiv.append($ue);
+        $parentDiv.append($actions);
+        $parentDiv.append($table);
     };
 
     /**
@@ -535,8 +543,7 @@ Yaio.NodeDataRenderer = function(appBase) {
      * @param {String} statestyle             style for the workflow-state to add to blocks
      */
     me._appendMetaDataBlocks = function(basenode, $row, statestyle) {
-        var svcDataUtils = me.appBase.get('DataUtils');
-        $row.append(me.$('<div />').html(svcDataUtils.htmlEscapeText(basenode.metaNodePraefix + basenode.metaNodeNummer))
+        $row.append(me.$('<div />').html(me.calcMetaNumber(basenode))
             .addClass('container_field')
             .addClass('fieldtype_basedata')
             .addClass('fieldtype_metanummer')
@@ -551,11 +558,7 @@ Yaio.NodeDataRenderer = function(appBase) {
      * @param {String} statestyle             style for the workflow-state to add to blocks
      */
     me._appendTypeDataBlocks = function(basenode, $row, statestyle) {
-        var svcDataUtils = me.appBase.get('DataUtils');
-        var typeData = basenode.className;
-        if (!svcDataUtils.isEmptyStringValue(basenode.metaNodeSubType)) {
-            typeData = basenode.metaNodeSubType;
-        }
+        var typeData = me.calcTypeName(basenode);
         $row.append(me.$('<div lang="tech" />').html(typeData)
             .addClass('container_field')
             .addClass('fieldtype_basedata')

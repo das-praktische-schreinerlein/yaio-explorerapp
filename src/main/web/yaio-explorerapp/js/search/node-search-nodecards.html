@@ -5,11 +5,6 @@
 *****************************
 *****************************
 -->
-    <div ng-repeat="node in nodes | filter:search" id="card{{node.sysUID}}" data-value="{{node.sysUID}}" class="yaio-nodecard">
-        <div class="yaio-nodecard-actions">
-            <a href="#/show/{{searchOptions.baseSysUID}}/activate/{{node.sysUID}}/" class="yaio-icon-open"></a></span>
-            <span class="fancytree-checkbox"></span>
-            <span class="fancytree-title fancytree-title-list"></span>
-        </div>
-        <div ng-init="renderNodeCard(node)"/>
+    <div ng-repeat="node in nodes | filter:search" id="card{{searchOptions.praefix}}{{node.sysUID}}" data-value="{{node.sysUID}}" class="yaio-nodecard">
+        <div ng-init="renderNodeCard(node, searchOptions.praefix)" />
     </div>

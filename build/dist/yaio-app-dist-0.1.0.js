@@ -1998,16 +1998,16 @@ Yaio.NodeDataRenderer = function(appBase) {
      * @param {Boolean} flgRenderMinimum       render only the minimal subset of data
      */
     me.renderColumnsForNode = function(event, data, preventActionsColum, flgRenderMinimum) {
-        var svcDataUtils = me.appBase.get('DataUtils');
         var svcYaioExplorerCommands = me.appBase.get('YaioExplorerCommands');
         var svcYaioNodeGanttRenderer = me.appBase.get('YaioNodeGanttRenderer');
 
         // extract nodedata
         var node = data.node;
         var basenode = node.data.basenode;
-        var nodestate = basenode.state;
-        var statestyle = 'yaio-node-state-' + nodestate;
-    
+
+        var statestyle = me.calcStateStyle(basenode);
+        var name = me.calcNodeName(basenode);
+
         var colName = 0, colData = 1, colGantt = 2, colActions = 3;
         
         // get tdlist
@@ -2021,37 +2021,26 @@ Yaio.NodeDataRenderer = function(appBase) {
         $expanderEle.attr('data-tooltip', 'tooltip.command.NodeShow');
         $expanderEle.attr('lang', 'tech');
         $expanderEle.attr('id', 'expander' + basenode.sysUID);
-    
+
         // replace checkbox by center-command
         var $checkEle = $tdList.eq(colName).find('span.fancytree-checkbox');
         $checkEle.html('<a href="#/show/' + basenode.sysUID + '"' +
             ' class="yaio-icon-center"' +
             ' lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>');
         $checkEle.removeClass('fancytree-checkbox').addClass('command-center');
-    
+
         // manipulate name-column
         $tdList.eq(colName).addClass('container_field')
                      .addClass('fieldtype_name')
                      .addClass('field_name');
         
-        // define name
-        var name = basenode.name;
-        if (me.appBase.DataUtils.isUndefinedStringValue(name)) {
-           if (basenode.className === 'UrlResNode') {
-               name = basenode.resLocName;
-           } else if (basenode.className === 'SymLinkNode') {
-               name = basenode.symLinkName;
-           }
-        }
-    
         // insert state before name-span
         var $nameEle = $tdList.eq(colName).find('span.fancytree-title');
         var $div = me.$('<div style="display: inline-block" />')
             .append(me.$('<span class="' + statestyle + ' fancytree-title-state" lang="de" id="titleState' + basenode.sysUID + '"/>')
                 .html(basenode.state + ' '))
             .append('&nbsp;')
-            .append(me.$('<span class="fancytree-title2" id="title' + basenode.sysUID + '">' +
-                svcDataUtils.htmlEscapeText(name) + '</span>'));
+            .append(me.$('<span class="fancytree-title2" id="title' + basenode.sysUID + '">' + name + '</span>'));
         $nameEle.html($div);
 
         // add nodeData
@@ -2107,40 +2096,22 @@ Yaio.NodeDataRenderer = function(appBase) {
     };
 
     /**
-     * render a nodecard
-     * @param {Object} basenode    yaio-node to render
-     * @param {String} filter      the filter to append data
+     * calc the style for the state of the node
+     * @param {Object} basenode    yaio-node to calc statestyle from
+     * @return {String} stylename
      */
-    me.renderNodeCard = function(basenode, filter) {
-        var svcDataUtils = me.appBase.get('DataUtils');
-
+    me.calcStateStyle = function(basenode) {
         // extract nodedata
         var nodestate = basenode.state;
-        var statestyle = 'yaio-node-state-' + nodestate;
+        return 'yaio-node-state-' + nodestate;
+    };
 
-        var colName = 0, colData = 1;
-
-        // get tdlist
-        var $divList = me.$(filter).find('>div');
-
-        // replace checkbox by center-command
-        var $expanderEle = $divList.eq(colName).find('span.fancytree-expander');
-        $expanderEle.attr('data-tooltip', 'tooltip.command.NodeShow');
-        $expanderEle.attr('lang', 'tech');
-        $expanderEle.attr('id', 'expander' + basenode.sysUID);
-
-        // replace checkbox by center-command
-        var $checkEle = $divList.eq(colName).find('span.fancytree-checkbox');
-        $checkEle.html('<a href="#/show/' + basenode.sysUID + '"' +
-            ' class="yaio-icon-center"' +
-            ' lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>');
-        $checkEle.removeClass('fancytree-checkbox').addClass('command-center');
-
-        // manipulate name-column
-        $divList.eq(colName).addClass('container_field')
-            .addClass('fieldtype_name')
-            .addClass('field_name');
-
+    /**
+     * calc the name for the node
+     * @param {Object} basenode    yaio-node to calc nodename from
+     * @return {String} stylename
+     */
+    me.calcNodeName = function(basenode) {
         // define name
         var name = basenode.name;
         if (me.appBase.DataUtils.isUndefinedStringValue(name)) {
@@ -2150,29 +2121,64 @@ Yaio.NodeDataRenderer = function(appBase) {
                 name = basenode.symLinkName;
             }
         }
+        name = me.appBase.DataUtils.htmlEscapeText(name);
+        return name;
+    };
 
-        // insert state before name-span
-        var $nameEle = $divList.eq(colName).find('span.fancytree-title');
-        var $div = me.$('<div style="display: inline" />')
-            .append(me.$('<span class="' + statestyle + ' fancytree-title-state" lang="de" id="titleState' + basenode.sysUID + '"/>')
-                .html(basenode.state + ' '))
-            .append('&nbsp;')
-            .append(me.$('<span class="fancytree-title2" id="title' + basenode.sysUID + '">' +
-                svcDataUtils.htmlEscapeText(name) + '</span>'));
-        $nameEle.html($div);
+    /**
+     * calc the metanumber for the node
+     * @param {Object} basenode    yaio-node to calc metanumber from
+     * @return {String} stylename
+     */
+    me.calcMetaNumber = function(basenode) {
+        return me.appBase.DataUtils.htmlEscapeText(basenode.metaNodePraefix + basenode.metaNodeNummer);
+    };
 
+    /**
+     * calc the typeName for the node
+     * @param {Object} basenode    yaio-node to calc typeName from
+     * @return {String} stylename
+     */
+    me.calcTypeName = function(basenode) {
+        var typeData = basenode.className;
+        if (!me.appBase.DataUtils.isEmptyStringValue(basenode.metaNodeSubType)) {
+            typeData = basenode.metaNodeSubType;
+        }
+        return typeData;
+    };
+
+
+    /**
+     * render a nodecard
+     * @param {Object} basenode    yaio-node to render
+     * @param {String} filter      the filter to append data
+     * @param {String} baseSysUID  id of the basenode for this search
+     */
+    me.renderNodeCard = function(basenode, filter, baseSysUID) {
         // add nodeData
         var msg = 'datablock for node:' + basenode.sysUID;
+
+        var stateStyle = me.calcStateStyle(basenode);
+        var name = me.calcNodeName(basenode);
+        var typeName = me.calcTypeName(basenode);
+
         console.log('renderBaseDataBlock START: ' + msg);
+        var $ue = me.$('<div class="jsh-md-infobox-ue ' + stateStyle + '">' +
+            '<a href="#/show/' + baseSysUID + '/activate/' + basenode.sysUID + '/" class="yaio-icon-open"></a>' +
+            '<a href="#/show/' + basenode.sysUID + '" class="yaio-icon-center" lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>' +
+            ' <span lang="tech">' + basenode.state + '</span> ' +
+            ' - <span lang="tech">' + typeName + '</span>' +
+            ' - <span>' + me.calcMetaNumber(basenode) + '</span>' +
+            '</div>');
+        var $actions = me.$('<div class="field_name">' + name + '</div>');
+
+        // get tdlist
+        var $parentDiv = me.$(filter);
 
         // current datablock
         var $table = me.$('<div class="container_data_table"/>');
         var $row = me.$('<div class="container_data_row"/>');
         $table.append($row);
-
-        // default fields
-        me._appendTypeDataBlocks(basenode, $row);
-        me._appendMetaDataBlocks(basenode, $row);
 
         // data
         $row = me.$('<div class="container_data_row"/>');
@@ -2207,7 +2213,9 @@ Yaio.NodeDataRenderer = function(appBase) {
                 });
         }
 
-        $divList.eq(colData).html($table).addClass('block_nodedata');
+        $parentDiv.append($ue);
+        $parentDiv.append($actions);
+        $parentDiv.append($table);
     };
 
     /**
@@ -2489,8 +2497,7 @@ Yaio.NodeDataRenderer = function(appBase) {
      * @param {String} statestyle             style for the workflow-state to add to blocks
      */
     me._appendMetaDataBlocks = function(basenode, $row, statestyle) {
-        var svcDataUtils = me.appBase.get('DataUtils');
-        $row.append(me.$('<div />').html(svcDataUtils.htmlEscapeText(basenode.metaNodePraefix + basenode.metaNodeNummer))
+        $row.append(me.$('<div />').html(me.calcMetaNumber(basenode))
             .addClass('container_field')
             .addClass('fieldtype_basedata')
             .addClass('fieldtype_metanummer')
@@ -2505,11 +2512,7 @@ Yaio.NodeDataRenderer = function(appBase) {
      * @param {String} statestyle             style for the workflow-state to add to blocks
      */
     me._appendTypeDataBlocks = function(basenode, $row, statestyle) {
-        var svcDataUtils = me.appBase.get('DataUtils');
-        var typeData = basenode.className;
-        if (!svcDataUtils.isEmptyStringValue(basenode.metaNodeSubType)) {
-            typeData = basenode.metaNodeSubType;
-        }
+        var typeData = me.calcTypeName(basenode);
         $row.append(me.$('<div lang="tech" />').html(typeData)
             .addClass('container_field')
             .addClass('fieldtype_basedata')
@@ -7555,7 +7558,7 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
     appBase.configureService('Angular.$rootScope', function() { return $rootScope; });
     appBase.configureService('Angular.$q', function() { return $q; });
 
-    return {
+    var me = {
         /** 
          * open helpsite
          * @param {String} url                    the url of the helpsite
@@ -7617,16 +7620,6 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             appBase.get('YaioNodeDataRenderer').renderColumnsForNode(null, data, true, flgMinimum);
         },
 
-        /**
-         * Renders the full cardblock for corresponding basenode.
-         * @param {Object} node           node-data to render
-         * @param {String} divIdSelector  div-selector to append the rendered data
-         */
-        renderNodeCard: function(node, divIdSelector) {
-            console.log('renderNodeCard nodeId=' + node.sysUID + ' div=' + $(divIdSelector).length);
-            appBase.get('YaioNodeDataRenderer').renderNodeCard(node, divIdSelector);
-        },
-
         ganttOptions: {
             ganttRangeStart: ganttRangeStart, 
             ganttRangeEnd: ganttRangeEnd
@@ -7658,6 +7651,8 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
         }
         
     };
+
+    return me;
 }]);
 
 /** 
@@ -8012,28 +8007,45 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
 
     /** 
      * callbackhandler to rendernodeLine for node
-     * @param {Object} node    YaioNode render
+     * @param {Object} node      YaioNode render
+     * @param {String} idPrefix  html-prefix for html-id
      */
-    $scope.renderNodeLine = function(node) {
+    $scope.renderNodeLine = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
         setTimeout(function() {
-                var domId = $scope.searchOptions.praefix + node.sysUID;
-                $scope.yaioUtils.renderNodeLine(node, '#tr' + domId, true);
-                console.log('renderNodeLine: done to:' + '#tr' + domId + $('#detail_sys_' + domId).length);
+            var htmlId = '#tr' + idPrefix + node.sysUID;
+            $scope.yaioUtils.renderNodeLine(node, htmlId, true);
 
-                var $html = $($scope.createParentHirarchyBlockForNode(node));
-                $('#tr' + domId + ' #detail_sys_' + node.sysUID).after($html);
-                console.log('renderNodeLine: added searchdata to:' +
-                    '#detail_sys_' + domId + $('#detail_sys_' + domId).length);
-            }, 10);
+            var $html = $($scope.createParentHirarchyBlockForNode(node, idPrefix));
+            $(htmlId + ' #detail_sys_' + node.sysUID).after($html);
+        }, 10);
+    };
+
+    /**
+     * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
+     * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
+     */
+    $scope.renderNodeCard = function(node, idPrefix) {
+        // we need a timeout to put the tr into DOM
+        setTimeout(function(){
+            var domId = '#card' + idPrefix + node.sysUID;
+            $scope.yaioUtils.getService('YaioNodeDataRenderer').renderNodeCard(
+                node, domId, $scope.searchOptions.baseSysUID);
+
+            // add parent
+            var $html = $($scope.createParentHirarchyBlockForNode(node, idPrefix));
+            $(domId).find('div.container_data_row').eq(0).after($html);
+        }, 10);
     };
 
     /**
      * create parentHirarchy-Block for node
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      * @returns {String}
      */
-    $scope.createParentHirarchyBlockForNode = function(node) {
+    $scope.createParentHirarchyBlockForNode = function(node, idPrefix) {
         // render hierarchy
         var parentNode = node.parentNode;
         var parentStr = node.name;
@@ -8044,29 +8056,9 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
         parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
 
         // add hierarchy
-        var html = '<div id="details_parent_' + node.sysUID + '"'
-            + ' class="field_nodeParent">'
-            + parentStr
-            + '</div>';
+        var html = '<div id="details_parent_' + idPrefix + node.sysUID + '"' +
+            ' class="field_nodeParent">' + parentStr + '</div>';
         return html;
-    };
-
-    /**
-     * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
-     * @param {Object} node          node to render
-     */
-    $scope.renderNodeCard = function(node) {
-        // we need a timeout to put the tr into DOM
-        setTimeout(function(){
-            $scope.yaioUtils.renderNodeCard(node, '#card' + node.sysUID);
-            console.log('renderNodeLine: done to:' + '#card' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
-
-            // add pareent+searchdata
-            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card_'));
-            $('#card' + node.sysUID).find('div.container_data_row').eq(0).after($html);
-            console.log('renderNodeLine: added parent+searchdata to:' + '#card' + node.sysUID + $('#card' + node.sysUID).length);
-
-        }, 10);
     };
 
     /**
@@ -9023,7 +9015,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             arrClassFilter: [],
             strMetaNodeTypeTagsFilter: '',
             strMetaNodeSubTypeFilter: '',
-            arrMetaNodeSubTypeFilter: []
+            arrMetaNodeSubTypeFilter: [],
+            praefix: ''
         };
         if ($routeParams.curPage) {
             $scope.searchOptions.curPage = decodeURI($routeParams.curPage);
@@ -9222,36 +9215,36 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     /** 
      * render nodeLine for node (adds it as '#tr' + node.sysUID to fancytree)
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      */
-    $scope.renderNodeLine = function(node) {
+    $scope.renderNodeLine = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
         setTimeout(function(){
-                $scope.yaioUtils.renderNodeLine(node, '#tr' + node.sysUID, false);
-                console.log('renderNodeLine: done to:' + '#tr' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+            var htmlId = '#tr' + idPrefix + node.sysUID;
+            $scope.yaioUtils.renderNodeLine(node, htmlId, true);
 
-                // add pareent+searchdata
-                var $html = $($scope.createParentHirarchyBlockForNode(node, 'tr_') + $scope.createSearchWordsBlockForNode(node));
-                $('#detail_sys_' + node.sysUID).after($html);
-                console.log('renderNodeLine: added parent+searchdata to:' + '#detail_sys_' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
-
-            }, 10);
+            // add parent+searchdata
+            var $html = $($scope.createParentHirarchyBlockForNode(node, 'tr' + idPrefix + '_') +
+                $scope.createSearchWordsBlockForNode(node, 'tr' + idPrefix + '_'));
+            $(htmlId + ' #detail_sys_' + node.sysUID).after($html);
+        }, 10);
     };
 
     /**
      * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      */
-    $scope.renderNodeCard = function(node) {
+    $scope.renderNodeCard = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
         setTimeout(function(){
-            $scope.yaioUtils.renderNodeCard(node, '#card' + node.sysUID);
-            console.log('renderNodeLine: done to:' + '#card' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
+            var htmlId = '#card' + idPrefix + node.sysUID;
+            $scope.yaioUtils.getService('YaioNodeDataRenderer').renderNodeCard(
+                node, htmlId, $scope.searchOptions.baseSysUID);
 
             // add pareent+searchdata
-            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card_'));
-            $('#card' + node.sysUID).find('div.container_data_row').eq(0).after($html);
-            console.log('renderNodeLine: added parent+searchdata to:' + '#card' + node.sysUID + $('#card' + node.sysUID).length);
-
+            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card' + idPrefix + '_'));
+            $(htmlId).find('div.container_data_row').eq(0).after($html);
         }, 10);
     };
 
@@ -9272,19 +9265,18 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
 
         // add hierarchy
-        var html = '<div id="' + idPrefix + 'details_parent_' + node.sysUID + '"'
-            + ' class="field_nodeParent">'
-            + parentStr
-            + '</div>';
+        var html = '<div id="details_parent_' + idPrefix + node.sysUID + '"'
+            + ' class="field_nodeParent">' + parentStr + '</div>';
         return html;
     };
 
     /**
      * create searchWords-Block for node
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      * @returns {String}
      */
-    $scope.createSearchWordsBlockForNode = function(node) {
+    $scope.createSearchWordsBlockForNode = function(node, idPrefix) {
         // extract search words
         var searchExtract = '';
         if ($scope.searchOptions.fulltext
@@ -9341,10 +9333,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         // add searchdata
-        var html = '<div id="details_searchdata_' + node.sysUID + '"'
-            + ' class="field_nodeSearchData">'
-            + searchExtract
-            + '</div>';
+        var html = '<div id="details_searchdata_' + idPrefix + node.sysUID + '"'
+            + ' class="field_nodeSearchData">' + searchExtract + '</div>';
         return html;
     };
 

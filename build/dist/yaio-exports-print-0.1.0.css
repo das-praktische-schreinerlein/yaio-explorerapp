@@ -389,6 +389,10 @@
     @page {
         size: landscape;
     }
+
+    div.yaio-nodecard {
+        width: 24%;
+    }
 }
 
 @media print and (orientation: portrait) {
@@ -410,5 +414,9 @@
 
     .globtoc {
         width: 660px !important;
+    }
+
+    div.yaio-nodecard {
+        width: 45%;
     }
 }

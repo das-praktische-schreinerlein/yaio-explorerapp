@@ -113,28 +113,45 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
 
     /** 
      * callbackhandler to rendernodeLine for node
-     * @param {Object} node    YaioNode render
+     * @param {Object} node      YaioNode render
+     * @param {String} idPrefix  html-prefix for html-id
      */
-    $scope.renderNodeLine = function(node) {
+    $scope.renderNodeLine = function(node, idPrefix) {
         // we need a timeout to put the tr into DOM
         setTimeout(function() {
-                var domId = $scope.searchOptions.praefix + node.sysUID;
-                $scope.yaioUtils.renderNodeLine(node, '#tr' + domId, true);
-                console.log('renderNodeLine: done to:' + '#tr' + domId + $('#detail_sys_' + domId).length);
+            var htmlId = '#tr' + idPrefix + node.sysUID;
+            $scope.yaioUtils.renderNodeLine(node, htmlId, true);
 
-                var $html = $($scope.createParentHirarchyBlockForNode(node));
-                $('#tr' + domId + ' #detail_sys_' + node.sysUID).after($html);
-                console.log('renderNodeLine: added searchdata to:' +
-                    '#detail_sys_' + domId + $('#detail_sys_' + domId).length);
-            }, 10);
+            var $html = $($scope.createParentHirarchyBlockForNode(node, idPrefix));
+            $(htmlId + ' #detail_sys_' + node.sysUID).after($html);
+        }, 10);
+    };
+
+    /**
+     * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
+     * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
+     */
+    $scope.renderNodeCard = function(node, idPrefix) {
+        // we need a timeout to put the tr into DOM
+        setTimeout(function(){
+            var domId = '#card' + idPrefix + node.sysUID;
+            $scope.yaioUtils.getService('YaioNodeDataRenderer').renderNodeCard(
+                node, domId, $scope.searchOptions.baseSysUID);
+
+            // add parent
+            var $html = $($scope.createParentHirarchyBlockForNode(node, idPrefix));
+            $(domId).find('div.container_data_row').eq(0).after($html);
+        }, 10);
     };
 
     /**
      * create parentHirarchy-Block for node
      * @param {Object} node          node to render
+     * @param {String} idPrefix      html-prefix for html-id
      * @returns {String}
      */
-    $scope.createParentHirarchyBlockForNode = function(node) {
+    $scope.createParentHirarchyBlockForNode = function(node, idPrefix) {
         // render hierarchy
         var parentNode = node.parentNode;
         var parentStr = node.name;
@@ -145,29 +162,9 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
         parentStr = '<b>' + yaioUtils.getService('DataUtils').htmlEscapeText(parentStr) + '</b>';
 
         // add hierarchy
-        var html = '<div id="details_parent_' + node.sysUID + '"'
-            + ' class="field_nodeParent">'
-            + parentStr
-            + '</div>';
+        var html = '<div id="details_parent_' + idPrefix + node.sysUID + '"' +
+            ' class="field_nodeParent">' + parentStr + '</div>';
         return html;
-    };
-
-    /**
-     * render nodeCard for node (adds it as '#tr' + node.sysUID to fancytree)
-     * @param {Object} node          node to render
-     */
-    $scope.renderNodeCard = function(node) {
-        // we need a timeout to put the tr into DOM
-        setTimeout(function(){
-            $scope.yaioUtils.renderNodeCard(node, '#card' + node.sysUID);
-            console.log('renderNodeLine: done to:' + '#card' + node.sysUID + $('#detail_sys_' + node.sysUID).length);
-
-            // add pareent+searchdata
-            var $html = $($scope.createParentHirarchyBlockForNode(node, 'card_'));
-            $('#card' + node.sysUID).find('div.container_data_row').eq(0).after($html);
-            console.log('renderNodeLine: added parent+searchdata to:' + '#card' + node.sysUID + $('#card' + node.sysUID).length);
-
-        }, 10);
     };
 
     /**

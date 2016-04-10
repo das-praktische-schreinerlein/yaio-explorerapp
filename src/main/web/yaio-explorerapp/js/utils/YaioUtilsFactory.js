@@ -29,7 +29,7 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
     appBase.configureService('Angular.$rootScope', function() { return $rootScope; });
     appBase.configureService('Angular.$q', function() { return $q; });
 
-    return {
+    var me = {
         /** 
          * open helpsite
          * @param {String} url                    the url of the helpsite
@@ -91,16 +91,6 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             appBase.get('YaioNodeDataRenderer').renderColumnsForNode(null, data, true, flgMinimum);
         },
 
-        /**
-         * Renders the full cardblock for corresponding basenode.
-         * @param {Object} node           node-data to render
-         * @param {String} divIdSelector  div-selector to append the rendered data
-         */
-        renderNodeCard: function(node, divIdSelector) {
-            console.log('renderNodeCard nodeId=' + node.sysUID + ' div=' + $(divIdSelector).length);
-            appBase.get('YaioNodeDataRenderer').renderNodeCard(node, divIdSelector);
-        },
-
         ganttOptions: {
             ganttRangeStart: ganttRangeStart, 
             ganttRangeEnd: ganttRangeEnd
@@ -132,4 +122,6 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
         }
         
     };
+
+    return me;
 }]);
