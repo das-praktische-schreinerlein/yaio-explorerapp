@@ -3,7 +3,7 @@
 
 <div class='box yaio-box add2toc-h1 yaio-box-explorer' toclabel='Explorer' id='box_explorer'>
     <div class='boxline boxline-ue2 yaio-boxline-ue2 yaio-boxline-ue2-explorer' id='ue_explorer'>
-      <div id="containerMasterUe">YAIO - D'Artagnan -Dashboard</div>
+      <div id="containerMasterUe">YAIO - D'Artagnan - Dashboard</div>
       <div id="containerCurrentSource" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/sourceselector/current-source-main.html'"></div>
       <div id="containerInfoCommands">
           <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/frontpage/menu-main.html'"></div>
@@ -28,26 +28,16 @@
 </div>
 
 <script type="text/javascript">
-    // format markdown-extension
-    yaioAppBase.get('YaioFormatter').runAllRendererOnBlock('#front-content-intro');
-
     // activate elements after 1 second
     setTimeout(function() { 
-        // activate speech recognition
-        yaioAppBase.get('YaioLayout').addSpeechRecognitionToElements();
-        yaioAppBase.get('YaioLayout').addDatePickerToElements();
-
         // add resize event
         $( window ).resize(function() {
             yaioAppBase.get('YaioLayout').setupAppSize();
         });    
-
     }, 1000);
     
-    // add TOC after 3 second
+    // do toggler
     setTimeout(function() { 
-        // add TOC
-        yaioAppBase.get('YaioFormatter').addTOCForBlock('#sidebartoc', '#front-content-intro', { toc: { topLink: 'Seitenkopf'}});
         yaioAppBase.get('YaioLayout').jMATService.getPageLayoutService().doAllBlockToggler(false);
         yaioAppBase.get('YaioLayout').setupAppSize();
     }, 3000);
