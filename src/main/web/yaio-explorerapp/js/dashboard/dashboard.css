@@ -18,14 +18,7 @@
  *****************************************
  *****************************************/
 #dashboard-content-current {
-    overflow-y:auto;
-    overflow-x: hidden;
-    clear: both;
-    float: left;
-}
-
-#dashboard-content-current {
-    overflow-y:auto;
+    overflow-y: auto;
     overflow-x: hidden;
     clear: both;
     float: left;
@@ -48,4 +41,70 @@
     font-weight: bold;
     text-align: left;
 }
- 
+
+/*****************************************
+ *****************************************
+ * workboard
+ *****************************************
+ *****************************************/
+#workboard-content-current {
+    overflow-y: auto;
+    overflow-x: hidden;
+    clear: both;
+    float: left;
+    padding-right: 20px;
+}
+
+#workboard-content-current .togglecontainer {
+    max-width: 1205px;
+}
+
+#workboard-content-current .boxline-dashboard {
+    max-width: 1205px;
+    width: 1205px;
+}
+
+.boxline-workboard {
+    color: black;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+
+table.workboardTable {
+    border: 2px solid black;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table.workboardTable td, table.workboardTable th {
+    border: 2px solid  black;
+    vertical-align: top;
+    text-align: center;
+}
+
+table.workboardTable th {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+td.yaio-workboard-column-label, th.yaio-workboard-column-label {
+    width: 200px;
+}
+td.yaio-workboard-column-data, th.yaio-workboard-column-data {
+    width: 310px;
+}
+
+span.yaio-workboard-rowname {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+#workboard-content-current div.yaio-nodecard {
+    width: 100%;
+}
+
+#workboard-content-current div.yaio-nodecard-container {
+    margin: 3px;
+}

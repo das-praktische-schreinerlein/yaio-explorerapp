@@ -1,6 +1,6 @@
 <div class='box yaio-box' ng-init="doFulltextSearch()">
     <div class='boxline boxline-dashboard boxline-dashboard-{{searchOptions.praefix}} boxline-dashboard-{{searchOptions.praefix}}-{{searchOptions.total}}' id="ue_dashboard_{{searchOptions.praefix}}">{{searchOptions.total}} <span lang='tech' translate="{{searchOptions.label}}">{{searchOptions.label}}</span>
-        <a ng-if="searchOptions.total > 0" href="#{{createSearchUri();}}" data-tooltip='tooltip.command.DashboardMoreResults' lang='tech' class="" translate="common.command.DashboardMoreResults">Alle anzeigen</a>
+        <a class="button" ng-if="searchOptions.total > searchOptions.pageSize" href="#{{createSearchUri();}}" data-tooltip='tooltip.command.DashboardMoreResults' lang='tech' class="" translate="common.command.DashboardMoreResults">Alle anzeigen</a>
     </div>
     <div class='togglecontainer togglecontainer-dashboard togglecontainer-dashboard-{{searchOptions.praefix}}' id="togglecontainer_dashboard_{{searchOptions.praefix}}">
 

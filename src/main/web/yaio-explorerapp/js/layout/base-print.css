@@ -18,6 +18,10 @@
         background: none;
     }
 
+    .hide-if-printversion {
+        display: none !important;
+    }
+
     /*****************************************
      *****************************************
      * base
@@ -136,6 +140,17 @@
 
     #sidebartoc {
         display: none !important;
+    }
+
+    #workboard-content-current div.yaio-nodecard {
+        width: 100% !important;
+    }
+
+    td.yaio-workboard-column-label, th.yaio-workboard-column-label {
+        width: 20%;
+    }
+    td.yaio-workboard-column-data, th.yaio-workboard-column-data {
+        width: 26%;
     }
 }
 
