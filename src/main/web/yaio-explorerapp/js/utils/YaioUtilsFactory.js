@@ -30,7 +30,72 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
     appBase.configureService('Angular.$q', function() { return $q; });
 
     var me = {
-        /** 
+        now: function() {
+            var date = new Date();
+            return date;
+        },
+
+        getDayOfWeek: function(date, dayOfWeek) {
+            date = new Date(date.getTime ());
+            date.setDate(date.getDate() + (dayOfWeek - date.getDay()) % 7);
+            return date;
+        },
+
+        getWithTime00: function(date) {
+            date = new Date(date.getTime ());
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            return date;
+        },
+
+        getWithTime24: function(date) {
+            date = new Date(date.getTime ());
+            date.setHours(23);
+            date.setMinutes(59);
+            date.setSeconds(59);
+            return date;
+        },
+
+        getFirstDayOfMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth(), 1);
+            return date;
+        },
+
+        getLastDayOfMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()+1, 0);
+            return date;
+        },
+
+        getLastMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
+            return date;
+        },
+
+        getNextMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()+1, date.getDay());
+            return date;
+        },
+
+        getLastWeek: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
+            return date;
+        },
+
+        getNextWeek: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
+            return date;
+        },
+
+
+        /**
          * open helpsite
          * @param {String} url                    the url of the helpsite
          */
