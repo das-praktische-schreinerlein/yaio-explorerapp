@@ -7696,7 +7696,7 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
          */
         renderSearchNodeLine: function(node, idPrefix, searchOptions) {
             var htmlId = '#tr' + idPrefix + node.sysUID;
-            me.renderNodeLine(node, htmlId, true);
+            me.renderNodeLine(node, htmlId, searchOptions.flgRenderMinimum);
 
             // add parent+searchdata
             var $html = $(me.createParentHirarchyBlockForNode(node, 'tr' + idPrefix + '_') +
@@ -8117,6 +8117,7 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
         // create search
         $scope.nodes = [];
         $scope.searchOptions = {
+            flgRenderMinimum: true,
             curPage: 1,
             pageSize: 10,
             searchSort: 'lastChangeDown',
@@ -9212,6 +9213,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         $scope.nodes = [];
 
         $scope.searchOptions = {
+            flgRenderMinimum: false,
             curPage: 1,
             pageSize: 20,
             searchSort: 'lastChangeDown',

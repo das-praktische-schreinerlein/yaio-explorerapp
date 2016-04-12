@@ -164,7 +164,7 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
          */
         renderSearchNodeLine: function(node, idPrefix, searchOptions) {
             var htmlId = '#tr' + idPrefix + node.sysUID;
-            me.renderNodeLine(node, htmlId, true);
+            me.renderNodeLine(node, htmlId, searchOptions.flgRenderMinimum);
 
             // add parent+searchdata
             var $html = $(me.createParentHirarchyBlockForNode(node, 'tr' + idPrefix + '_') +

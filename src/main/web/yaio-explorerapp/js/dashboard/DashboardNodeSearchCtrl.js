@@ -30,6 +30,7 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
         // create search
         $scope.nodes = [];
         $scope.searchOptions = {
+            flgRenderMinimum: true,
             curPage: 1,
             pageSize: 10,
             searchSort: 'lastChangeDown',

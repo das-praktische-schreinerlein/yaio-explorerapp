@@ -32,6 +32,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         $scope.nodes = [];
 
         $scope.searchOptions = {
+            flgRenderMinimum: false,
             curPage: 1,
             pageSize: 20,
             searchSort: 'lastChangeDown',
