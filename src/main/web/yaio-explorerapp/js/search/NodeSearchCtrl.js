@@ -46,22 +46,24 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             strMetaNodeTypeTagsFilter: '',
             strMetaNodeSubTypeFilter: '',
             arrMetaNodeSubTypeFilter: [],
-            praefix: ''
+            praefix: '',
+            istStartGE: '',
+            istStartLE: '',
+            istEndeGE: '',
+            istEndeLE: '',
+            planStartGE: '',
+            planStartLE: '',
+            planEndeGE: '',
+            planEndeLE: ''
         };
-        if ($routeParams.curPage) {
-            $scope.searchOptions.curPage = decodeURI($routeParams.curPage);
-        }
-        if ($routeParams.pageSize) {
-            $scope.searchOptions.pageSize = decodeURI($routeParams.pageSize);
-        }
-        if ($routeParams.searchSort) {
-            $scope.searchOptions.searchSort = decodeURI($routeParams.searchSort);
-        }
-        if ($routeParams.baseSysUID) {
-            $scope.searchOptions.baseSysUID = decodeURI($routeParams.baseSysUID);
-        }
-        if ($routeParams.fulltext) {
-            $scope.searchOptions.fulltext = decodeURI($routeParams.fulltext);
+
+        var routeFields = ['curPage', 'pageSize', 'searchSort', 'baseSysUID', 'fulltext'];
+        var routeField;
+        for (var idx = 0; idx < routeFields.length; idx++) {
+            routeField = routeFields[idx];
+            if ($routeParams.hasOwnProperty(routeField)) {
+                $scope.searchOptions[routeField] = decodeURI($routeParams[routeField]);
+            }
         }
 
         // extract additional-Searchfilter
@@ -83,6 +85,17 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         if (additionalSearchFilter.metaNodeSubTypeFilter) {
             $scope.searchOptions.strMetaNodeSubTypeFilter = decodeURI(additionalSearchFilter.metaNodeSubTypeFilter);
             $scope.searchOptions.arrMetaNodeSubTypeFilter = $scope.searchOptions.strMetaNodeSubTypeFilter.split(',');
+        }
+
+        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
+        var additionalSearchField;
+        for (idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
+                $scope.searchOptions[additionalSearchField] = new Date(decodeURI(additionalSearchFilter[additionalSearchField]));
+            }
         }
         console.log('NodeSearchCtrl - processing');
 
@@ -175,7 +188,16 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
             'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
             'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
+            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';' +
+            'istStartGE=' + $scope.searchOptions.istStartGE + ';' +
+            'istStartLE=' + $scope.searchOptions.istStartLE + ';' +
+            'istEndeGE=' + $scope.searchOptions.istEndeGE + ';' +
+            'istEndeLE=' + $scope.searchOptions.istEndeLE + ';' +
+            'planStartGE=' + $scope.searchOptions.planStartGE + ';' +
+            'planStartLE=' + $scope.searchOptions.planStartLE + ';' +
+            'planEndeGE=' + $scope.searchOptions.planEndeGE + ';' +
+            'planEndeLE=' + $scope.searchOptions.planEndeLE + ';';
+
         return '/search'
             + '/' + encodeURI(page)
             + '/' + encodeURI(searchOptions.pageSize)
