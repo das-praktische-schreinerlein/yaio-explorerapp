@@ -1,0 +1,3 @@
+    <div ng-init="boardOptions.label = 'label.workboard.thisweek'; boardOptions.praefix = 'thisweek'; boardOptions.dateVon = yaioUtils.getDayOfWeek(yaioUtils.now(), 1); boardOptions.dateBis = yaioUtils.getDayOfWeek(yaioUtils.now(), 7);">
+       <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-starts_ends_done.html'"></div>
+    </div>

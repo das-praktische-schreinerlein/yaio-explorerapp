@@ -2164,8 +2164,8 @@ Yaio.NodeDataRenderer = function(appBase) {
 
         console.log('renderBaseDataBlock START: ' + msg);
         var $ue = me.$('<div class="jsh-md-infobox-ue ' + stateStyle + '">' +
-            '<a href="#/show/' + baseSysUID + '/activate/' + basenode.sysUID + '/" class="yaio-icon-open"></a>' +
-            '<a href="#/show/' + basenode.sysUID + '" class="yaio-icon-center" lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>' +
+            '<a href="#/show/' + baseSysUID + '/activate/' + basenode.sysUID + '/" class="yaio-icon-open hide-if-printversion"></a>' +
+            '<a href="#/show/' + basenode.sysUID + '" class="yaio-icon-center hide-if-printversion" lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>' +
             ' <span lang="tech">' + basenode.state + '</span> ' +
             ' - <span lang="tech">' + typeName + '</span>' +
             ' - <span>' + me.calcMetaNumber(basenode) + '</span>' +
@@ -4635,7 +4635,10 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         // copy availiable serverSearchOptions
         var serverSearchOptions = {};
         var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 
-            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter'];
+            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
+            'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
         var searchField;
         for (var idx = 0; idx < searchFields.length; idx++) {
             searchField = searchFields[idx];
@@ -7274,7 +7277,7 @@ yaioApp.config(function($routeProvider) {
         .when('/dashboard', { 
             controller:  'DashboardCtrl',
             templateUrl: resBaseUrl + 'js/dashboard/dashboard.html' })
-        .when('/sourceselect', { 
+        .when('/sourceselect', {
             controller:  'SourceSelectorCtrl',
             templateUrl: resBaseUrl + 'js/sourceselector/sourceselector.html' })
         .when('/sourceselect/:newds', { 
@@ -7559,7 +7562,72 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
     appBase.configureService('Angular.$q', function() { return $q; });
 
     var me = {
-        /** 
+        now: function() {
+            var date = new Date();
+            return date;
+        },
+
+        getDayOfWeek: function(date, dayOfWeek) {
+            date = new Date(date.getTime ());
+            date.setDate(date.getDate() + (dayOfWeek - date.getDay()) % 7);
+            return date;
+        },
+
+        getWithTime00: function(date) {
+            date = new Date(date.getTime ());
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            return date;
+        },
+
+        getWithTime24: function(date) {
+            date = new Date(date.getTime ());
+            date.setHours(23);
+            date.setMinutes(59);
+            date.setSeconds(59);
+            return date;
+        },
+
+        getFirstDayOfMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth(), 1);
+            return date;
+        },
+
+        getLastDayOfMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()+1, 0);
+            return date;
+        },
+
+        getLastMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
+            return date;
+        },
+
+        getNextMonth: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()+1, date.getDay());
+            return date;
+        },
+
+        getLastWeek: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
+            return date;
+        },
+
+        getNextWeek: function(date) {
+            date = new Date(date.getTime ());
+            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
+            return date;
+        },
+
+
+        /**
          * open helpsite
          * @param {String} url                    the url of the helpsite
          */
@@ -8059,7 +8127,15 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             strWorkflowStateFilter: '',
             strClassFilter: '',
             strMetaNodeTypeTagsFilter: '',
-            strMetaNodeSubTypeFilter: ''
+            strMetaNodeSubTypeFilter: '',
+            istStartGE: '',
+            istStartLE: '',
+            istEndeGE: '',
+            istEndeLE: '',
+            planStartGE: '',
+            planStartLE: '',
+            planEndeGE: '',
+            planEndeLE: ''
         };
     };
 
@@ -8072,7 +8148,15 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
             'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';' +
             'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
+            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';' +
+            'istStartGE=' + $scope.searchOptions.istStartGE + ';' +
+            'istStartLE=' + $scope.searchOptions.istStartLE + ';' +
+            'istEndeGE=' + $scope.searchOptions.istEndeGE + ';' +
+            'istEndeLE=' + $scope.searchOptions.istEndeLE + ';' +
+            'planStartGE=' + $scope.searchOptions.planStartGE + ';' +
+            'planStartLE=' + $scope.searchOptions.planStartLE + ';' +
+            'planEndeGE=' + $scope.searchOptions.planEndeGE + ';' +
+            'planEndeLE=' + $scope.searchOptions.planEndeLE + ';';
         return '/search'
             + '/' + encodeURI('1')
             + '/' + encodeURI('20')
@@ -8168,6 +8252,39 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
     $scope.showCardView = function() {
         $('div.container-yaio-search-nodecards').css('display', 'block');
         $('div.container-yaio-search-table').css('display', 'none');
+    };
+
+    // init
+    $scope._init();
+});
+
+/**
+ * angular-controller for serving page: dashoard-page
+ * @controller
+ */
+yaioApp.controller('WorkboardLineCtrl', function($rootScope, $scope, $location, $routeParams, setFormErrors,
+                                             OutputOptionsEditor, authorization, yaioUtils) {
+    'use strict';
+
+    /**
+     * init the controller
+     * @private
+     */
+    $scope._init = function () {
+        // include utils
+        $scope.yaioUtils = yaioUtils;
+
+        $scope.boardOptions = {
+        };
+
+        // call authentificate
+        authorization.authentificate(function () {
+            // check authentification
+            if (!$rootScope.authenticated) {
+                $location.path(yaioUtils.getConfig().appLoginUrl);
+                $scope.error = false;
+            }
+        });
     };
 
     // init
@@ -9109,22 +9226,24 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             strMetaNodeTypeTagsFilter: '',
             strMetaNodeSubTypeFilter: '',
             arrMetaNodeSubTypeFilter: [],
-            praefix: ''
+            praefix: '',
+            istStartGE: '',
+            istStartLE: '',
+            istEndeGE: '',
+            istEndeLE: '',
+            planStartGE: '',
+            planStartLE: '',
+            planEndeGE: '',
+            planEndeLE: ''
         };
-        if ($routeParams.curPage) {
-            $scope.searchOptions.curPage = decodeURI($routeParams.curPage);
-        }
-        if ($routeParams.pageSize) {
-            $scope.searchOptions.pageSize = decodeURI($routeParams.pageSize);
-        }
-        if ($routeParams.searchSort) {
-            $scope.searchOptions.searchSort = decodeURI($routeParams.searchSort);
-        }
-        if ($routeParams.baseSysUID) {
-            $scope.searchOptions.baseSysUID = decodeURI($routeParams.baseSysUID);
-        }
-        if ($routeParams.fulltext) {
-            $scope.searchOptions.fulltext = decodeURI($routeParams.fulltext);
+
+        var routeFields = ['curPage', 'pageSize', 'searchSort', 'baseSysUID', 'fulltext'];
+        var routeField;
+        for (var idx = 0; idx < routeFields.length; idx++) {
+            routeField = routeFields[idx];
+            if ($routeParams.hasOwnProperty(routeField)) {
+                $scope.searchOptions[routeField] = decodeURI($routeParams[routeField]);
+            }
         }
 
         // extract additional-Searchfilter
@@ -9146,6 +9265,17 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         if (additionalSearchFilter.metaNodeSubTypeFilter) {
             $scope.searchOptions.strMetaNodeSubTypeFilter = decodeURI(additionalSearchFilter.metaNodeSubTypeFilter);
             $scope.searchOptions.arrMetaNodeSubTypeFilter = $scope.searchOptions.strMetaNodeSubTypeFilter.split(',');
+        }
+
+        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
+        var additionalSearchField;
+        for (idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
+                $scope.searchOptions[additionalSearchField] = new Date(decodeURI(additionalSearchFilter[additionalSearchField]));
+            }
         }
         console.log('NodeSearchCtrl - processing');
 
@@ -9238,7 +9368,16 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
             'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
             'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
+            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';' +
+            'istStartGE=' + $scope.searchOptions.istStartGE + ';' +
+            'istStartLE=' + $scope.searchOptions.istStartLE + ';' +
+            'istEndeGE=' + $scope.searchOptions.istEndeGE + ';' +
+            'istEndeLE=' + $scope.searchOptions.istEndeLE + ';' +
+            'planStartGE=' + $scope.searchOptions.planStartGE + ';' +
+            'planStartLE=' + $scope.searchOptions.planStartLE + ';' +
+            'planEndeGE=' + $scope.searchOptions.planEndeGE + ';' +
+            'planEndeLE=' + $scope.searchOptions.planEndeLE + ';';
+
         return '/search'
             + '/' + encodeURI(page)
             + '/' + encodeURI(searchOptions.pageSize)

@@ -1,0 +1,29 @@
+<div class='togglecontainer togglecontainer-workboard togglecontainer-workboard-{{boardOptions.praefix}}' id="togglecontainer_workboard_{{boardOptions.praefix}}">
+    <table class="workboardTable" id="workboardTable{{boardOptions.praefix}}">
+        <!-- define columngroups -->
+        <colgroup>
+            <col class="yaio-workboard-column-label"></col>
+            <col class="yaio-workboard-column-data yaio-workboard-column-starts"></col>
+            <col class="yaio-workboard-column-data yaio-workboard-column-ends"></col>
+            <col class="yaio-workboard-column-data yaio-workboard-column-done"></col>
+        </colgroup>
+        <tbody>
+            <tr>
+                <td class="yaio-workboard-column-label">
+                    <span class="yaio-workboard-rowname" lang='tech' translate="{{boardOptions.label}}">{{boardOptions.label}}</span>
+                    <br>
+                    <span class="yaio-workboard-rowtime">{{yaioUtils.getService('DataUtils').formatGermanDate(boardOptions.dateVon)}}-{{yaioUtils.getService('DataUtils').formatGermanDate(boardOptions.dateBis)}}</span>
+                </td>
+                <td class="yaio-workboard-column-data yaio-workboard-column-starts" ng-controller="DashBoardNodeSearchCtrl" ng-init="searchOptions.planStartGE = yaioUtils.getWithTime00(boardOptions.dateVon); searchOptions.planStartLE = yaioUtils.getWithTime24(boardOptions.dateBis); searchOptions.praefix = boardOptions.praefix + 'open'; searchOptions.strClassFilter = 'EventNode,TaskNode'; searchOptions.strWorkflowStateFilter = 'CONFIRMED,OPEN,LATE'; searchOptions.searchSort = 'planStartUp'; searchOptions.pageSize = 5;">
+                    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
+                </td>
+                <td class="yaio-workboard-column-data yaio-workboard-column-ends" ng-controller="DashBoardNodeSearchCtrl" ng-init="searchOptions.planEndeGE = yaioUtils.getWithTime00(boardOptions.dateVon); searchOptions.planEndeLE = yaioUtils.getWithTime24(boardOptions.dateBis); searchOptions.praefix = boardOptions.praefix + 'running'; searchOptions.strClassFilter = 'EventNode,TaskNode'; searchOptions.strWorkflowStateFilter = 'RUNNING,WARNING'; searchOptions.searchSort = 'planStartUp'; searchOptions.pageSize = 5;">
+                    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
+                </td>
+                <td class="yaio-workboard-column-data yaio-workboard-column-done" ng-controller="DashBoardNodeSearchCtrl" ng-init="searchOptions.istEndeGE = yaioUtils.getWithTime00(boardOptions.dateVon); searchOptions.istEndeLE = yaioUtils.getWithTime24(boardOptions.dateBis); searchOptions.praefix = boardOptions.praefix + 'done'; searchOptions.strClassFilter = 'EventNode,TaskNode'; searchOptions.strWorkflowStateFilter = 'DONE,CANCELED'; searchOptions.searchSort = 'planStartUp'; searchOptions.pageSize = 5;">
+                    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

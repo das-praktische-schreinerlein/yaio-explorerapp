@@ -2,7 +2,7 @@
      "token": {
         "EventNodeMetaNodeSubType.EVENT": "event",
         "EventNodeMetaNodeSubType.DEADLINE": "deadline",
-        "EventNodeMetaNodeSubType.TIMEFRAME": "timeframe",
+        "EventNodeMetaNodeSubType.TIMEFRAME": "period",
         "InfoNodeMetaNodeSubType.INFONODE": "infonode",
         "InfoNodeMetaNodeSubType.CONTAINER": "infocontainer",
         "InfoNodeMetaNodeSubType.SNAPSHOT": "Snapshot",
