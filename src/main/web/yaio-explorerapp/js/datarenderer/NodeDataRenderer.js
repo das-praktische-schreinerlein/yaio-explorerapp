@@ -210,8 +210,8 @@ Yaio.NodeDataRenderer = function(appBase) {
 
         console.log('renderBaseDataBlock START: ' + msg);
         var $ue = me.$('<div class="jsh-md-infobox-ue ' + stateStyle + '">' +
-            '<a href="#/show/' + baseSysUID + '/activate/' + basenode.sysUID + '/" class="yaio-icon-open"></a>' +
-            '<a href="#/show/' + basenode.sysUID + '" class="yaio-icon-center" lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>' +
+            '<a href="#/show/' + baseSysUID + '/activate/' + basenode.sysUID + '/" class="yaio-icon-open hide-if-printversion"></a>' +
+            '<a href="#/show/' + basenode.sysUID + '" class="yaio-icon-center hide-if-printversion" lang="tech" data-tooltip="tooltip.command.NodeFocus"></a>' +
             ' <span lang="tech">' + basenode.state + '</span> ' +
             ' - <span lang="tech">' + typeName + '</span>' +
             ' - <span>' + me.calcMetaNumber(basenode) + '</span>' +
