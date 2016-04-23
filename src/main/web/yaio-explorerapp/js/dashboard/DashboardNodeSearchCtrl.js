@@ -49,7 +49,11 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             planStartGE: '',
             planStartLE: '',
             planEndeGE: '',
-            planEndeLE: ''
+            planEndeLE: '',
+            istStartIsNull: '',
+            istEndeIsNull: '',
+            planStartIsNull: '',
+            planEndeIsNull: ''
         };
     };
 
@@ -62,15 +66,16 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
             'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';' +
             'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';' +
-            'istStartGE=' + $scope.searchOptions.istStartGE + ';' +
-            'istStartLE=' + $scope.searchOptions.istStartLE + ';' +
-            'istEndeGE=' + $scope.searchOptions.istEndeGE + ';' +
-            'istEndeLE=' + $scope.searchOptions.istEndeLE + ';' +
-            'planStartGE=' + $scope.searchOptions.planStartGE + ';' +
-            'planStartLE=' + $scope.searchOptions.planStartLE + ';' +
-            'planEndeGE=' + $scope.searchOptions.planEndeGE + ';' +
-            'planEndeLE=' + $scope.searchOptions.planEndeLE + ';';
+            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
+        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+        var additionalSearchField;
+        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            additionalFilter += additionalSearchField + '=' + $scope.searchOptions[additionalSearchField] + ';';
+        }
         return '/search'
             + '/' + encodeURI('1')
             + '/' + encodeURI('20')

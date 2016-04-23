@@ -55,7 +55,11 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             planStartGE: '',
             planStartLE: '',
             planEndeGE: '',
-            planEndeLE: ''
+            planEndeLE: '',
+            istStartIsNull: '',
+            istEndeIsNull: '',
+            planStartIsNull: '',
+            planEndeIsNull: ''
         };
 
         var routeFields = ['curPage', 'pageSize', 'searchSort', 'baseSysUID', 'fulltext'];
@@ -89,7 +93,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istStartIsNull', 'planStartIsNull', 'planStartIsNull'
         ];
         var additionalSearchField;
         for (idx = 0; idx < additionalSearchFields.length; idx++) {
@@ -189,15 +194,16 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
             'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
             'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';' +
-            'istStartGE=' + $scope.searchOptions.istStartGE + ';' +
-            'istStartLE=' + $scope.searchOptions.istStartLE + ';' +
-            'istEndeGE=' + $scope.searchOptions.istEndeGE + ';' +
-            'istEndeLE=' + $scope.searchOptions.istEndeLE + ';' +
-            'planStartGE=' + $scope.searchOptions.planStartGE + ';' +
-            'planStartLE=' + $scope.searchOptions.planStartLE + ';' +
-            'planEndeGE=' + $scope.searchOptions.planEndeGE + ';' +
-            'planEndeLE=' + $scope.searchOptions.planEndeLE + ';';
+            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
+        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+        var additionalSearchField;
+        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            additionalFilter += additionalSearchField + '=' + searchOptions[additionalSearchField] + ';';
+        }
 
         return '/search'
             + '/' + encodeURI(page)

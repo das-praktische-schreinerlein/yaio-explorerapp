@@ -231,12 +231,12 @@ Yaio.NodeDataRenderer = function(appBase) {
         $table.append($row);
         if (basenode.className === 'TaskNode' || basenode.className === 'EventNode') {
             // TaskNode
-            $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Ist:</div></div>');
-            $table.append($row);
-            me._appendWorkflowRawIstDataBlocks(basenode, $row);
             $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Plan:</div></div>');
             $table.append($row);
             me._appendWorkflowRawPlanDataBlocks(basenode, $row);
+            $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Ist:</div></div>');
+            $table.append($row);
+            me._appendWorkflowRawIstDataBlocks(basenode, $row);
         } else if (basenode.className === 'InfoNode' || basenode.className === 'UrlResNode') {
             // render Info + UrlRes
 

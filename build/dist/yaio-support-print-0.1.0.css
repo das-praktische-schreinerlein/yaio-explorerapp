@@ -380,7 +380,7 @@
         display: none !important;
     }
 
-    #workboard-content-current div.yaio-nodecard {
+    .workboard-container div.yaio-nodecard {
         width: 100% !important;
     }
 
@@ -408,6 +408,10 @@
     div.yaio-nodecard {
         width: 24%;
     }
+
+    #togglecontainer_dashboard_todosNotPlaned div.yaio-nodecard {
+        width: 24% !important;
+    }
 }
 
 @media print and (orientation: portrait) {
@@ -433,5 +437,9 @@
 
     div.yaio-nodecard {
         width: 45%;
+    }
+
+    #togglecontainer_dashboard_todosNotPlaned div.yaio-nodecard {
+        width: 45% !important;
     }
 }

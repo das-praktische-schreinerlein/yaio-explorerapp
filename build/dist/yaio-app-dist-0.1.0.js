@@ -2185,12 +2185,12 @@ Yaio.NodeDataRenderer = function(appBase) {
         $table.append($row);
         if (basenode.className === 'TaskNode' || basenode.className === 'EventNode') {
             // TaskNode
-            $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Ist:</div></div>');
-            $table.append($row);
-            me._appendWorkflowRawIstDataBlocks(basenode, $row);
             $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Plan:</div></div>');
             $table.append($row);
             me._appendWorkflowRawPlanDataBlocks(basenode, $row);
+            $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Ist:</div></div>');
+            $table.append($row);
+            me._appendWorkflowRawIstDataBlocks(basenode, $row);
         } else if (basenode.className === 'InfoNode' || basenode.className === 'UrlResNode') {
             // render Info + UrlRes
 
@@ -4637,7 +4637,8 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 
             'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
             'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
         ];
         var searchField;
         for (var idx = 0; idx < searchFields.length; idx++) {
@@ -7626,6 +7627,12 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return date;
         },
 
+        getStartOfTime: function() {
+            var date = new Date();
+            date.setFullYear('1976', '05', '28');
+            return date;
+        },
+
 
         /**
          * open helpsite
@@ -8136,7 +8143,11 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             planStartGE: '',
             planStartLE: '',
             planEndeGE: '',
-            planEndeLE: ''
+            planEndeLE: '',
+            istStartIsNull: '',
+            istEndeIsNull: '',
+            planStartIsNull: '',
+            planEndeIsNull: ''
         };
     };
 
@@ -8149,15 +8160,16 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
             'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';' +
             'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';' +
-            'istStartGE=' + $scope.searchOptions.istStartGE + ';' +
-            'istStartLE=' + $scope.searchOptions.istStartLE + ';' +
-            'istEndeGE=' + $scope.searchOptions.istEndeGE + ';' +
-            'istEndeLE=' + $scope.searchOptions.istEndeLE + ';' +
-            'planStartGE=' + $scope.searchOptions.planStartGE + ';' +
-            'planStartLE=' + $scope.searchOptions.planStartLE + ';' +
-            'planEndeGE=' + $scope.searchOptions.planEndeGE + ';' +
-            'planEndeLE=' + $scope.searchOptions.planEndeLE + ';';
+            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
+        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+        var additionalSearchField;
+        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            additionalFilter += additionalSearchField + '=' + $scope.searchOptions[additionalSearchField] + ';';
+        }
         return '/search'
             + '/' + encodeURI('1')
             + '/' + encodeURI('20')
@@ -9236,7 +9248,11 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             planStartGE: '',
             planStartLE: '',
             planEndeGE: '',
-            planEndeLE: ''
+            planEndeLE: '',
+            istStartIsNull: '',
+            istEndeIsNull: '',
+            planStartIsNull: '',
+            planEndeIsNull: ''
         };
 
         var routeFields = ['curPage', 'pageSize', 'searchSort', 'baseSysUID', 'fulltext'];
@@ -9270,7 +9286,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istStartIsNull', 'planStartIsNull', 'planStartIsNull'
         ];
         var additionalSearchField;
         for (idx = 0; idx < additionalSearchFields.length; idx++) {
@@ -9370,15 +9387,16 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
             'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
             'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';' +
-            'istStartGE=' + $scope.searchOptions.istStartGE + ';' +
-            'istStartLE=' + $scope.searchOptions.istStartLE + ';' +
-            'istEndeGE=' + $scope.searchOptions.istEndeGE + ';' +
-            'istEndeLE=' + $scope.searchOptions.istEndeLE + ';' +
-            'planStartGE=' + $scope.searchOptions.planStartGE + ';' +
-            'planStartLE=' + $scope.searchOptions.planStartLE + ';' +
-            'planEndeGE=' + $scope.searchOptions.planEndeGE + ';' +
-            'planEndeLE=' + $scope.searchOptions.planEndeLE + ';';
+            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
+        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+        var additionalSearchField;
+        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            additionalFilter += additionalSearchField + '=' + searchOptions[additionalSearchField] + ';';
+        }
 
         return '/search'
             + '/' + encodeURI(page)

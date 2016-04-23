@@ -1772,11 +1772,11 @@ body .ui-tooltip {
     padding-right: 20px;
 }
 
-#workboard-content-current .togglecontainer {
+.workboard-container .togglecontainer {
     max-width: 1205px;
 }
 
-#workboard-content-current .boxline-dashboard {
+.workboard-container .boxline-dashboard {
     max-width: 1205px;
     width: 1205px;
 }
@@ -1787,6 +1787,11 @@ body .ui-tooltip {
     font-size: 12px;
     font-weight: bold;
     text-align: center;
+}
+
+.boxline-workboard-label {
+    font-size: 11px;
+    font-weight: normal;
 }
 
 table.workboardTable {
@@ -1818,10 +1823,10 @@ span.yaio-workboard-rowname {
     font-size: 11px;
 }
 
-#workboard-content-current div.yaio-nodecard {
+.workboard-container div.yaio-nodecard {
     width: 100%;
 }
 
-#workboard-content-current div.yaio-nodecard-container {
+.workboard-container div.yaio-nodecard-container {
     margin: 3px;
 }

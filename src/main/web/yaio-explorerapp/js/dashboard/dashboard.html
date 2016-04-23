@@ -11,29 +11,46 @@
     </div>
 </div>
 
-<div id="dashboard-content-current">
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-events-open.html'" id="dashboard-events-open" ng-controller="DashBoardNodeSearchCtrl"></div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-warning.html'" id="dashboard-todos-warning" ng-controller="DashBoardNodeSearchCtrl"></div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-late.html'" id="dashboard-todos-late" ng-controller="DashBoardNodeSearchCtrl"></div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-wip-container.html'" id="dashboard-wip-container" ng-controller="DashBoardNodeSearchCtrl"></div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-running.html'" id="dashboard-todos-running" ng-controller="DashBoardNodeSearchCtrl"></div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-open.html'" id="dashboard-todos-open" ng-controller="DashBoardNodeSearchCtrl"></div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-notplaned.html'" id="dashboard-todos-notplaned" ng-controller="DashBoardNodeSearchCtrl"></div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-last-changed.html'" id="dashboard-last-changed" ng-controller="DashBoardNodeSearchCtrl"></div>
-</div>
 <div id="workboard-content-current">
     <div class='box yaio-box'>
+        <div class='boxline boxline-dashboard' id="ue_workboard_current"><span lang='tech' translate="label.workboard.headline.current">Aktuell</span></div>
+        <div class="workboard-container">
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-late_short_running.html'"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-current.html'" id="workboard-late" ng-controller="WorkboardLineCtrl"></div>
+        </div>
+        <div class="dashboard-container">
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-noplandate-running.html'" id="dashboard-todos-noplandate-running" ng-controller="DashBoardNodeSearchCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-noplandate-open.html'" id="dashboard-todos-noplandate-open" ng-controller="DashBoardNodeSearchCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-notplaned.html'" id="dashboard-todos-notplaned" ng-controller="DashBoardNodeSearchCtrl"></div>
+        </div>
+    </div>
+    <div class='box yaio-box'>
         <div class='boxline boxline-dashboard' id="ue_workboard_upcomin"><span lang='tech' translate="label.workboard.headline.upcomin">Demnächst</span></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-starts_ends_done.html'"></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-today.html'" id="workboard-today" ng-controller="WorkboardLineCtrl"></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-thisweek.html'" id="workboard-thisweek" ng-controller="WorkboardLineCtrl"></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-thismonth.html'" id="workboard-thismonth" ng-controller="WorkboardLineCtrl"></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-nextmonth.html'" id="workboard-nextmonth" ng-controller="WorkboardLineCtrl"></div>
+        <div class="workboard-container">
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-starts_ends_done.html'"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-today.html'" id="workboard-today" ng-controller="WorkboardLineCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-thisweek.html'" id="workboard-thisweek" ng-controller="WorkboardLineCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-thismonth.html'" id="workboard-thismonth" ng-controller="WorkboardLineCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-nextmonth.html'" id="workboard-nextmonth" ng-controller="WorkboardLineCtrl"></div>
+        </div>
     </div>
     <div class='box yaio-box'>
         <div class='boxline boxline-dashboard' id="ue_workboard_last"><span lang='tech' translate="label.workboard.headline.last">Zuletzt</span></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-starts_ends_done.html'"></div>
-        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-lastmonth.html'" id="workboard-lastmonth" ng-controller="WorkboardLineCtrl"></div>
+        <div class="workboard-container">
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-starts_ends_done.html'"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-lastmonth.html'" id="workboard-lastmonth" ng-controller="WorkboardLineCtrl"></div>
+        </div>
+    </div>
+</div>
+<div id="dashboard-content-current">
+    <div class="dashboard-container">
+        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-events-open.html'" id="dashboard-events-open" ng-controller="DashBoardNodeSearchCtrl"></div>
+        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-warning.html'" id="dashboard-todos-warning" ng-controller="DashBoardNodeSearchCtrl"></div>
+        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-late.html'" id="dashboard-todos-late" ng-controller="DashBoardNodeSearchCtrl"></div>
+        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-wip-container.html'" id="dashboard-wip-container" ng-controller="DashBoardNodeSearchCtrl"></div>
+        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-running.html'" id="dashboard-todos-running" ng-controller="DashBoardNodeSearchCtrl"></div>
+        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-todos-open.html'" id="dashboard-todos-open" ng-controller="DashBoardNodeSearchCtrl"></div>
+        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-last-changed.html'" id="dashboard-last-changed" ng-controller="DashBoardNodeSearchCtrl"></div>
     </div>
 </div>
 

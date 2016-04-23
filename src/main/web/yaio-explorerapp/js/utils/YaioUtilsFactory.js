@@ -94,6 +94,12 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return date;
         },
 
+        getStartOfTime: function() {
+            var date = new Date();
+            date.setFullYear('1976', '05', '28');
+            return date;
+        },
+
 
         /**
          * open helpsite
