@@ -7615,18 +7615,6 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return date;
         },
 
-        getLastWeek: function(date) {
-            date = new Date(date.getTime ());
-            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
-            return date;
-        },
-
-        getNextWeek: function(date) {
-            date = new Date(date.getTime ());
-            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
-            return date;
-        },
-
         getStartOfTime: function() {
             var date = new Date();
             date.setFullYear('1976', '05', '28');
