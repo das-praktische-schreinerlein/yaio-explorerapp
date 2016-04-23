@@ -1,3 +1,8 @@
-    <div ng-init="boardOptions.label = 'label.workboard.current'; boardOptions.praefix = 'current'; boardOptions.dateVon = yaioUtils.getStartOfTime(); boardOptions.dateBis = yaioUtils.now();">
+    <div ng-init="boardOptions.label = 'label.workboard.current';
+                  boardOptions.praefix = 'current';
+                  boardOptions.dateVon = yaioUtils.getStartOfTime();
+                  boardOptions.dateVonFilter = boardOptions.dateVon;
+                  boardOptions.dateBis = yaioUtils.now();
+                  boardOptions.dateBisFilter = boardOptions.dateBis;">
        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-late_short_running.html'"></div>
     </div>

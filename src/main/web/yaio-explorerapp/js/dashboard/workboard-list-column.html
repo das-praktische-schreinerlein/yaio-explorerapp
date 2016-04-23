@@ -1,5 +1,6 @@
 <div ng-init="doFulltextSearch()">
-    <div class='boxline boxline-workboard boxline-workboard-{{searchOptions.praefix}} boxline-workboard-{{searchOptions.praefix}}-{{searchOptions.total}}' id="ue_workboard_{{searchOptions.praefix}}">{{searchOptions.total}} <span class="ue_workboard_" ng-if="searchOptions.total > 0" lang='tech' translate="label.workboard.tablecolumn.tasksevents">Tasks+Events</span>
+    <div class='boxline boxline-workboard boxline-workboard-{{searchOptions.praefix}} boxline-workboard-{{searchOptions.praefix}}-{{searchOptions.total}}' id="ue_workboard_{{searchOptions.praefix}}">{{searchOptions.total}}
+        <span class="ue_workboard_" ng-if="searchOptions.total > 0" lang='tech' translate="label.workboard.tablecolumn.tasksevents">Tasks+Events</span>
         <a class="button" ng-if="searchOptions.total > searchOptions.pageSize" href="#{{createSearchUri();}}" data-tooltip='tooltip.command.DashboardMoreResults' lang='tech' class="" translate="common.command.DashboardMoreResults">Alle anzeigen</a>
     </div>
     <div class="yaio-nodecard-container" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-nodecards.html'"></div>

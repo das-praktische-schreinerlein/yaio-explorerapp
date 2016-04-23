@@ -1,3 +1,8 @@
-    <div ng-init="searchOptions.label = 'label.dashboard.todosNotPlaned'; searchOptions.praefix = 'todosNotPlaned'; searchOptions.flgConcreteToDosOnly = 0; searchOptions.strMetaNodeSubTypeFilter = 'TaskNodeMetaNodeSubType.TASK,TaskNodeMetaNodeSubType.SUBTASK,TaskNodeMetaNodeSubType.TODO'; searchOptions.strWorkflowStateFilter = 'NOTPLANED'; searchOptions.searchSort = 'createdDown';">
+    <div ng-init="searchOptions.label = 'label.dashboard.todosNotPlaned';
+                  searchOptions.praefix = 'todosNotPlaned';
+                  searchOptions.flgConcreteToDosOnly = 0;
+                  searchOptions.strMetaNodeSubTypeFilter = 'TaskNodeMetaNodeSubType.TASK,TaskNodeMetaNodeSubType.SUBTASK,TaskNodeMetaNodeSubType.TODO';
+                  searchOptions.strWorkflowStateFilter = 'NOTPLANED';
+                  searchOptions.searchSort = 'createdDown';">
        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-list-table.html'"></div>
     </div>

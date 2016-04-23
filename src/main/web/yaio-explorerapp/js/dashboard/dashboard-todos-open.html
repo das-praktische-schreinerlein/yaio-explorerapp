@@ -1,3 +1,7 @@
-    <div ng-init="searchOptions.label = 'label.dashboard.todosOpen'; searchOptions.praefix = 'todosOpen'; searchOptions.flgConcreteToDosOnly = 1; searchOptions.strWorkflowStateFilter = 'OPEN'; searchOptions.searchSort = 'planStartUp';">
+    <div ng-init="searchOptions.label = 'label.dashboard.todosOpen';
+                  searchOptions.praefix = 'todosOpen';
+                  searchOptions.flgConcreteToDosOnly = 1;
+                  searchOptions.strWorkflowStateFilter = 'OPEN';
+                  searchOptions.searchSort = 'planStartUp';">
        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-list-table.html'"></div>
     </div>
