@@ -94,17 +94,11 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull',
+            'flgConcreteToDosOnly'
         ];
         var additionalSearchField;
-        for (idx = 0; idx < additionalSearchFields.length; idx++) {
-            additionalSearchField = additionalSearchFields[idx];
-            if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
-                $scope.searchOptions[additionalSearchField] = decodeURI(additionalSearchFilter[additionalSearchField]);
-            }
-        }
-        additionalSearchFields = ['flgConcreteToDosOnly', 'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
-        ];
         for (idx = 0; idx < additionalSearchFields.length; idx++) {
             additionalSearchField = additionalSearchFields[idx];
             if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
