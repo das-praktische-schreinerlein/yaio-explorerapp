@@ -5690,57 +5690,10 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         var msg = 'fulltextSearch searchOptions: ' + searchOptions;
 
         // search ids
-        var nodeId, node, flgFound, content;
-        var searchResultIds = [];
-        var suchworte = searchOptions.fulltext.toLowerCase().split(' ');
-        var classes = searchOptions.strClassFilter.split(',');
-        var states = searchOptions.strWorkflowStateFilter.split(',');
-        var subTypes = searchOptions.strMetaNodeSubTypeFilter.split(',');
-        var metaNodeTypeTags = searchOptions.strMetaNodeTypeTagsFilter.split(',');
-        var notPraefix = searchOptions.strNotNodePraefix.split(' ');
-        for (var idx = 0; idx < me.nodeList.length; idx++) {
-            nodeId = me.nodeList[idx];
-            node = me.getNodeDataById(nodeId, true);
-            content = node.nodeDesc + ' ' + node.name + ' ' + node.state;
+        var nodeId;
+        var staticSearchOptions = me._prepareSearchOptions(searchOptions);
+        var searchResultIds =  me._filterNodes(staticSearchOptions);
 
-            flgFound = false;
-            // Fulltext
-            if (suchworte.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(content.toLowerCase(), suchworte)) {
-                // words not found
-                continue;
-            }
-            // Classfilter
-            if (classes.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.workflowState, classes)) {
-                // words not found
-                continue;
-            }
-            // SubTypes-Filter
-            if (subTypes.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeSubType, subTypes)) {
-                // words not found
-                continue;
-            }
-            // MetaNodeTypeTags-Filter
-            if (metaNodeTypeTags.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeTypeTags, metaNodeTypeTags)) {
-                // words not found
-                continue;
-            }
-            // Workflowstate-Filter
-            if (states.length > 0 && !me.appBase.get('YaioExportedData').VolltextTreffer(node.className, states)) {
-                // words not found
-                continue;
-            }
-            // NotNodePraefix-Filter
-            if (notPraefix.length > 0 && me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodePraefix, notPraefix, true, true)) {
-                // blacklisted praefixes found
-                console.log('ignore nodeId ' + nodeId + ' because of ' + node.metaNodePraefix);
-                continue;
-            }
-            
-            // no filter or all machtes
-            searchResultIds.push(nodeId);
-            flgFound = true;
-        }
-        
         // read all data and sort
         var searchConfig = [];
         searchConfig.push(me.mapSorts[searchOptions.searchSort]);
@@ -5774,6 +5727,191 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
 
         return searchResponse;
     };
+
+    /**
+     * prepare the searchOptions (convert strings to arrays, dates to int...)
+     * @param {Object} searchOptions       filters
+     * @returns {Object}                   prepared filters
+     */
+    me._prepareSearchOptions = function (searchOptions) {
+        var staticSearchOptions = {};
+        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter',
+            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
+            'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+        var searchField;
+        for (var idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            if (searchOptions.hasOwnProperty(searchField)) {
+                staticSearchOptions[searchField] = searchOptions[searchField];
+            }
+        }
+
+        // map
+        staticSearchOptions.suchworte = searchOptions.fulltext.toLowerCase().split(' ');
+        staticSearchOptions.classes = searchOptions.strClassFilter.split(',');
+        staticSearchOptions.states = searchOptions.strWorkflowStateFilter.split(',');
+        staticSearchOptions.subTypes = searchOptions.strMetaNodeSubTypeFilter.split(',');
+        staticSearchOptions.metaNodeTypeTags = searchOptions.strMetaNodeTypeTagsFilter.split(',');
+        staticSearchOptions.notPraefix = searchOptions.strNotNodePraefix.split(' ');
+        staticSearchOptions.flgConcreteToDosOnly = searchOptions.flgConcreteToDosOnly;
+
+        // convert dateValues
+        searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
+        var value, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
+        for (idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            value = searchOptions[searchField];
+            if (searchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
+                if (typeof value === 'string') {
+                    lstDateTime = value.split(' ');
+                    lstDate = lstDateTime[0].split('.');
+                    strTime = '12:00:00';
+                    if (searchField.match(/.*GE$/)) {
+                        strTime = '00:00:00';
+                    } else if (searchField.match(/.*LE$/)) {
+                        strTime = '23:59:59';
+                    }
+
+                    if (lstDateTime.length > 1) {
+                        strTime = lstDateTime[1] + ':00';
+                    }
+                    newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
+                    newDate = new Date(newDateTimeStr);
+                    value = newDate.getTime();
+                } else if (typeof value === 'object') {
+                    value = value.getTime();
+                }
+                staticSearchOptions[searchField] = value;
+            }
+        }
+
+        return staticSearchOptions;
+    };
+
+    /**
+     * filter all nodes
+     * @param {Object} staticSearchOptions  prepared filters
+     * @returns {Array}                     matching nodes
+     */
+    me._filterNodes = function (staticSearchOptions) {
+        var searchResultIds = [];
+
+        var flgFound, nodeId, node, content;
+        for (var idx = 0; idx < me.nodeList.length; idx++) {
+            nodeId = me.nodeList[idx];
+            node = me.getNodeDataById(nodeId, true);
+            content = node.nodeDesc + ' ' + node.name + ' ' + node.state;
+
+            flgFound = true;
+            // Fulltext
+            if (staticSearchOptions.suchworte.length > 0 &&
+                !me.appBase.get('YaioExportedData').VolltextTreffer(content.toLowerCase(), staticSearchOptions.suchworte)) {
+                // words not found
+                continue;
+            }
+
+            // Classfilter
+            if (staticSearchOptions.classes.length > 0 &&
+                !me.appBase.get('YaioExportedData').VolltextTreffer(node.className, staticSearchOptions.classes, false, true)) {
+                // words not found
+                continue;
+            }
+            // SubTypes-Filter
+            if (staticSearchOptions.subTypes.length > 0 &&
+                !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeSubType, staticSearchOptions.subTypes, false, true)) {
+                // words not found
+                continue;
+            }
+            // MetaNodeTypeTags-Filter
+            if (staticSearchOptions.metaNodeTypeTags.length > 0 &&
+                !me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodeTypeTags, staticSearchOptions.metaNodeTypeTags, false, true)) {
+                // words not found
+                continue;
+            }
+            // Workflowstate-Filter
+            if (staticSearchOptions.states.length > 0 &&
+                !me.appBase.get('YaioExportedData').VolltextTreffer(node.workflowState, staticSearchOptions.states, false, true)) {
+                // words not found
+                continue;
+            }
+            // NotNodePraefix-Filter
+            if (staticSearchOptions.notPraefix.length > 0 &&
+                me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodePraefix, staticSearchOptions.notPraefix, true, true)) {
+                // blacklisted praefixes found
+                console.log('fulltextSearch ignore nodeId ' + nodeId + ' because of ' + node.metaNodePraefix);
+                continue;
+            }
+
+            // flgConcreteToDosOnly-Filter
+            if (staticSearchOptions.flgConcreteToDosOnly > 0 &&
+                (me.appBase.DataUtils.isEmptyStringValue(node.planAufwand) || node.planAufwand <= 0)) {
+                continue;
+            }
+
+            // datefilter
+            var searchFields = ['istStart', 'istEnde',
+                'planStart', 'planEnde'
+            ];
+            var searchField;
+            for (var idx2 = 0; idx2 < searchFields.length; idx2++) {
+                searchField = searchFields[idx2];
+                if (!me._filterNodeByDateFilter(staticSearchOptions, node, searchField)) {
+                    flgFound = false;
+                }
+            }
+            if (flgFound) {
+                // no filter or all machtes
+                searchResultIds.push(nodeId);
+            }
+        }
+
+        return searchResultIds;
+    };
+
+    /**
+     * filter the node with all dateFilter for searchField (LE, GE, IsNull)
+     * @param {Object} staticSearchOptions  prepared filters
+     * @param {Object} node                 prepared filters
+     * @param {String} fieldName            fieldName to run filter on
+     * @returns {Boolean}                   passes or not
+     */
+    me._filterNodeByDateFilter = function (staticSearchOptions, node, fieldName) {
+        var filterName = fieldName + 'LE';
+        var filterValue = staticSearchOptions[filterName];
+        var fieldValue = node[fieldName];
+        if (staticSearchOptions.hasOwnProperty(filterName) && filterValue > 0 &&
+            ((me.appBase.DataUtils.isEmptyStringValue(fieldValue) || fieldValue > filterValue))) {
+            console.error('_filterNodeByDateFilter ignore nodeId ' + node.sysUID + ' because of ' + fieldValue + '>' + filterName + ':' + filterValue);
+            return false;
+        }
+
+        filterName = fieldName + 'GE';
+        filterValue = staticSearchOptions[filterName];
+        fieldValue = node[fieldName];
+        if (staticSearchOptions.hasOwnProperty(filterName) && filterValue > 0 &&
+            ((me.appBase.DataUtils.isEmptyStringValue(fieldValue) || fieldValue < filterValue))) {
+            console.error('_filterNodeByDateFilter ignore nodeId ' + node.sysUID + ' because of ' + fieldValue + '<' + filterName + ':' + filterValue);
+            return false;
+        }
+
+        filterName = fieldName + 'IsNull';
+        filterValue = staticSearchOptions[filterName];
+        fieldValue = node[fieldName];
+        if (staticSearchOptions.hasOwnProperty(filterName) &&
+            (filterValue === 'true' || filterValue === true) &&
+            !me.appBase.DataUtils.isEmptyStringValue(fieldValue)) {
+            console.error('_filterNodeByDateFilter ignore nodeId ' + node.sysUID + ' because of ' + fieldValue + ' not ' + filterName + ':' + filterValue);
+            return false;
+        }
+
+        return true;
+    };
+
 
     /**
      * create a dynamic sort-function
