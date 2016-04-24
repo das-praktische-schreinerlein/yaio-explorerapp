@@ -32,7 +32,7 @@
                              searchOptions.praefix = boardOptions.praefix + 'running';
                              searchOptions.strClassFilter = 'EventNode,TaskNode';
                              searchOptions.strWorkflowStateFilter = 'RUNNING,WARNING';
-                             searchOptions.searchSort = 'planStartUp';
+                             searchOptions.searchSort = 'planEndeUp';
                              searchOptions.pageSize = 5;">
                     <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
                 </td>
@@ -43,7 +43,7 @@
                              searchOptions.praefix = boardOptions.praefix + 'done';
                              searchOptions.strClassFilter = 'EventNode,TaskNode';
                              searchOptions.strWorkflowStateFilter = 'DONE,CANCELED';
-                             searchOptions.searchSort = 'planStartUp';
+                             searchOptions.searchSort = 'istEndeDown';
                              searchOptions.pageSize = 5;">
                     <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
                 </td>
