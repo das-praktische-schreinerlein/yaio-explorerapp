@@ -576,7 +576,6 @@ Yaio.NodeEditor = function(appBase) {
         } else if (field.type === 'select') {
             me.$(fieldNameId).val(value).trigger('select').triggerHandler('change');
         } else if (field.type === 'tagstring') {
-            console.error('tagstring:' + value + ' for ' + fieldNameId);
             me.$.each(value.split(' '), function (optionIndex, optionValue) {
                 if (me.appBase.DataUtils.isEmptyStringValue(optionValue)) {
                     return;
