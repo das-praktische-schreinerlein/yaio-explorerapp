@@ -40,6 +40,13 @@
         <a ng-click="doNewFulltextSearch();" class="button" translate="common.command.DoSearch">Search</a>
 
         {{ searchOptions.total }} Treffer
+
+        <ul class="pagination">
+            <li ng-repeat="n in [20, 50, 100] track by $index" ng-class="{active: searchOptions.pageSize == n}">
+                <a href="#{{ createSearchUri(searchOptions, 1, n); }}">{{n}}</a>
+            </li>
+        </ul>
+
     </div><!--
        --><paging
         class="small"

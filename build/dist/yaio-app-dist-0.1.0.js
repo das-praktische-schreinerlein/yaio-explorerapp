@@ -9416,9 +9416,10 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
      * create the search-uri to use
      * @param {Object} searchOptions  current searchoptions (filter..) to use
      * @param {int} page              pagenumber to load
+     * @param {int} pageSize          optional pageSize (if not set searchOptions.pageSize will be used)
      * @returns {String}              new search-uri
      */
-    $scope.createSearchUri = function(searchOptions, page) {
+    $scope.createSearchUri = function(searchOptions, page, pageSize) {
         var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
             'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
@@ -9437,7 +9438,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
 
         return '/search'
             + '/' + encodeURI(page)
-            + '/' + encodeURI(searchOptions.pageSize)
+            + '/' + encodeURI(pageSize > 0 ? pageSize : searchOptions.pageSize)
             + '/' + encodeURI(searchOptions.searchSort)
             + '/' + encodeURI(searchOptions.baseSysUID)
             + '/' + encodeURI(searchOptions.fulltext)
