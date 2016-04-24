@@ -37,7 +37,11 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
 
         getDayOfWeek: function(date, dayOfWeek) {
             date = new Date(date.getTime ());
-            date.setDate(date.getDate() + (dayOfWeek - date.getDay()) % 7);
+            var weekDay = date.getDay();
+            if (weekDay === 0) {
+                weekDay = 7;
+            }
+            date.setDate(date.getDate() + (dayOfWeek - weekDay) % 7);
             return date;
         },
 
@@ -55,6 +59,7 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             date.setHours(23);
             date.setMinutes(59);
             date.setSeconds(59);
+            date.setMilliseconds(999);
             return date;
         },
 
@@ -72,19 +77,19 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
 
         getLastMonth: function(date) {
             date = new Date(date.getTime ());
-            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDay());
+            date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDate());
             return date;
         },
 
         getNextMonth: function(date) {
             date = new Date(date.getTime ());
-            date.setFullYear(date.getFullYear(), date.getMonth()+1, date.getDay());
+            date.setFullYear(date.getFullYear(), date.getMonth()+1, date.getDate());
             return date;
         },
 
         getStartOfTime: function() {
             var date = new Date();
-            date.setFullYear('1976', '05', '28');
+            date.setFullYear('1976', '04', '28');
             return date;
         },
 
