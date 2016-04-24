@@ -365,6 +365,37 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
             // replace space with ,
             serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
         }
+        // convert dateValues
+        searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
+        var value, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
+        for (idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            value = serverSearchOptions[searchField];
+            if (serverSearchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
+                if (typeof value === 'string') {
+                    lstDateTime = value.split(' ');
+                    lstDate = lstDateTime[0].split('.');
+                    strTime = '12:00:00';
+                    if (searchField.match(/.*GE$/)) {
+                        strTime = '00:00:00';
+                    } else if (searchField.match(/.*LE$/)) {
+                        strTime = '23:59:59';
+                    }
+
+                    if (lstDateTime.length > 1) {
+                        strTime = lstDateTime[1] + ':00';
+                    }
+                    newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
+                    newDate = new Date(newDateTimeStr);
+                    value = newDate.getTime();
+                } else if (typeof value === 'object') {
+                    value = value.getTime();
+                }
+                serverSearchOptions[searchField] = value;
+            }
+        }
 
         // load data
         var url = me.config.restSearchUrl + uri;

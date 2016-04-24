@@ -42,6 +42,7 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             strClassFilter: '',
             strMetaNodeTypeTagsFilter: '',
             strMetaNodeSubTypeFilter: '',
+            flgConcreteToDosOnly: 0,
             istStartGE: '',
             istStartLE: '',
             istEndeGE: '',
@@ -68,11 +69,21 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
             'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
-        var additionalSearchField;
+        var value, additionalSearchField;
         for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            value = $scope.searchOptions[additionalSearchField];
+            if (!yaioUtils.getService('DataUtils').isEmptyStringValue(value)) {
+                value = yaioUtils.getService('DataUtils').formatGermanDate(value);
+            } else {
+                value = '';
+            }
+            additionalFilter += additionalSearchField + '=' + value + ';';
+        }
+        additionalSearchFields = ['flgConcreteToDosOnly', 'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'];
+        for (idx = 0; idx < additionalSearchFields.length; idx++) {
             additionalSearchField = additionalSearchFields[idx];
             additionalFilter += additionalSearchField + '=' + $scope.searchOptions[additionalSearchField] + ';';
         }
