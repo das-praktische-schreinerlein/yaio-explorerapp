@@ -1183,7 +1183,6 @@ Yaio.NodeEditor = function(appBase) {
         } else if (field.type === 'select') {
             me.$(fieldNameId).val(value).trigger('select').triggerHandler('change');
         } else if (field.type === 'tagstring') {
-            console.error('tagstring:' + value + ' for ' + fieldNameId);
             me.$.each(value.split(' '), function (optionIndex, optionValue) {
                 if (me.appBase.DataUtils.isEmptyStringValue(optionValue)) {
                     return;
@@ -4654,6 +4653,37 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         if (serverSearchOptions.hasOwnProperty('strMetaNodeTypeTagsFilter')) {
             // replace space with ,
             serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
+        }
+        // convert dateValues
+        searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
+        var value, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
+        for (idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            value = serverSearchOptions[searchField];
+            if (serverSearchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
+                if (typeof value === 'string') {
+                    lstDateTime = value.split(' ');
+                    lstDate = lstDateTime[0].split('.');
+                    strTime = '12:00:00';
+                    if (searchField.match(/.*GE$/)) {
+                        strTime = '00:00:00';
+                    } else if (searchField.match(/.*LE$/)) {
+                        strTime = '23:59:59';
+                    }
+
+                    if (lstDateTime.length > 1) {
+                        strTime = lstDateTime[1] + ':00';
+                    }
+                    newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
+                    newDate = new Date(newDateTimeStr);
+                    value = newDate.getTime();
+                } else if (typeof value === 'object') {
+                    value = value.getTime();
+                }
+                serverSearchOptions[searchField] = value;
+            }
         }
 
         // load data
@@ -8129,6 +8159,7 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             strClassFilter: '',
             strMetaNodeTypeTagsFilter: '',
             strMetaNodeSubTypeFilter: '',
+            flgConcreteToDosOnly: 0,
             istStartGE: '',
             istStartLE: '',
             istEndeGE: '',
@@ -8155,11 +8186,21 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
             'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
-        var additionalSearchField;
+        var value, additionalSearchField;
         for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            value = $scope.searchOptions[additionalSearchField];
+            if (!yaioUtils.getService('DataUtils').isEmptyStringValue(value)) {
+                value = yaioUtils.getService('DataUtils').formatGermanDate(value);
+            } else {
+                value = '';
+            }
+            additionalFilter += additionalSearchField + '=' + value + ';';
+        }
+        additionalSearchFields = ['flgConcreteToDosOnly', 'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'];
+        for (idx = 0; idx < additionalSearchFields.length; idx++) {
             additionalSearchField = additionalSearchFields[idx];
             additionalFilter += additionalSearchField + '=' + $scope.searchOptions[additionalSearchField] + ';';
         }
@@ -9234,6 +9275,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             strMetaNodeSubTypeFilter: '',
             arrMetaNodeSubTypeFilter: [],
             praefix: '',
+            flgConcreteToDosOnly: 0,
             istStartGE: '',
             istStartLE: '',
             istEndeGE: '',
@@ -9279,14 +9321,21 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istStartIsNull', 'planStartIsNull', 'planStartIsNull'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
         var additionalSearchField;
         for (idx = 0; idx < additionalSearchFields.length; idx++) {
             additionalSearchField = additionalSearchFields[idx];
             if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
-                $scope.searchOptions[additionalSearchField] = new Date(decodeURI(additionalSearchFilter[additionalSearchField]));
+                $scope.searchOptions[additionalSearchField] = decodeURI(additionalSearchFilter[additionalSearchField]);
+            }
+        }
+        additionalSearchFields = ['flgConcreteToDosOnly', 'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+        for (idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
+                $scope.searchOptions[additionalSearchField] = decodeURI(additionalSearchFilter[additionalSearchField]);
             }
         }
         console.log('NodeSearchCtrl - processing');
@@ -9383,7 +9432,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
             'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull',
+            'flgConcreteToDosOnly'
         ];
         var additionalSearchField;
         for (var idx = 0; idx < additionalSearchFields.length; idx++) {

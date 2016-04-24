@@ -8,6 +8,7 @@
 <div id="searchcommand" class="container-searchcommands">
     <div class="fulltextline" data-tooltip='tooltip.command.DoSearch' lang="tech">
         <input type="text" ng-keyup="checkEnterFulltextSearch($event);" placeholder="Suchtext" name="fulltext" maxsize="40" class="inputtype_text" id="inputSearchOptionsFulltext" ng-model="searchOptions.fulltext">
+
         <select name="searchSort" class="inputtype_select" id="inputSearchOptionsSearchSortt" ng-model="searchOptions.searchSort">
             <option value="default" translate="common.select.searchSort.default">default</option>
             <option value="createdUp" translate="common.select.searchSort.createdUp">createdUp</option>
@@ -35,7 +36,9 @@
             <option value="workflowStateUp" translate="common.select.searchSort.workflowStateUp">workflowStateUp</option>
             <option value="workflowStateDown" translate="common.select.searchSort.workflowStateDown">workflowStateDown</option>
         </select>
+
         <a ng-click="doNewFulltextSearch();" class="button" translate="common.command.DoSearch">Search</a>
+
         {{ searchOptions.total }} Treffer
     </div><!--
        --><paging
@@ -55,56 +58,123 @@
 </paging><!--
      -->
     <br>
-    <div class="fulltextline" data-tooltip='tooltip.command.DoSearch' lang="tech">
-        <span lang='tech' translate="editor.common.label.type">Typ</span>
-        <select name="strClassFilter" class="inputtype_select use_select2 inputtype_select_class" id="inputSearchOptionsStrClassFilter" ng-model="searchOptions.arrClassFilter" multiple="multiple">
-            <option value="" translate="common.select.all">Alle
-            <option translate="common.select.className.TaskNode" value="TaskNode">Task
-            <option translate="common.select.className.EventNode" value="EventNode">Event
-            <option translate="common.select.className.InfoNode" value="InfoNode">Info
-            <option translate="common.select.className.UrlResNode" value="UrlResNode">UrlRes
-            <option translate="common.select.className.SymLinkNode" value="SymLinkNode">Symlink
-        </select>
-        <span lang='tech' translate="editor.common.label.metaNodeSubType">Subtype</span>
-        <select name="strMetaNodeSubTypeFilter" class="inputtype_select use_select2 inputtype_select_metaNodeSubtype" id="inputSearchOptionsStrMetaNodeSubTypeFilter" ng-model="searchOptions.arrMetaNodeSubTypeFilter" multiple="multiple">
-            <option value="" translate="common.select.all">Alle
-            <option value="EventNodeMetaNodeSubType.EVENT" translate="common.select.EventNodeMetaNodeSubType.EVENT">Event
-            <option value="EventNodeMetaNodeSubType.DEADLINE" translate="common.select.EventNodeMetaNodeSubType.DEADLINE">Deadline
-            <option value="EventNodeMetaNodeSubType.TIMEFRAME" translate="common.select.EventNodeMetaNodeSubType.TIMEFRAME">Period
-            <option value="InfoNodeMetaNodeSubType.INFONODE" translate="common.select.InfoNodeMetaNodeSubType.INFONODE">Infonode
-            <option value="InfoNodeMetaNodeSubType.CONTAINER" translate="common.select.InfoNodeMetaNodeSubType.CONTAINER">Infocontainer
-            <option value="InfoNodeMetaNodeSubType.SNAPSHOT" translate="common.select.InfoNodeMetaNodeSubType.SNAPSHOT">Snapshot
-            <option value="TaskNodeMetaNodeSubType.DEPARTMENT" translate="common.select.TaskNodeMetaNodeSubType.DEPARTMENT">Bereich
-            <option value="TaskNodeMetaNodeSubType.SECTION" translate="common.select.TaskNodeMetaNodeSubType.SECTION">Abteilung
-            <option value="TaskNodeMetaNodeSubType.WIP" translate="common.select.TaskNodeMetaNodeSubType.WIP">WorkInProgress
-            <option value="TaskNodeMetaNodeSubType.BACKLOG" translate="common.select.TaskNodeMetaNodeSubType.BACKLOG">Backlog-Container
-            <option value="TaskNodeMetaNodeSubType.ARCHIV" translate="common.select.TaskNodeMetaNodeSubType.ARCHIV">Archiv-Container
-            <option value="TaskNodeMetaNodeSubType.PROJECT" translate="common.select.TaskNodeMetaNodeSubType.PROJECT">Project
-            <option value="TaskNodeMetaNodeSubType.SUBPROJECT" translate="common.select.TaskNodeMetaNodeSubType.SUBPROJECT">SubProject
-            <option value="TaskNodeMetaNodeSubType.TASK" translate="common.select.TaskNodeMetaNodeSubType.TASK">Task
-            <option value="TaskNodeMetaNodeSubType.SUBTASK" translate="common.select.TaskNodeMetaNodeSubType.SUBTASK">SubTask
-            <option value="TaskNodeMetaNodeSubType.TODO" translate="common.select.TaskNodeMetaNodeSubType.TODO">Simple Todo
-            <option value="TaskNodeMetaNodeSubType.CONTAINER" translate="common.select.TaskNodeMetaNodeSubType.CONTAINER">Container
-            <option value="UrlResNodeMetaNodeSubType.RESOURCE" translate="common.select.UrlResNodeMetaNodeSubType.RESOURCE">Resource
-            <option value="SymLinkNodeMetaNodeSubType.SYMLINK" translate="common.select.SymLinkNodeMetaNodeSubType.SYMLINK">Resource
-        </select>
-        <span lang='tech' translate="editor.common.label.state">Status</span>
-        <select name="strWorkflowStateFilter" class="inputtype_select use_select2 inputtype_select_state" id="inputSearchOptionsStrWorkflowStateFilter" ng-model="searchOptions.arrWorkflowStateFilter" multiple="multiple">
-            <option value="" translate="common.select.all">Alle
-            <option value="NOTPLANED" translate="common.select.TaskNodeType.UNKNOWN">Ungeplant
-            <option value="OPEN" translate="common.select.TaskNodeType.OFFEN">Offen
-            <option value="LATE" translate="common.select.TaskNodeType.LATE">Start verspätet
-            <option value="RUNNING" translate="common.select.TaskNodeType.RUNNING">in Bearbeitung
-            <option value="WARNING" translate="common.select.TaskNodeType.WARNING">Ende überschritten
-            <option value="DONE" translate="common.select.TaskNodeType.ERLEDIGT">Erledigt
-            <option value="CANCELED" translate="common.select.TaskNodeType.VERWORFEN">Verworfen
-        </select>
+    <fieldset>
+        <legend id="legendStateSearchFields"><span translate="editor.common.legend.StateSearch">Stati</span></legend>
+        <div class="formrow filter_StateSearchFields flg-hide-if-inputvalue-empty" id="formrow_StateSearchFields" inputids="inputSearchOptionsStrClassFilter,inputSearchOptionsStrMetaNodeSubTypeFilter,inputSearchOptionsStrWorkflowStateFilter,inputFlgConcreteToDosOnly">
+            <span lang='tech' translate="editor.common.label.type">Typ</span>
+            <select name="strClassFilter" class="inputtype_select use_select2 inputtype_select_class" id="inputSearchOptionsStrClassFilter" ng-model="searchOptions.arrClassFilter" multiple="multiple">
+                <option value="" translate="common.select.all">Alle
+                <option translate="common.select.className.TaskNode" value="TaskNode">Task
+                <option translate="common.select.className.EventNode" value="EventNode">Event
+                <option translate="common.select.className.InfoNode" value="InfoNode">Info
+                <option translate="common.select.className.UrlResNode" value="UrlResNode">UrlRes
+                <option translate="common.select.className.SymLinkNode" value="SymLinkNode">Symlink
+            </select>
+            <span lang='tech' translate="editor.common.label.metaNodeSubType">Subtype</span>
+            <select name="strMetaNodeSubTypeFilter" class="inputtype_select use_select2 inputtype_select_metaNodeSubtype" id="inputSearchOptionsStrMetaNodeSubTypeFilter" ng-model="searchOptions.arrMetaNodeSubTypeFilter" multiple="multiple">
+                <option value="" translate="common.select.all">Alle
+                <option value="EventNodeMetaNodeSubType.EVENT" translate="common.select.EventNodeMetaNodeSubType.EVENT">Event
+                <option value="EventNodeMetaNodeSubType.DEADLINE" translate="common.select.EventNodeMetaNodeSubType.DEADLINE">Deadline
+                <option value="EventNodeMetaNodeSubType.TIMEFRAME" translate="common.select.EventNodeMetaNodeSubType.TIMEFRAME">Period
+                <option value="InfoNodeMetaNodeSubType.INFONODE" translate="common.select.InfoNodeMetaNodeSubType.INFONODE">Infonode
+                <option value="InfoNodeMetaNodeSubType.CONTAINER" translate="common.select.InfoNodeMetaNodeSubType.CONTAINER">Infocontainer
+                <option value="InfoNodeMetaNodeSubType.SNAPSHOT" translate="common.select.InfoNodeMetaNodeSubType.SNAPSHOT">Snapshot
+                <option value="TaskNodeMetaNodeSubType.DEPARTMENT" translate="common.select.TaskNodeMetaNodeSubType.DEPARTMENT">Bereich
+                <option value="TaskNodeMetaNodeSubType.SECTION" translate="common.select.TaskNodeMetaNodeSubType.SECTION">Abteilung
+                <option value="TaskNodeMetaNodeSubType.WIP" translate="common.select.TaskNodeMetaNodeSubType.WIP">WorkInProgress
+                <option value="TaskNodeMetaNodeSubType.BACKLOG" translate="common.select.TaskNodeMetaNodeSubType.BACKLOG">Backlog-Container
+                <option value="TaskNodeMetaNodeSubType.ARCHIV" translate="common.select.TaskNodeMetaNodeSubType.ARCHIV">Archiv-Container
+                <option value="TaskNodeMetaNodeSubType.PROJECT" translate="common.select.TaskNodeMetaNodeSubType.PROJECT">Project
+                <option value="TaskNodeMetaNodeSubType.SUBPROJECT" translate="common.select.TaskNodeMetaNodeSubType.SUBPROJECT">SubProject
+                <option value="TaskNodeMetaNodeSubType.TASK" translate="common.select.TaskNodeMetaNodeSubType.TASK">Task
+                <option value="TaskNodeMetaNodeSubType.SUBTASK" translate="common.select.TaskNodeMetaNodeSubType.SUBTASK">SubTask
+                <option value="TaskNodeMetaNodeSubType.TODO" translate="common.select.TaskNodeMetaNodeSubType.TODO">Simple Todo
+                <option value="TaskNodeMetaNodeSubType.CONTAINER" translate="common.select.TaskNodeMetaNodeSubType.CONTAINER">Container
+                <option value="UrlResNodeMetaNodeSubType.RESOURCE" translate="common.select.UrlResNodeMetaNodeSubType.RESOURCE">Resource
+                <option value="SymLinkNodeMetaNodeSubType.SYMLINK" translate="common.select.SymLinkNodeMetaNodeSubType.SYMLINK">Resource
+            </select>
+            <span lang='tech' translate="editor.common.label.flgConcreteToDosOnly">ConcreteToDosOnly</span>
+            <input type="checkbox" name="flgConcreteToDosOnly" value="1" class="inputtype_checkbox" ng-model="searchOptions.flgConcreteToDosOnly" ng-true-value="1" ng-false-value="0" id="inputFlgConcreteToDosOnly" ng-change="">
+            <span lang='tech' translate="editor.common.label.state">Status</span>
+            <select name="strWorkflowStateFilter" class="inputtype_select use_select2 inputtype_select_state" id="inputSearchOptionsStrWorkflowStateFilter" ng-model="searchOptions.arrWorkflowStateFilter" multiple="multiple">
+                <option value="" translate="common.select.all">Alle
+                <option value="NOTPLANED" translate="common.select.TaskNodeType.UNKNOWN">Ungeplant
+                <option value="OPEN" translate="common.select.TaskNodeType.OFFEN">Offen
+                <option value="LATE" translate="common.select.TaskNodeType.LATE">Start verspätet
+                <option value="RUNNING" translate="common.select.TaskNodeType.RUNNING">in Bearbeitung
+                <option value="WARNING" translate="common.select.TaskNodeType.WARNING">Ende überschritten
+                <option value="DONE" translate="common.select.TaskNodeType.ERLEDIGT">Erledigt
+                <option value="CANCELED" translate="common.select.TaskNodeType.VERWORFEN">Verworfen
+            </select>
+        </div>
+    </fieldset>
+    <script type="text/javascript">
+        // toggler for optional, empty elements
+        jMATService.getPageLayoutService().appendFormrowToggler('legendStateSearchFields', 'filterStateSearchFields', 'filter_StateSearchFields', '&nbsp;');
+    </script>
 
-        <br />
+    <fieldset>
+        <legend id="legendMetaSearchFields"><span translate="editor.common.legend.MetaSearch">Meta</span></legend>
+        <div class="formrow filter_MetaSearchFields flg-hide-if-inputvalue-empty" id="formrow_MetaSearchFields" inputids="inputSearchOptionsStrMetaNodeTypeTagsFilter,inputSearchOptionsStrNotNodePraefix">
+            <span lang='tech' translate="editor.common.label.metaNodeTypeTags">Tags</span>
+            <input type="text" placeholder="Tags" name="strMetaNodeTypeTagsFilter" maxsize="40" class="inputtype_text" id="inputSearchOptionsStrMetaNodeTypeTagsFilter" ng-model="searchOptions.strMetaNodeTypeTagsFilter">
+            <span lang='tech' translate="editor.common.label.notPraefix">Not Praefix</span>
+            <input type="text" placeholder="Blacklisted" name="strNotNodePraefix" maxsize="40" class="inputtype_text" id="inputSearchOptionsStrNotNodePraefix" ng-model="searchOptions.strNotNodePraefix">
+        </div>
+    </fieldset>
+    <script type="text/javascript">
+        // toggler for optional, empty elements
+        jMATService.getPageLayoutService().appendFormrowToggler('legendMetaSearchFields', 'filterMetaSearchFields', 'filter_MetaSearchFields', '&nbsp;');
+    </script>
 
-        <span lang='tech' translate="editor.common.label.metaNodeTypeTags">Status</span>
-        <input type="text" placeholder="Tags" name="strMetaNodeTypeTagsFilter" maxsize="40" class="inputtype_text" id="inputSearchOptionsStrMetaNodeTypeTagsFilter" ng-model="searchOptions.strMetaNodeTypeTagsFilter">
-        <span lang='tech' translate="editor.common.label.notPraefix">Not Praefix</span>
-        <input type="text" placeholder="Blacklisted" name="strNotNodePraefix" maxsize="40" class="inputtype_text" id="inputSearchOptionsStrNotNodePraefix" ng-model="searchOptions.strNotNodePraefix">
-    </div>
+    <fieldset>
+        <legend id="legendPlanSearchFields"><span translate="editor.common.legend.Plan">Plan</span></legend>
+        <div class="formrow filter_PlanSearchFields flg-hide-if-inputvalue-empty" id="formrow_PlanSearchFields" inputids="inputPlanStartGE,inputPlanStartLE,inputPlanEndeGE,inputPlanEndeLE">
+            <!-- show textfield -->
+            <label for="inputPlanStartGE" translate="editor.common.label.planStart">Start</label>
+            <input type="text" name="planStartGE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.planStartGE" id="inputPlanStartGE" ng-change="">
+            -
+            <input type="text" name="planStartLE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.planStartLE" id="inputPlanStartLE" ng-change="">
+            <label for="inputPlanStartIsNull" translate="editor.common.label.dateIsNull">Datum nicht belegt</label>
+            <input type="checkbox" name="planStartIsNull" value="true" class="inputtype_checkbox" ng-model="searchOptions.planStartIsNull" ng-true-value="true" ng-false-value="" id="inputPlanStartIsNull" ng-change="">
+
+            <!-- show textfield -->
+            <label for="inputPlanEndeGE" translate="editor.common.label.planEnde">Ende</label>
+            <input type="text" name="planEndeGE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.planEndeGE" id="inputPlanEndeGE" ng-change="">
+            -
+            <input type="text" name="planEndeLE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.planEndeLE" id="inputPlanEndeLE" ng-change="">
+            <label for="inputPlanEndeIsNull" translate="editor.common.label.dateIsNull">Datum nicht belegt</label>
+            <input type="checkbox" name="planEndeIsNull" value="true" class="inputtype_checkbox" ng-model="searchOptions.planEndeIsNull" ng-true-value="true" ng-false-value="" id="inputPlanEndeIsNull" ng-change="">
+        </div>
+    </fieldset>
+    <script type="text/javascript">
+        // toggler for optional, empty elements
+        jMATService.getPageLayoutService().appendFormrowToggler('legendPlanSearchFields', 'filterPlanSearchFields', 'filter_PlanSearchFields', '&nbsp;');
+    </script>
+
+    <fieldset>
+        <legend id="legendIstSearchFields"><span translate="editor.common.legend.Ist">Ist</span></legend>
+        <div class="formrow filter_IstSearchFields flg-hide-if-inputvalue-empty" id="formrow_IstSearchFields" inputids="inputIstStartIsNull,inputIstStartGE,inputIstStartLE,inputIstEndeGE,inputIstEndeLE">
+            <!-- show textfield -->
+            <label for="inputIstStartGE" translate="editor.common.label.istStart">Start</label>
+            <input type="text" name="istStartGE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.istStartGE" id="inputIstStartGE" ng-change="">
+            -
+            <input type="text" name="istStartLE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.istStartLE" id="inputIstStartLE" ng-change="">
+            <label for="inputIstStartIsNull" translate="editor.common.label.dateIsNull">Datum nicht belegt</label>
+            <input type="checkbox" name="istStartIsNull" value="true" class="inputtype_checkbox" ng-model="searchOptions.istStartIsNull" ng-true-value="true" ng-false-value="" id="inputIstStartIsNull" ng-change="">
+
+            <!-- show textfield -->
+            <label for="inputIstEndeGE" translate="editor.common.label.istEnde">Ende</label>
+            <input type="text" name="istEndeGE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.istEndeGE" id="inputIstEndeGE" ng-change="">
+            -
+            <input type="text" name="istEndeLE" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}" maxsize="10" class="inputtype_date" ng-model="searchOptions.istEndeLE" id="inputIstEndeLE" ng-change="">
+            <label for="inputIstEndeIsNull" translate="editor.common.label.dateIsNull">Datum nicht belegt</label>
+            <input type="checkbox" name="istEndeIsNull" value="true" class="inputtype_checkbox" ng-model="searchOptions.istEndeIsNull" ng-true-value="true" ng-false-value="" id="inputIstEndeIsNull" ng-change="">
+            <br>
+        </div>
+    </fieldset>
+    <script type="text/javascript">
+        // toggler for optional, empty elements
+        jMATService.getPageLayoutService().appendFormrowToggler('legendIstSearchFields', 'filterIstSearchFields', 'filter_IstSearchFields', '&nbsp;');
+    </script>
 </div>

@@ -14,7 +14,7 @@
                     <br>
                     <span class="yaio-workboard-rowtime">{{yaioUtils.getService('DataUtils').formatGermanDate(boardOptions.dateVon)}}-{{yaioUtils.getService('DataUtils').formatGermanDate(boardOptions.dateBis)}}</span>
                 </td>
-                <td class="yaio-workboard-column-data yaio-workboard-column-starts"
+                <td class="yaio-workboard-column-data yaio-workboard-column-late"
                     ng-controller="DashBoardNodeSearchCtrl"
                     ng-init="searchOptions.planStartGE = yaioUtils.getWithTime00(boardOptions.dateVonFilter);
                              searchOptions.planStartLE = yaioUtils.getWithTime24(boardOptions.dateBisFilter);
@@ -25,7 +25,7 @@
                              searchOptions.pageSize = 5;">
                     <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
                 </td>
-                <td class="yaio-workboard-column-data yaio-workboard-column-ends"
+                <td class="yaio-workboard-column-data yaio-workboard-column-short"
                     ng-controller="DashBoardNodeSearchCtrl"
                     ng-init="searchOptions.planEndeGE = yaioUtils.getWithTime00(boardOptions.dateVonFilter);
                              searchOptions.planEndeLE = yaioUtils.getWithTime24(boardOptions.dateBisFilter);
@@ -36,7 +36,7 @@
                              searchOptions.pageSize = 5;">
                     <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
                 </td>
-                <td class="yaio-workboard-column-data yaio-workboard-column-done"
+                <td class="yaio-workboard-column-data yaio-workboard-column-running"
                     ng-controller="DashBoardNodeSearchCtrl"
                     ng-init="searchOptions.planEndeGE = yaioUtils.getWithTime00(boardOptions.dateVonFilter);
                              searchOptions.planEndeLE = undefined;
