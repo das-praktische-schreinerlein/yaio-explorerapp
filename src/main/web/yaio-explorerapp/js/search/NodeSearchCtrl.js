@@ -48,6 +48,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             strMetaNodeSubTypeFilter: '',
             arrMetaNodeSubTypeFilter: [],
             praefix: '',
+            flgConcreteToDosOnly: 0,
             istStartGE: '',
             istStartLE: '',
             istEndeGE: '',
@@ -93,14 +94,21 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istStartIsNull', 'planStartIsNull', 'planStartIsNull'
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
         var additionalSearchField;
         for (idx = 0; idx < additionalSearchFields.length; idx++) {
             additionalSearchField = additionalSearchFields[idx];
             if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
-                $scope.searchOptions[additionalSearchField] = new Date(decodeURI(additionalSearchFilter[additionalSearchField]));
+                $scope.searchOptions[additionalSearchField] = decodeURI(additionalSearchFilter[additionalSearchField]);
+            }
+        }
+        additionalSearchFields = ['flgConcreteToDosOnly', 'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+        for (idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            if (additionalSearchFilter.hasOwnProperty(additionalSearchField)) {
+                $scope.searchOptions[additionalSearchField] = decodeURI(additionalSearchFilter[additionalSearchField]);
             }
         }
         console.log('NodeSearchCtrl - processing');
@@ -197,7 +205,8 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
             'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull',
+            'flgConcreteToDosOnly'
         ];
         var additionalSearchField;
         for (var idx = 0; idx < additionalSearchFields.length; idx++) {
