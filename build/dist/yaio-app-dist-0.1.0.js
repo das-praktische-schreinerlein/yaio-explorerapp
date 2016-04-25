@@ -5496,6 +5496,8 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
 
         me.nodeList[node.sysUID] = node;
         me.nodeList.push(node.sysUID);
+
+        me._cacheParentHierarchy(node);
         
         for (var i = 0; i < node.childNodes.length; i++) {
             var childNode = node.childNodes[i];
@@ -5576,6 +5578,8 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         // add node at addIdx
         console.log(msg + ' addNewNode at pos:' + addIdx);
         parent.childNodes.splice(addIdx, 0, node.sysUID);
+
+        me._cacheParentHierarchy(node);
 
         return node;
     };
@@ -5660,6 +5664,8 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
             
             // add to nodeList
             me.nodeList.push(node.sysUID);
+
+            me._cacheParentHierarchy(node);
         } else {
             // unknown mode
             svcLogger.logError('unknown mode=' + options.mode + ' form formName=' + options.formName, false);
@@ -5739,7 +5745,8 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
             'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
             'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
             'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull',
+            'baseSysUID'
         ];
         var searchField;
         for (var idx = 0; idx < searchFields.length; idx++) {
@@ -5839,6 +5846,12 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
                 // words not found
                 continue;
             }
+            // baseSysUID-Filter
+            if (staticSearchOptions.baseSysUID.length > 0 &&
+                !me.appBase.get('YaioExportedData').VolltextTreffer(node.cachedParentHierarchy, [',' + staticSearchOptions.baseSysUID + ','], true, true)) {
+                // words not found
+                continue;
+            }
             // NotNodePraefix-Filter
             if (staticSearchOptions.notPraefix.length > 0 &&
                 me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodePraefix, staticSearchOptions.notPraefix, true, true)) {
@@ -5854,9 +5867,7 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
             }
 
             // datefilter
-            var searchFields = ['istStart', 'istEnde',
-                'planStart', 'planEnde'
-            ];
+            var searchFields = ['istStart', 'istEnde', 'planStart', 'planEnde'];
             var searchField;
             for (var idx2 = 0; idx2 < searchFields.length; idx2++) {
                 searchField = searchFields[idx2];
@@ -5876,7 +5887,7 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
     /**
      * filter the node with all dateFilter for searchField (LE, GE, IsNull)
      * @param {Object} staticSearchOptions  prepared filters
-     * @param {Object} node                 prepared filters
+     * @param {Object} node                 node to filter
      * @param {String} fieldName            fieldName to run filter on
      * @returns {Boolean}                   passes or not
      */
@@ -5963,7 +5974,19 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         list.sort(me._dynamicSortMultiple(sortConfig));
     };
 
-    
+    /**
+     * cache the parentHierarchy
+     * @param {Object} node                 node to cache the parentHierarchy
+     */
+    me._cacheParentHierarchy = function (node) {
+        if (!node.cachedParentHierarchy) {
+            node.cachedParentHierarchy = ',' + node.sysUID + ',';
+            if (node.parentId && me.nodeList.hasOwnProperty(node.parentId)) {
+                node.cachedParentHierarchy = me.nodeList[node.parentId].cachedParentHierarchy + node.cachedParentHierarchy;
+            }
+        }
+    };
+
     me._init();
     
     return me;
