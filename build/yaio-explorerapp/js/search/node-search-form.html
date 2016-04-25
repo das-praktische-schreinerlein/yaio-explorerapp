@@ -6,6 +6,18 @@
 *****************************
  -->
 <div id="searchcommand" class="container-searchcommands">
+    <div class="container-verortung">
+        <div class="entry yaio-node-state-{{parentnode.state}}" ng-repeat="parentnode in rootNodeHierarchy">
+            <b>--&gt;</b><a ng-click="searchOptions.baseSysUID = parentnode.sysUID; doNewFulltextSearch();">{{parentnode.name}}</a>
+        </div>
+        <select name="searchSort" class="">
+            <option selected>...</option>
+            <option ng-repeat="childnode in rootNodeChildren" ng-click="searchOptions.baseSysUID = childnode.sysUID; doNewFulltextSearch();">
+                {{childnode.name}}
+            </option>
+        </select>
+    </div>
+    <br />
     <div class="fulltextline" data-tooltip='tooltip.command.DoSearch' lang="tech">
         <input type="text" ng-keyup="checkEnterFulltextSearch($event);" placeholder="Suchtext" name="fulltext" maxsize="40" class="inputtype_text" id="inputSearchOptionsFulltext" ng-model="searchOptions.fulltext">
 

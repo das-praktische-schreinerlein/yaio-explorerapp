@@ -5886,7 +5886,6 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         var fieldValue = node[fieldName];
         if (staticSearchOptions.hasOwnProperty(filterName) && filterValue > 0 &&
             ((me.appBase.DataUtils.isEmptyStringValue(fieldValue) || fieldValue > filterValue))) {
-            console.error('_filterNodeByDateFilter ignore nodeId ' + node.sysUID + ' because of ' + fieldValue + '>' + filterName + ':' + filterValue);
             return false;
         }
 
@@ -5895,7 +5894,6 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         fieldValue = node[fieldName];
         if (staticSearchOptions.hasOwnProperty(filterName) && filterValue > 0 &&
             ((me.appBase.DataUtils.isEmptyStringValue(fieldValue) || fieldValue < filterValue))) {
-            console.error('_filterNodeByDateFilter ignore nodeId ' + node.sysUID + ' because of ' + fieldValue + '<' + filterName + ':' + filterValue);
             return false;
         }
 
@@ -5905,7 +5903,6 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         if (staticSearchOptions.hasOwnProperty(filterName) &&
             (filterValue === 'true' || filterValue === true) &&
             !me.appBase.DataUtils.isEmptyStringValue(fieldValue)) {
-            console.error('_filterNodeByDateFilter ignore nodeId ' + node.sysUID + ' because of ' + fieldValue + ' not ' + filterName + ':' + filterValue);
             return false;
         }
 
@@ -7129,6 +7126,9 @@ Yaio.ExplorerTree = function(appBase) {
                 case 'focusNewWindow':
                     window.open('#/show/' + node.key, '_blank');
                     break;
+                case 'search':
+                    window.location = '#/search/1/20/lastChangeDown/' + node.key + '///';
+                    break;
                 default:
                     window.alert('Unhandled command: ' + data.cmd);
                     return;
@@ -7177,6 +7177,7 @@ Yaio.ExplorerTree = function(appBase) {
                 {title: '----'},
                 {title: 'Focus', cmd: 'focus', uiIcon: 'ui-icon-arrowreturn-1-e' },
                 {title: 'In neuem Fenster', cmd: 'focusNewWindow', uiIcon: 'ui-icon-arrowreturn-1-e' },
+                {title: 'Suche', cmd: 'search', uiIcon: 'ui-icon-search' },
                 {title: 'Export Jira', cmd: 'asJira', uiIcon: 'ui-icon-clipboard' },
                 {title: 'Export Txt', cmd: 'asTxt', uiIcon: 'ui-icon-clipboard' },
                 {title: '----'},
@@ -7794,6 +7795,17 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return date;
         },
 
+        getNodeHierarchy: function(node) {
+            // create nodehierarchy
+            var nodeHierarchy = [];
+            var parentNode = node.parentNode;
+            while (!appBase.get('DataUtils').isEmptyStringValue(parentNode)) {
+                nodeHierarchy.push(parentNode);
+                parentNode = parentNode.parentNode;
+            }
+            nodeHierarchy.reverse();
+            return nodeHierarchy;
+        },
 
         /**
          * open helpsite
@@ -8238,7 +8250,7 @@ yaioApp.controller('FrontPageCtrl', function($rootScope, $scope, $location, $rou
 });
 
 /**
- * angular-controller for serving page: dashoard-page
+ * angular-controller for serving page: dashboard-page
  * @controller
  */
 yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $routeParams, setFormErrors,
@@ -9229,17 +9241,9 @@ yaioApp.controller('NodeShowCtrl', function($rootScope, $scope, $location, $rout
             // all fine
             console.log('NodeShowCtrl - OK loading nodes:' + yaioNodeActionResponse.stateMsg);
             $scope.node = yaioNodeActionResponse.node;
-            
-            // create nodehierarchy
-            var nodeHierarchy = [];
-            var parentNode = yaioNodeActionResponse.node.parentNode;
-            while (!yaioUtils.getService('DataUtils').isEmptyStringValue(parentNode)) {
-                nodeHierarchy.push(parentNode);
-                parentNode = parentNode.parentNode;
-            }
-            nodeHierarchy.reverse();
-            $scope.nodeHierarchy = nodeHierarchy;
-            
+
+            $scope.nodeHierarchy = yaioUtils.getNodeHierarchy(yaioNodeActionResponse.node);
+
             // load only when templates loaded, because we need some time for rendering angular :-(
             var tries = 20;
             var templateIsLoadedTimer;
@@ -9396,6 +9400,9 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         // create search
         $scope.nodes = [];
 
+        $scope.rootNodeHierarchy = [];
+        $scope.rootNodeChildren = [];
+
         $scope.searchOptions = {
             flgRenderMinimum: false,
             curPage: 1,
@@ -9483,6 +9490,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
                 $scope.error = false;
             } else {
                 // do Search
+                $scope.loadRootNodeHierarchy();
                 $scope.doFulltextSearch();
             }
         });
@@ -9555,9 +9563,10 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
      * @param {Object} searchOptions  current searchoptions (filter..) to use
      * @param {int} page              pagenumber to load
      * @param {int} pageSize          optional pageSize (if not set searchOptions.pageSize will be used)
+     * @param {int} baseSysUID        optional baseSysUID (if not set searchOptions.baseSysUID will be used)
      * @returns {String}              new search-uri
      */
-    $scope.createSearchUri = function(searchOptions, page, pageSize) {
+    $scope.createSearchUri = function(searchOptions, page, pageSize, baseSysUID) {
         var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
             'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
@@ -9578,7 +9587,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             + '/' + encodeURI(page)
             + '/' + encodeURI(pageSize > 0 ? pageSize : searchOptions.pageSize)
             + '/' + encodeURI(searchOptions.searchSort)
-            + '/' + encodeURI(searchOptions.baseSysUID)
+            + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : searchOptions.baseSysUID)
             + '/' + encodeURI(searchOptions.fulltext)
             + '/' + encodeURI(additionalFilter)
             + '/';
@@ -9607,6 +9616,28 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
                 var header = angularResponse.header;
                 var config = angularResponse.config;
                 var message = 'error loading nodes with searchOptions: ' + searchOptions;
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
+    };
+
+    /**
+     * load available templates into form
+     */
+    $scope.loadRootNodeHierarchy = function() {
+        yaioUtils.getService('YaioNodeRepository').getNodeById($scope.searchOptions.baseSysUID, {})
+            .then(function sucess(angularResponse) {
+                // handle success
+                $scope.rootNodeHierarchy = yaioUtils.getNodeHierarchy(angularResponse.data.node);
+                $scope.rootNodeHierarchy.push(angularResponse.data.node);
+                $scope.rootNodeChildren = angularResponse.data.childNodes;
+            }, function error(angularResponse) {
+                // handle error
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading rootNodeHierarchy';
                 yaioUtils.getService('Logger').logError(message, true);
                 message = 'error data: ' + data + ' header:' + header + ' config:' + config;
                 yaioUtils.getService('Logger').logError(message, false);
