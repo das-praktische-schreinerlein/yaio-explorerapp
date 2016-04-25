@@ -68,6 +68,9 @@ yaioApp.config(function($routeProvider) {
         .when('/dashboard', { 
             controller:  'DashboardCtrl',
             templateUrl: resBaseUrl + 'js/dashboard/dashboard.html' })
+        .when('/dashboard/:baseSysUID?/:additionalFilters?/', {
+            controller:  'DashboardCtrl',
+            templateUrl: resBaseUrl + 'js/dashboard/dashboard.html' })
         .when('/sourceselect', {
             controller:  'SourceSelectorCtrl',
             templateUrl: resBaseUrl + 'js/sourceselector/sourceselector.html' })

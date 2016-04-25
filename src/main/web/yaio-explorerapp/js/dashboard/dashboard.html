@@ -9,6 +9,17 @@
           <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/frontpage/menu-main.html'"></div>
       </div>
     </div>
+    <div class="container-verortung">
+        <div class="entry yaio-node-state-{{parentnode.state}}" ng-repeat="parentnode in rootNodeHierarchy">
+            <b>--&gt;</b><a ng-click="dashboardOptions.baseSysUID = parentnode.sysUID; doNewDashboardSearch();">{{parentnode.name}}</a>
+        </div>
+        <select name="searchSort" class="">
+            <option selected>...</option>
+            <option ng-repeat="childnode in rootNodeChildren" ng-click="dashboardOptions.baseSysUID = childnode.sysUID; doNewDashboardSearch();">
+                {{childnode.name}}
+            </option>
+        </select>
+    </div>
 </div>
 
 <div id="workboard-content-current">

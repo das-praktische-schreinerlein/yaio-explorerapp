@@ -16,7 +16,7 @@
  * angular-controller for serving page-element: dashboard-search-elements
  * @controller
  */
-yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioUtils) {
+yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, $routeParams, yaioUtils) {
     'use strict';
 
     /**
@@ -56,6 +56,15 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             planStartIsNull: '',
             planEndeIsNull: ''
         };
+
+        var routeFields = ['baseSysUID'];
+        var routeField;
+        for (var idx = 0; idx < routeFields.length; idx++) {
+            routeField = routeFields[idx];
+            if ($routeParams.hasOwnProperty(routeField)) {
+                $scope.searchOptions[routeField] = decodeURI($routeParams[routeField]);
+            }
+        }
     };
 
     /**

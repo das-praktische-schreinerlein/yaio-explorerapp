@@ -13,7 +13,7 @@
  */
 
 /**
- * angular-controller for serving page: dashoard-page
+ * angular-controller for serving page: dashboard-page
  * @controller
  */
 yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $routeParams, setFormErrors,
@@ -28,15 +28,92 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
         // include utils
         $scope.yaioUtils = yaioUtils;
 
+        $scope.rootNodeHierarchy = [];
+        $scope.rootNodeChildren = [];
+
+        $scope.dashboardOptions = {
+            baseSysUID: yaioUtils.getConfig().masterSysUId
+        };
+
+        var routeFields = ['baseSysUID'];
+        var routeField;
+        for (var idx = 0; idx < routeFields.length; idx++) {
+            routeField = routeFields[idx];
+            if ($routeParams.hasOwnProperty(routeField)) {
+                $scope.dashboardOptions[routeField] = decodeURI($routeParams[routeField]);
+            }
+        }
+
         // call authentificate
         authorization.authentificate(function () {
             // check authentification
             if (!$rootScope.authenticated) {
                 $location.path(yaioUtils.getConfig().appLoginUrl);
                 $scope.error = false;
+            } else {
+                // do Search
+                $scope.loadRootNodeHierarchy();
             }
         });
     };
+
+    /**
+     * load node-hierarchy into form
+     */
+    $scope.loadRootNodeHierarchy = function() {
+        yaioUtils.getService('YaioNodeRepository').getNodeById($scope.dashboardOptions.baseSysUID, {})
+            .then(function sucess(angularResponse) {
+                // handle success
+                $scope.rootNodeHierarchy = yaioUtils.getNodeHierarchy(angularResponse.data.node);
+                $scope.rootNodeHierarchy.push(angularResponse.data.node);
+                $scope.rootNodeChildren = angularResponse.data.childNodes;
+            }, function error(angularResponse) {
+                // handle error
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading rootNodeHierarchy';
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
+    };
+
+    /**
+     * do dashboard
+     */
+    $scope.doNewDashboardSearch = function() {
+        var newUrl = $scope.createDashboardUri($scope.dashboardOptions);
+
+        // save lastLocation for login
+        $rootScope.lastLocation = newUrl;
+
+        // no cache!!!
+        console.log('load new Url:' + newUrl);
+        $location.path(newUrl);
+    };
+
+    /**
+     * create the dashboard-uri to use
+     * @param {Object} dashboardOptions  current dashboardOptions (filter..) to use
+     * @param {int} baseSysUID           optional baseSysUID (if not set dashboardOptions.baseSysUID will be used)
+     * @returns {String}                 new dashboard-uri
+     */
+    $scope.createDashboardUri = function(dashboardOptions, baseSysUID) {
+        var additionalFilter = '';
+        var additionalSearchFields = [];
+        var additionalSearchField;
+        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            additionalFilter += additionalSearchField + '=' + dashboardOptions[additionalSearchField] + ';';
+        }
+
+        return '/dashboard'
+            + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : dashboardOptions.baseSysUID)
+            + '/' + encodeURI(additionalFilter)
+            + '/';
+    };
+
 
     // init
     $scope._init();
