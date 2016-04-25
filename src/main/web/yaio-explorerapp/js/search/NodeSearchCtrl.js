@@ -254,7 +254,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     };
 
     /**
-     * load available templates into form
+     * load node-hierarchy into form
      */
     $scope.loadRootNodeHierarchy = function() {
         yaioUtils.getService('YaioNodeRepository').getNodeById($scope.searchOptions.baseSysUID, {})
