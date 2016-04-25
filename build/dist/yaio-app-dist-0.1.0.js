@@ -7129,6 +7129,9 @@ Yaio.ExplorerTree = function(appBase) {
                 case 'search':
                     window.location = '#/search/1/20/lastChangeDown/' + node.key + '///';
                     break;
+                case 'dashboard':
+                    window.location = '#/dashboard/' + node.key + '//';
+                    break;
                 default:
                     window.alert('Unhandled command: ' + data.cmd);
                     return;
@@ -7177,7 +7180,9 @@ Yaio.ExplorerTree = function(appBase) {
                 {title: '----'},
                 {title: 'Focus', cmd: 'focus', uiIcon: 'ui-icon-arrowreturn-1-e' },
                 {title: 'In neuem Fenster', cmd: 'focusNewWindow', uiIcon: 'ui-icon-arrowreturn-1-e' },
-                {title: 'Suche', cmd: 'search', uiIcon: 'ui-icon-search' },
+                {title: 'Search', cmd: 'search', uiIcon: 'ui-icon-search' },
+                {title: 'Dashboard', cmd: 'dashboard', uiIcon: 'ui-icon-search' },
+                {title: '----'},
                 {title: 'Export Jira', cmd: 'asJira', uiIcon: 'ui-icon-clipboard' },
                 {title: 'Export Txt', cmd: 'asTxt', uiIcon: 'ui-icon-clipboard' },
                 {title: '----'},
@@ -7445,6 +7450,9 @@ yaioApp.config(function($routeProvider) {
             controller:  'FrontPageCtrl',
             templateUrl: resBaseUrl + 'js/frontpage/frontpage.html' })
         .when('/dashboard', { 
+            controller:  'DashboardCtrl',
+            templateUrl: resBaseUrl + 'js/dashboard/dashboard.html' })
+        .when('/dashboard/:baseSysUID?/:additionalFilters?/', {
             controller:  'DashboardCtrl',
             templateUrl: resBaseUrl + 'js/dashboard/dashboard.html' })
         .when('/sourceselect', {
@@ -7795,6 +7803,11 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return date;
         },
 
+        /**
+         * calc parentHierarchy for node
+         * @param {Object} node          node to get parent-hierarchy
+         * @returns {Array}              parent-objects
+         */
         getNodeHierarchy: function(node) {
             // create nodehierarchy
             var nodeHierarchy = [];
@@ -8265,15 +8278,92 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
         // include utils
         $scope.yaioUtils = yaioUtils;
 
+        $scope.rootNodeHierarchy = [];
+        $scope.rootNodeChildren = [];
+
+        $scope.dashboardOptions = {
+            baseSysUID: yaioUtils.getConfig().masterSysUId
+        };
+
+        var routeFields = ['baseSysUID'];
+        var routeField;
+        for (var idx = 0; idx < routeFields.length; idx++) {
+            routeField = routeFields[idx];
+            if ($routeParams.hasOwnProperty(routeField)) {
+                $scope.dashboardOptions[routeField] = decodeURI($routeParams[routeField]);
+            }
+        }
+
         // call authentificate
         authorization.authentificate(function () {
             // check authentification
             if (!$rootScope.authenticated) {
                 $location.path(yaioUtils.getConfig().appLoginUrl);
                 $scope.error = false;
+            } else {
+                // do Search
+                $scope.loadRootNodeHierarchy();
             }
         });
     };
+
+    /**
+     * load node-hierarchy into form
+     */
+    $scope.loadRootNodeHierarchy = function() {
+        yaioUtils.getService('YaioNodeRepository').getNodeById($scope.dashboardOptions.baseSysUID, {})
+            .then(function sucess(angularResponse) {
+                // handle success
+                $scope.rootNodeHierarchy = yaioUtils.getNodeHierarchy(angularResponse.data.node);
+                $scope.rootNodeHierarchy.push(angularResponse.data.node);
+                $scope.rootNodeChildren = angularResponse.data.childNodes;
+            }, function error(angularResponse) {
+                // handle error
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading rootNodeHierarchy';
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
+    };
+
+    /**
+     * do dashboard
+     */
+    $scope.doNewDashboardSearch = function() {
+        var newUrl = $scope.createDashboardUri($scope.dashboardOptions);
+
+        // save lastLocation for login
+        $rootScope.lastLocation = newUrl;
+
+        // no cache!!!
+        console.log('load new Url:' + newUrl);
+        $location.path(newUrl);
+    };
+
+    /**
+     * create the dashboard-uri to use
+     * @param {Object} dashboardOptions  current dashboardOptions (filter..) to use
+     * @param {int} baseSysUID           optional baseSysUID (if not set dashboardOptions.baseSysUID will be used)
+     * @returns {String}                 new dashboard-uri
+     */
+    $scope.createDashboardUri = function(dashboardOptions, baseSysUID) {
+        var additionalFilter = '';
+        var additionalSearchFields = [];
+        var additionalSearchField;
+        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            additionalFilter += additionalSearchField + '=' + dashboardOptions[additionalSearchField] + ';';
+        }
+
+        return '/dashboard'
+            + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : dashboardOptions.baseSysUID)
+            + '/' + encodeURI(additionalFilter)
+            + '/';
+    };
+
 
     // init
     $scope._init();
@@ -8283,7 +8373,7 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
  * angular-controller for serving page-element: dashboard-search-elements
  * @controller
  */
-yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioUtils) {
+yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, $routeParams, yaioUtils) {
     'use strict';
 
     /**
@@ -8323,6 +8413,15 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, yaioU
             planStartIsNull: '',
             planEndeIsNull: ''
         };
+
+        var routeFields = ['baseSysUID'];
+        var routeField;
+        for (var idx = 0; idx < routeFields.length; idx++) {
+            routeField = routeFields[idx];
+            if ($routeParams.hasOwnProperty(routeField)) {
+                $scope.searchOptions[routeField] = decodeURI($routeParams[routeField]);
+            }
+        }
     };
 
     /**
@@ -9623,7 +9722,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     };
 
     /**
-     * load available templates into form
+     * load node-hierarchy into form
      */
     $scope.loadRootNodeHierarchy = function() {
         yaioUtils.getService('YaioNodeRepository').getNodeById($scope.searchOptions.baseSysUID, {})
