@@ -31,6 +31,9 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         // create search
         $scope.nodes = [];
 
+        $scope.rootNodeHierarchy = [];
+        $scope.rootNodeChildren = [];
+
         $scope.searchOptions = {
             flgRenderMinimum: false,
             curPage: 1,
@@ -118,6 +121,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
                 $scope.error = false;
             } else {
                 // do Search
+                $scope.loadRootNodeHierarchy();
                 $scope.doFulltextSearch();
             }
         });
@@ -190,9 +194,10 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
      * @param {Object} searchOptions  current searchoptions (filter..) to use
      * @param {int} page              pagenumber to load
      * @param {int} pageSize          optional pageSize (if not set searchOptions.pageSize will be used)
+     * @param {int} baseSysUID        optional baseSysUID (if not set searchOptions.baseSysUID will be used)
      * @returns {String}              new search-uri
      */
-    $scope.createSearchUri = function(searchOptions, page, pageSize) {
+    $scope.createSearchUri = function(searchOptions, page, pageSize, baseSysUID) {
         var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
             'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
             'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
@@ -213,7 +218,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
             + '/' + encodeURI(page)
             + '/' + encodeURI(pageSize > 0 ? pageSize : searchOptions.pageSize)
             + '/' + encodeURI(searchOptions.searchSort)
-            + '/' + encodeURI(searchOptions.baseSysUID)
+            + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : searchOptions.baseSysUID)
             + '/' + encodeURI(searchOptions.fulltext)
             + '/' + encodeURI(additionalFilter)
             + '/';
@@ -242,6 +247,28 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
                 var header = angularResponse.header;
                 var config = angularResponse.config;
                 var message = 'error loading nodes with searchOptions: ' + searchOptions;
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
+    };
+
+    /**
+     * load available templates into form
+     */
+    $scope.loadRootNodeHierarchy = function() {
+        yaioUtils.getService('YaioNodeRepository').getNodeById($scope.searchOptions.baseSysUID, {})
+            .then(function sucess(angularResponse) {
+                // handle success
+                $scope.rootNodeHierarchy = yaioUtils.getNodeHierarchy(angularResponse.data.node);
+                $scope.rootNodeHierarchy.push(angularResponse.data.node);
+                $scope.rootNodeChildren = angularResponse.data.childNodes;
+            }, function error(angularResponse) {
+                // handle error
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading rootNodeHierarchy';
                 yaioUtils.getService('Logger').logError(message, true);
                 message = 'error data: ' + data + ' header:' + header + ' config:' + config;
                 yaioUtils.getService('Logger').logError(message, false);
