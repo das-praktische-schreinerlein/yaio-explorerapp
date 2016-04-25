@@ -93,6 +93,22 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return date;
         },
 
+        /**
+         * calc parentHierarchy for node
+         * @param {Object} node          node to get parent-hierarchy
+         * @returns {Array}              parent-objects
+         */
+        getNodeHierarchy: function(node) {
+            // create nodehierarchy
+            var nodeHierarchy = [];
+            var parentNode = node.parentNode;
+            while (!appBase.get('DataUtils').isEmptyStringValue(parentNode)) {
+                nodeHierarchy.push(parentNode);
+                parentNode = parentNode.parentNode;
+            }
+            nodeHierarchy.reverse();
+            return nodeHierarchy;
+        },
 
         /**
          * open helpsite
