@@ -379,6 +379,12 @@ Yaio.ExplorerTree = function(appBase) {
                 case 'focusNewWindow':
                     window.open('#/show/' + node.key, '_blank');
                     break;
+                case 'search':
+                    window.location = '#/search/1/20/lastChangeDown/' + node.key + '///';
+                    break;
+                case 'dashboard':
+                    window.location = '#/dashboard/' + node.key + '//';
+                    break;
                 default:
                     window.alert('Unhandled command: ' + data.cmd);
                     return;
@@ -427,6 +433,9 @@ Yaio.ExplorerTree = function(appBase) {
                 {title: '----'},
                 {title: 'Focus', cmd: 'focus', uiIcon: 'ui-icon-arrowreturn-1-e' },
                 {title: 'In neuem Fenster', cmd: 'focusNewWindow', uiIcon: 'ui-icon-arrowreturn-1-e' },
+                {title: 'Search', cmd: 'search', uiIcon: 'ui-icon-search' },
+                {title: 'Dashboard', cmd: 'dashboard', uiIcon: 'ui-icon-search' },
+                {title: '----'},
                 {title: 'Export Jira', cmd: 'asJira', uiIcon: 'ui-icon-clipboard' },
                 {title: 'Export Txt', cmd: 'asTxt', uiIcon: 'ui-icon-clipboard' },
                 {title: '----'},
