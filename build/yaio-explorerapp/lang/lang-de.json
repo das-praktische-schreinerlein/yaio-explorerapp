@@ -261,6 +261,8 @@
     "loginform.legend.Login": "Anmeldung",
     "search.table.headline.tabTogglerCard": "Zur Node-Cards-Sicht",
     "search.table.headline.tabTogglerTable": "Zur Listensicht",
+    "search.table.headline.tabTogglerDetailsOn": "Details anzeigen",
+    "search.table.headline.tabTogglerDetailsOff": "Details ausblenden",
     "sourceselector.desc": "Wählen Sie die Datenquelle für die YaioApp mit der Sie arbeiten möchten:",
     "sourceselector.ue": "Auswahl der Datenquelle",
     "label.dashboard.eventsOpen": "Termine - laufen oder starten demnächst",

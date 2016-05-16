@@ -23,8 +23,8 @@
                       <a ng-click="showTableView();" id="tabTogglerTable" class="button tabToggler" translate="search.table.headline.tabTogglerTable">TableView</a>
                     </span>
                     <span style="display: inline-block; width: 150px;">
-                        <a class="button tabToggler" id="showDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;">Details anzeigen</a>
-                        <a class="button tabToggler" style="display: none" id="hideDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;">Details verbergen</a>
+                        <a class="button tabToggler" id="showDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;" translate="search.table.headline.tabTogglerDetailsOn">Details anzeigen</a>
+                        <a class="button tabToggler" style="display: none" id="hideDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;" translate="search.table.headline.tabTogglerDetailsOff">Details verbergen</a>
                     </span>
                 </div>
                 <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/search/node-search-nodecards.html'"></div>

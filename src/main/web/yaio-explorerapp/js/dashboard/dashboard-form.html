@@ -13,6 +13,6 @@
 
     <button class="button" ng-click="dashboardOptions.baseDate = yaioUtils.getService('YaioBase').parseGermanDate(dashboardOptions.baseDateStr); doNewDashboardSearch();">GO</button>
 
-    <a class="button" id="showDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;">Details anzeigen</a>
-    <a class="button" style="display: none" id="hideDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;">Details verbergen</a>
+    <a class="button" id="showDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;" translate="search.table.headline.tabTogglerDetailsOn">Details anzeigen</a>
+    <a class="button" style="display: none" id="hideDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;" translate="search.table.headline.tabTogglerDetailsOff">Details verbergen</a>
 </div>
