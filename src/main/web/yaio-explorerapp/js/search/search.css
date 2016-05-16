@@ -223,3 +223,6 @@ div.yaio-nodecard div.field_nodeParent b {
 div.yaio-nodecard div.container_data_row {
     width: 100%;
 }
+div.container-yaio-search-nodecards div.yaio-nodecard .container_data_row_details {
+    display: none;
+}

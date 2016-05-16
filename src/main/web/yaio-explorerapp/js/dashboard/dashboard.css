@@ -113,3 +113,7 @@ span.yaio-workboard-rowname {
 .workboard-container div.yaio-nodecard-container {
     margin: 3px;
 }
+
+.workboard-container div.yaio-nodecard .container_data_row_details {
+    display: none;
+}

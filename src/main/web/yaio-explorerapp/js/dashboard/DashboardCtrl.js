@@ -55,6 +55,7 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
             $scope.dashboardOptions.baseDate =
                 yaioUtils.getService('YaioBase').parseGermanDate(decodeURI(additionalSearchFilter.baseDate));
         }
+        $scope.dashboardOptions.baseDateStr = yaioUtils.getService('DataUtils').formatGermanDate($scope.dashboardOptions.baseDate);
 
         // call authentificate
         authorization.authentificate(function () {

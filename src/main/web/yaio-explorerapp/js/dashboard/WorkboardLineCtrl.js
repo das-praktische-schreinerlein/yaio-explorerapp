@@ -29,7 +29,8 @@ yaioApp.controller('WorkboardLineCtrl', function($rootScope, $scope, $location, 
         $scope.yaioUtils = yaioUtils;
 
         $scope.boardOptions = {
-            baseDate: yaioUtils.now()
+            baseDate: yaioUtils.now(),
+            pageSize: 5
         };
 
         // extract additional-Searchfilter

@@ -227,28 +227,28 @@ Yaio.NodeDataRenderer = function(appBase) {
         $table.append($row);
 
         // data
-        $row = me.$('<div class="container_data_row"/>');
-        $table.append($row);
+        var $detailsContainer = me.$('<div class="container_data_row container_data_row_details"/>');
+        $table.append($detailsContainer);
         if (basenode.className === 'TaskNode' || basenode.className === 'EventNode') {
             // TaskNode
             $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Plan:</div></div>');
-            $table.append($row);
+            $detailsContainer.append($row);
             me._appendWorkflowRawPlanDataBlocks(basenode, $row);
             $row = me.$('<div class="container_data_row"><div class="container_field fieldtype_additionaldata">Ist:</div></div>');
-            $table.append($row);
+            $detailsContainer.append($row);
             me._appendWorkflowRawIstDataBlocks(basenode, $row);
         } else if (basenode.className === 'InfoNode' || basenode.className === 'UrlResNode') {
             // render Info + UrlRes
 
             // Url only
             if (basenode.className === 'UrlResNode') {
-                me._appendUrlResDataBlocks(basenode, $row, true);
+                me._appendUrlResDataBlocks(basenode, $detailsContainer, true);
             }
 
             // both
             if (   basenode.docLayoutTagCommand || basenode.docLayoutShortName
                 || basenode.docLayoutAddStyleClass || basenode.docLayoutFlgCloseDiv) {
-                me._appendDocLayoutBlocks(basenode, $row);
+                me._appendDocLayoutBlocks(basenode, $detailsContainer);
             }
         } else if (basenode.className === 'SymLinkNode') {
             // render SymLinkNode
