@@ -44,10 +44,33 @@ Yaio.Base = function(appBase) {
              me.$(link1).css('display', 'none');
          }
          return false;
-     };
+    };
     
     me.createXFrameAllowFrom = function() {
         return 'x-frames-allow-from=' + window.location.hostname;
+    };
+
+    me.parseGermanDate = function(value, defaultTimeStr) {
+        var res, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
+        if (typeof value === 'string') {
+            lstDateTime = value.split(' ');
+            lstDate = lstDateTime[0].split('.');
+            strTime = '12:00:00';
+            if (defaultTimeStr) {
+                strTime = defaultTimeStr;
+            }
+
+            if (lstDateTime.length > 1) {
+                strTime = lstDateTime[1] + ':00';
+            }
+            newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
+            newDate = new Date(newDateTimeStr);
+            res = newDate;
+        } else if (typeof value === 'object') {
+            res = value;
+        }
+
+        return res;
     };
 
     me._init();
