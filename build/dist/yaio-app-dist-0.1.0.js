@@ -485,10 +485,33 @@ Yaio.Base = function(appBase) {
              me.$(link1).css('display', 'none');
          }
          return false;
-     };
+    };
     
     me.createXFrameAllowFrom = function() {
         return 'x-frames-allow-from=' + window.location.hostname;
+    };
+
+    me.parseGermanDate = function(value, defaultTimeStr) {
+        var res, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
+        if (typeof value === 'string') {
+            lstDateTime = value.split(' ');
+            lstDate = lstDateTime[0].split('.');
+            strTime = '12:00:00';
+            if (defaultTimeStr) {
+                strTime = defaultTimeStr;
+            }
+
+            if (lstDateTime.length > 1) {
+                strTime = lstDateTime[1] + ':00';
+            }
+            newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
+            newDate = new Date(newDateTimeStr);
+            res = newDate;
+        } else if (typeof value === 'object') {
+            res = value;
+        }
+
+        return res;
     };
 
     me._init();
@@ -7478,6 +7501,9 @@ yaioApp.config(function($routeProvider) {
         .when('/dashboard/:baseSysUID?/:additionalFilters?/', {
             controller:  'DashboardCtrl',
             templateUrl: resBaseUrl + 'js/dashboard/dashboard.html' })
+        .when('/workboard/:baseSysUID?/:additionalFilters?/', {
+            controller:  'DashboardCtrl',
+            templateUrl: resBaseUrl + 'js/dashboard/workboard.html' })
         .when('/sourceselect', {
             controller:  'SourceSelectorCtrl',
             templateUrl: resBaseUrl + 'js/sourceselector/sourceselector.html' })
@@ -8027,6 +8053,24 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return html;
         },
 
+        /**
+         * parse additionalParameters from String (split by ; and split name=value)
+         * @param additionalParametersStr     source to parse for additionFilter
+         * @returns {Object}                  object with additionalParameters-Strings
+         */
+        parseAdditionalParameters: function(additionalParametersStr){
+            var additionalParameters = {};
+            if (additionalParametersStr) {
+                var params = additionalParametersStr.split(';');
+                for (var idx = 0; idx < params.length; idx++) {
+                    var param = params[idx];
+                    var paramData = param.split('=', 2);
+                    additionalParameters[paramData[0]] = paramData[1];
+                }
+            }
+            return additionalParameters;
+        },
+
 
 
         ganttOptions: {
@@ -8305,8 +8349,14 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
         $scope.rootNodeChildren = [];
 
         $scope.dashboardOptions = {
-            baseSysUID: yaioUtils.getConfig().masterSysUId
+            baseSysUID: yaioUtils.getConfig().masterSysUId,
+            baseDate: yaioUtils.now(),
+            mode: 'dashboard'
         };
+
+        if ($location.path().split('/')[1] === 'workboard') {
+            $scope.dashboardOptions.mode = 'workboard';
+        }
 
         var routeFields = ['baseSysUID'];
         var routeField;
@@ -8315,6 +8365,12 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
             if ($routeParams.hasOwnProperty(routeField)) {
                 $scope.dashboardOptions[routeField] = decodeURI($routeParams[routeField]);
             }
+        }
+        // extract additional-Searchfilter
+        var additionalSearchFilter = yaioUtils.parseAdditionalParameters($routeParams.additionalFilters);
+        if (additionalSearchFilter.hasOwnProperty('baseDate')) {
+            $scope.dashboardOptions.baseDate =
+                yaioUtils.getService('YaioBase').parseGermanDate(decodeURI(additionalSearchFilter.baseDate));
         }
 
         // call authentificate
@@ -8374,14 +8430,16 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
      */
     $scope.createDashboardUri = function(dashboardOptions, baseSysUID) {
         var additionalFilter = '';
-        var additionalSearchFields = [];
+        var additionalSearchFields = ['baseDate'];
         var additionalSearchField;
         for (var idx = 0; idx < additionalSearchFields.length; idx++) {
             additionalSearchField = additionalSearchFields[idx];
-            additionalFilter += additionalSearchField + '=' + dashboardOptions[additionalSearchField] + ';';
+            additionalFilter += additionalSearchField + '=' +
+                yaioUtils.getService('DataUtils').formatGermanDate(dashboardOptions[additionalSearchField]) +
+                ';';
         }
 
-        return '/dashboard'
+        return '/' + $scope.dashboardOptions.mode
             + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : dashboardOptions.baseSysUID)
             + '/' + encodeURI(additionalFilter)
             + '/';
@@ -8594,7 +8652,15 @@ yaioApp.controller('WorkboardLineCtrl', function($rootScope, $scope, $location, 
         $scope.yaioUtils = yaioUtils;
 
         $scope.boardOptions = {
+            baseDate: yaioUtils.now()
         };
+
+        // extract additional-Searchfilter
+        var additionalSearchFilter = yaioUtils.parseAdditionalParameters($routeParams.additionalFilters);
+        if (additionalSearchFilter.hasOwnProperty('baseDate')) {
+            $scope.boardOptions.baseDate =
+                yaioUtils.getService('YaioBase').parseGermanDate(decodeURI(additionalSearchFilter.baseDate));
+        }
 
         // call authentificate
         authorization.authentificate(function () {
@@ -9567,7 +9633,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         // extract additional-Searchfilter
-        var additionalSearchFilter = $scope.parseAdditionalParameters($routeParams.additionalFilters);
+        var additionalSearchFilter = yaioUtils.parseAdditionalParameters($routeParams.additionalFilters);
         if (additionalSearchFilter.notNodePraefix) {
             $scope.searchOptions.strNotNodePraefix = decodeURI(additionalSearchFilter.notNodePraefix);
         }
@@ -9636,24 +9702,6 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     };
 
     /**
-     * parse additionalParameters from String (split by ; and split name=value)
-     * @param additionalParametersStr     source to parse for additionFilter
-     * @returns {Object}                  object with additionalParameters-Strings
-     */
-    $scope.parseAdditionalParameters = function(additionalParametersStr){
-        var additionalParameters = {};
-        if (additionalParametersStr) {
-            var params = additionalParametersStr.split(';');
-            for (var idx = 0; idx < params.length; idx++) {
-                var param = params[idx];
-                var paramData = param.split('=', 2);
-                additionalParameters[paramData[0]] = paramData[1];
-            }
-        }
-        return additionalParameters;
-    };
-
-    /** 
      * callbackhandler for fulltextsearch if keyCode=13 (Enter) start doNewFulltextSearch
      * @param {Event} event                  key-pressed event
      */

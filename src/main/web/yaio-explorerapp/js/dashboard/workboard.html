@@ -1,0 +1,65 @@
+<update-meta name="title" content="YAIO - D'Artagnan - Dashboard"></update-meta>
+<update-meta name="description" content="YAIO - D'Artagnan - Dashboard"></update-meta>
+
+<div class='box yaio-box add2toc-h1 yaio-box-explorer' toclabel='Explorer' id='box_explorer'>
+    <div class='boxline boxline-ue2 yaio-boxline-ue2 yaio-boxline-ue2-explorer' id='ue_explorer'>
+      <div id="containerMasterUe">YAIO - D'Artagnan - Workboard</div>
+      <div id="containerCurrentSource" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/sourceselector/current-source-main.html'"></div>
+      <div id="containerInfoCommands">
+          <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/frontpage/menu-main.html'"></div>
+      </div>
+    </div>
+    <div class="container-verortung">
+        <div class="entry yaio-node-state-{{parentnode.state}}" ng-repeat="parentnode in rootNodeHierarchy">
+            <b>--&gt;</b><a ng-click="dashboardOptions.baseSysUID = parentnode.sysUID; doNewDashboardSearch();">{{parentnode.name}}</a>
+        </div>
+        <select name="searchSort" class="">
+            <option selected>...</option>
+            <option ng-repeat="childnode in rootNodeChildren" ng-click="dashboardOptions.baseSysUID = childnode.sysUID; doNewDashboardSearch();">
+                {{childnode.name}}
+            </option>
+        </select>
+    </div>
+</div>
+
+<div id="workboard-content-current">
+    <div class='box yaio-box'>
+        <div class='boxline boxline-dashboard' id="ue_workboard_upcomin"><span lang='tech' translate="label.workboard.headline.upcomin">Demnächst</span></div>
+        <div class="workboard-container">
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-starts_ends_done.html'"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-today.html'" id="workboard-today" ng-controller="WorkboardLineCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-thisweek.html'" id="workboard-thisweek" ng-controller="WorkboardLineCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-thismonth.html'" id="workboard-thismonth" ng-controller="WorkboardLineCtrl"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-nextmonth.html'" id="workboard-nextmonth" ng-controller="WorkboardLineCtrl"></div>
+        </div>
+    </div>
+    <div class='box yaio-box'>
+        <div class='boxline boxline-dashboard' id="ue_workboard_last"><span lang='tech' translate="label.workboard.headline.last">Zuletzt</span></div>
+        <div class="workboard-container">
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-starts_ends_done.html'"></div>
+            <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-lastmonth.html'" id="workboard-lastmonth" ng-controller="WorkboardLineCtrl"></div>
+        </div>
+    </div>
+</div>
+
+<div id="front-content-right">
+    <div id="sidebartoc" class="sidebartoc documentation-sidebartoc"> </div>
+</div>
+
+<script type="text/javascript">
+    // activate elements after 1 second
+    setTimeout(function() { 
+        // add resize event
+        $( window ).resize(function() {
+            yaioAppBase.get('YaioLayout').setupAppSize();
+        });    
+    }, 1000);
+    
+    // do toggler
+    setTimeout(function() { 
+        yaioAppBase.get('YaioLayout').jMATService.getPageLayoutService().doAllBlockToggler(false);
+        yaioAppBase.get('YaioLayout').setupAppSize();
+    }, 3000);
+    
+
+</script>

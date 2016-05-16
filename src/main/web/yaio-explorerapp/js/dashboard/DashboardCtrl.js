@@ -32,8 +32,14 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
         $scope.rootNodeChildren = [];
 
         $scope.dashboardOptions = {
-            baseSysUID: yaioUtils.getConfig().masterSysUId
+            baseSysUID: yaioUtils.getConfig().masterSysUId,
+            baseDate: yaioUtils.now(),
+            mode: 'dashboard'
         };
+
+        if ($location.path().split('/')[1] === 'workboard') {
+            $scope.dashboardOptions.mode = 'workboard';
+        }
 
         var routeFields = ['baseSysUID'];
         var routeField;
@@ -42,6 +48,12 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
             if ($routeParams.hasOwnProperty(routeField)) {
                 $scope.dashboardOptions[routeField] = decodeURI($routeParams[routeField]);
             }
+        }
+        // extract additional-Searchfilter
+        var additionalSearchFilter = yaioUtils.parseAdditionalParameters($routeParams.additionalFilters);
+        if (additionalSearchFilter.hasOwnProperty('baseDate')) {
+            $scope.dashboardOptions.baseDate =
+                yaioUtils.getService('YaioBase').parseGermanDate(decodeURI(additionalSearchFilter.baseDate));
         }
 
         // call authentificate
@@ -101,14 +113,16 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
      */
     $scope.createDashboardUri = function(dashboardOptions, baseSysUID) {
         var additionalFilter = '';
-        var additionalSearchFields = [];
+        var additionalSearchFields = ['baseDate'];
         var additionalSearchField;
         for (var idx = 0; idx < additionalSearchFields.length; idx++) {
             additionalSearchField = additionalSearchFields[idx];
-            additionalFilter += additionalSearchField + '=' + dashboardOptions[additionalSearchField] + ';';
+            additionalFilter += additionalSearchField + '=' +
+                yaioUtils.getService('DataUtils').formatGermanDate(dashboardOptions[additionalSearchField]) +
+                ';';
         }
 
-        return '/dashboard'
+        return '/' + $scope.dashboardOptions.mode
             + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : dashboardOptions.baseSysUID)
             + '/' + encodeURI(additionalFilter)
             + '/';

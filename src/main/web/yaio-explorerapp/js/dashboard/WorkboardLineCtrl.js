@@ -29,7 +29,15 @@ yaioApp.controller('WorkboardLineCtrl', function($rootScope, $scope, $location, 
         $scope.yaioUtils = yaioUtils;
 
         $scope.boardOptions = {
+            baseDate: yaioUtils.now()
         };
+
+        // extract additional-Searchfilter
+        var additionalSearchFilter = yaioUtils.parseAdditionalParameters($routeParams.additionalFilters);
+        if (additionalSearchFilter.hasOwnProperty('baseDate')) {
+            $scope.boardOptions.baseDate =
+                yaioUtils.getService('YaioBase').parseGermanDate(decodeURI(additionalSearchFilter.baseDate));
+        }
 
         // call authentificate
         authorization.authentificate(function () {
