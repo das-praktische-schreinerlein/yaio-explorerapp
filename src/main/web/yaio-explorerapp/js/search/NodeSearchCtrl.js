@@ -76,7 +76,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         }
 
         // extract additional-Searchfilter
-        var additionalSearchFilter = $scope.parseAdditionalParameters($routeParams.additionalFilters);
+        var additionalSearchFilter = yaioUtils.parseAdditionalParameters($routeParams.additionalFilters);
         if (additionalSearchFilter.notNodePraefix) {
             $scope.searchOptions.strNotNodePraefix = decodeURI(additionalSearchFilter.notNodePraefix);
         }
@@ -145,24 +145,6 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     };
 
     /**
-     * parse additionalParameters from String (split by ; and split name=value)
-     * @param additionalParametersStr     source to parse for additionFilter
-     * @returns {Object}                  object with additionalParameters-Strings
-     */
-    $scope.parseAdditionalParameters = function(additionalParametersStr){
-        var additionalParameters = {};
-        if (additionalParametersStr) {
-            var params = additionalParametersStr.split(';');
-            for (var idx = 0; idx < params.length; idx++) {
-                var param = params[idx];
-                var paramData = param.split('=', 2);
-                additionalParameters[paramData[0]] = paramData[1];
-            }
-        }
-        return additionalParameters;
-    };
-
-    /** 
      * callbackhandler for fulltextsearch if keyCode=13 (Enter) start doNewFulltextSearch
      * @param {Event} event                  key-pressed event
      */

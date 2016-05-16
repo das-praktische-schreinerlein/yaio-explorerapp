@@ -294,6 +294,24 @@ yaioApp.factory('yaioUtils', ['$location', '$http', '$rootScope', '$q', function
             return html;
         },
 
+        /**
+         * parse additionalParameters from String (split by ; and split name=value)
+         * @param additionalParametersStr     source to parse for additionFilter
+         * @returns {Object}                  object with additionalParameters-Strings
+         */
+        parseAdditionalParameters: function(additionalParametersStr){
+            var additionalParameters = {};
+            if (additionalParametersStr) {
+                var params = additionalParametersStr.split(';');
+                for (var idx = 0; idx < params.length; idx++) {
+                    var param = params[idx];
+                    var paramData = param.split('=', 2);
+                    additionalParameters[paramData[0]] = paramData[1];
+                }
+            }
+            return additionalParameters;
+        },
+
 
 
         ganttOptions: {
