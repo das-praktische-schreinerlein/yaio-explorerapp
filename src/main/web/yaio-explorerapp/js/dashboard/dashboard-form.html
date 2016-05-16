@@ -1,0 +1,18 @@
+<div class="container-verortung">
+    <div class="entry yaio-node-state-{{parentnode.state}}" ng-repeat="parentnode in rootNodeHierarchy">
+        <b>--&gt;</b><a ng-click="dashboardOptions.baseSysUID = parentnode.sysUID; doNewDashboardSearch();">{{parentnode.name}}</a>
+    </div>
+    <select name="searchSort" class="">
+        <option selected>...</option>
+        <option ng-repeat="childnode in rootNodeChildren" ng-click="dashboardOptions.baseSysUID = childnode.sysUID; doNewDashboardSearch();">
+            {{childnode.name}}
+        </option>
+    </select>
+
+    <input type="text" placeholder="dd.mm.jjjj" name="baseDate" pattern="\d{2}\.\d{2}\.\d{4}"  maxsize="10" class="inputtype_date" ng-model="dashboardOptions.baseDateStr" id="inputBaseDate">
+
+    <button class="button" ng-click="dashboardOptions.baseDate = yaioUtils.getService('YaioBase').parseGermanDate(dashboardOptions.baseDateStr); doNewDashboardSearch();">GO</button>
+
+    <a class="button" id="showDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;">Details anzeigen</a>
+    <a class="button" style="display: none" id="hideDetailsLink" onclick="javascript:yaioAppBase.get('YaioBase').toggleWithLinks('#showDetailsLink', '#hideDetailsLink', '.container_data_row_details', '');return false;">Details verbergen</a>
+</div>

@@ -22,7 +22,7 @@
                              searchOptions.strClassFilter = 'EventNode,TaskNode';
                              searchOptions.strWorkflowStateFilter = 'LATE';
                              searchOptions.searchSort = 'planStartUp';
-                             searchOptions.pageSize = 5;">
+                             searchOptions.pageSize = boardOptions.pageSize;">
                     <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
                 </td>
                 <td class="yaio-workboard-column-data yaio-workboard-column-short"
@@ -33,7 +33,7 @@
                              searchOptions.strClassFilter = 'EventNode,TaskNode';
                              searchOptions.strWorkflowStateFilter = 'WARNING';
                              searchOptions.searchSort = 'planStartUp';
-                             searchOptions.pageSize = 5;">
+                             searchOptions.pageSize = boardOptions.pageSize;">
                     <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
                 </td>
                 <td class="yaio-workboard-column-data yaio-workboard-column-running"
@@ -44,7 +44,7 @@
                              searchOptions.strClassFilter = 'EventNode,TaskNode';
                              searchOptions.strWorkflowStateFilter = 'RUNNING';
                              searchOptions.searchSort = 'planEndeUp';
-                             searchOptions.pageSize = 5;">
+                             searchOptions.pageSize = boardOptions.pageSize;">
                     <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-column.html'"></div>
                 </td>
             </tr>
