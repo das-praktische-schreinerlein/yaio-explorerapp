@@ -60,7 +60,12 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             filters.push([dateStr, dateStr, dateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        $scope.doDateChart(chartDivSelector, filters);
+        $scope.doDateChart(chartDivSelector, filters, {
+            type: 'timeseries',
+                tick: {
+                format: '%d.%m.%Y'
+            }
+        });
     };
 
     $scope.doWeekChart = function(chartDivSelector) {
@@ -74,7 +79,12 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             filters.push([dateStr, startDateStr, endDateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        $scope.doDateChart(chartDivSelector, filters);
+        $scope.doDateChart(chartDivSelector, filters, {
+            type: 'timeseries',
+            tick: {
+                format: '%d.%m.%Y'
+            }
+        });
     };
 
     $scope.doMonthChart = function(chartDivSelector) {
@@ -88,7 +98,12 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             filters.push([dateStr, startDateStr, endDateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        $scope.doDateChart(chartDivSelector, filters);
+        $scope.doDateChart(chartDivSelector, filters, {
+            type: 'timeseries',
+                tick: {
+                format: '%m.%Y'
+            }
+        });
     };
 
     $scope.doYearChart = function(chartDivSelector) {
@@ -102,10 +117,15 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             filters.push([dateStr, startDateStr, endDateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        $scope.doDateChart(chartDivSelector, filters);
+        $scope.doDateChart(chartDivSelector, filters, {
+            type: 'timeseries',
+            tick: {
+                format: '%Y'
+            }
+        });
     };
 
-    $scope.doDateChart = function(chartDivSelector, filters) {
+    $scope.doDateChart = function(chartDivSelector, filters, xFormat) {
         var chartId = 'dateChart' + new Date().getTime();
 
         $(chartDivSelector).children().remove();
@@ -137,16 +157,11 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             bindto: ('#' + chartId),
             data: {
                 x: 'dates',
-                type: 'bar',
+                type: 'area',
                 columns: dataColumns
             },
             axis: {
-                x: {
-                    type: 'timeseries',
-                    tick: {
-                        format: '%d.%m.%Y'
-                    }
-                }
+                x: xFormat
             }
         });
 

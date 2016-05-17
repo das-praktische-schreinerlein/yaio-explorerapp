@@ -9,13 +9,16 @@
           <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/frontpage/menu-main.html'"></div>
       </div>
     </div>
-    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-form.html'"></div>
 </div>
 
 <div id="workboard-content-chart">
     <div class='box yaio-box'>
         <div class='boxline boxline-dashboard'>
             <span lang='tech' translate="label.workboard.headline.chartboard">Charts</span>
+            <span class="entry yaio-node-state-{{parentnode.state}}" ng-repeat="parentnode in rootNodeHierarchy">
+                <b>--&gt;</b>{{parentnode.name}}
+            </span>
+            {{dashboardOptions.baseDateStr}}
             <button class="button" ng-click="dashboardOptions.mode = 'dashboard'; doNewDashboardSearch();" lang='tech' translate="label.workboard.headline.extendToDashboard">Extend to Dashboard</button>
             <button class="button" ng-click="dashboardOptions.mode = 'workboard'; doNewDashboardSearch();" lang='tech' translate="label.workboard.headline.focusDashboard">Focus</button>
         </div>
