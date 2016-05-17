@@ -39,7 +39,10 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
 
         if ($location.path().split('/')[1] === 'workboard') {
             $scope.dashboardOptions.mode = 'workboard';
+        } else if ($location.path().split('/')[1] === 'chartboard') {
+            $scope.dashboardOptions.mode = 'chartboard';
         }
+
 
         var routeFields = ['baseSysUID'];
         var routeField;

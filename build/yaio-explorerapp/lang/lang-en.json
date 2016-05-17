@@ -273,6 +273,7 @@
     "label.workboard.lastmonth": "last month",
     "label.workboard.headline.upcomin": "Upcomin",
     "label.workboard.headline.last": "Past",
+    "label.workboard.headline.cashboard": "open Charts",
     "label.workboard.headline.extendToDashboard": "extend dashboard",
     "label.workboard.headline.focusDashboard": "focus dashboard",
     "label.workboard.tablecolumn.tasksevents": "tasks/events",

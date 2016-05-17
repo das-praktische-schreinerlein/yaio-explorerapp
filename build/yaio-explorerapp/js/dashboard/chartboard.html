@@ -1,0 +1,36 @@
+<update-meta name="title" content="YAIO - D'Artagnan - Dashboard"></update-meta>
+<update-meta name="description" content="YAIO - D'Artagnan - Dashboard"></update-meta>
+
+<div class='box yaio-box add2toc-h1 yaio-box-explorer' toclabel='Explorer' id='box_explorer'>
+    <div class='boxline boxline-ue2 yaio-boxline-ue2 yaio-boxline-ue2-explorer' id='ue_explorer'>
+      <div id="containerMasterUe">YAIO - D'Artagnan - Chartboard</div>
+      <div id="containerCurrentSource" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/sourceselector/current-source-main.html'"></div>
+      <div id="containerInfoCommands">
+          <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/frontpage/menu-main.html'"></div>
+      </div>
+    </div>
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/dashboard-form.html'"></div>
+</div>
+
+<div id="workboard-content-chart">
+    <div class='box yaio-box'>
+        <div class='boxline boxline-dashboard'>
+            <span lang='tech' translate="label.workboard.headline.chartboard">Charts</span>
+            <button class="button" ng-click="dashboardOptions.mode = 'dashboard'; doNewDashboardSearch();" lang='tech' translate="label.workboard.headline.extendToDashboard">Extend to Dashboard</button>
+            <button class="button" ng-click="dashboardOptions.mode = 'workboard'; doNewDashboardSearch();" lang='tech' translate="label.workboard.headline.focusDashboard">Focus</button>
+        </div>
+        <div class='boxline boxline-dashboard' ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-chart.html'" ng-controller="NodeChartCtrl">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // activate elements after 1 second
+    setTimeout(function() {
+        yaioAppBase.get('YaioLayout').addDatePickerToElements();
+        // add resize event
+        $( window ).resize(function() {
+            yaioAppBase.get('YaioLayout').setupAppSize();
+        });    
+    }, 1000);
+</script>
