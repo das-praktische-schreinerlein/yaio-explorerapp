@@ -8737,7 +8737,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
 
     $scope.doDateChart = function(chartDivSelector, filters) {
         var chartId = 'dateChart' + new Date().getTime();
-        console.error("xxx", chartId);
+
         $(chartDivSelector).children().remove();
         $(chartDivSelector).append('<div class="workboard-chart-instance" id="' + chartId + '"></div>');
 
@@ -8780,7 +8780,6 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             }
         });
 
-        console.error("init done", chartId);
         for (ci = 0; ci < filterConfigs.length; ci++) {
             var filterConfig = filterConfigs[ci];
             for (di = 0; di < filters.length; di++) {
