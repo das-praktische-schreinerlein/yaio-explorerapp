@@ -135,6 +135,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             //{ 'label': 'created', 'dateFilterGE': 'createdGE', 'dateFilterLE': 'createdLE', 'strWorkflowStateFilter': ''},
             { 'label': 'start planned', 'dateFilterGE': 'planStartGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': ''},
             { 'label': 'end planned', 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planEndeLE', 'strWorkflowStateFilter': ''},
+//            { 'label': 'started', 'dateFilterGE': 'istStartGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': ''},
             { 'label': 'done', 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istEndeLE', 'strWorkflowStateFilter': 'DONE'}
         ];
 
@@ -179,6 +180,12 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
                 $scope.doChartSearch(chart, dataColumns[ci + 1], chartSearchOptions);
             }
         }
+        // reload after 5 s
+        setTimeout(function() {
+            chart.load({
+                columns: dataColumns
+            });
+        }, 5000);
     };
 
     $scope.createSearchOptions = function (){
@@ -218,6 +225,8 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             .then(function(angularResponse) {
                 // success handler
                 dataColumn[chartSearchOptions.curIdx + 1] = angularResponse.data.count;
+
+                // update chart
                 chart.load({
                     columns: [
                         dataColumn
