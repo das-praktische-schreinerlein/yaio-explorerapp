@@ -14,7 +14,7 @@
 
 <div id="workboard-content-current">
     <div class='box yaio-box'>
-        <div class='boxline boxline-dashboard' id="ue_workboard_upcomin"><span lang='tech' translate="label.workboard.headline.upcomin">Demnächst</span></div>
+        <div class='boxline boxline-dashboard' id="ue_workboard_upcomin"><span lang='tech' translate="label.workboard.headline.upcomin">Demnächst</span><button class="button" ng-click="dashboardOptions.mode = 'dashboard'; doNewDashboardSearch();" lang='tech' translate="label.workboard.headline.extendToDashboard">Extend to Dashboard</button></div>
         <div class="workboard-container">
             <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-head-starts_ends_done.html'"></div>
             <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-today.html'" id="workboard-today" ng-controller="WorkboardLineCtrl"></div>
