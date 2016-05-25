@@ -135,7 +135,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             //{ 'label': 'created', 'dateFilterGE': 'createdGE', 'dateFilterLE': 'createdLE', 'strWorkflowStateFilter': ''},
             { 'label': 'start planned', 'dateFilterGE': 'planStartGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': ''},
             { 'label': 'end planned', 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planEndeLE', 'strWorkflowStateFilter': ''},
-//            { 'label': 'started', 'dateFilterGE': 'istStartGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': ''},
+            { 'label': 'started', 'dateFilterGE': 'istStartGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': ''},
             { 'label': 'done', 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istEndeLE', 'strWorkflowStateFilter': 'DONE'}
         ];
 
@@ -168,28 +168,34 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
 
         for (ci = 0; ci < filterConfigs.length; ci++) {
             var filterConfig = filterConfigs[ci];
+            var chartColumn = {};
+            chartColumn.dataColumn = dataColumns[ci + 1];
+            chartColumn.filterConfig = filterConfig;
+            chartColumn.dataPointState = [];
+            chartColumn.dataPointSearchOptions = [];
+            chartColumn.timeOut = 2000;
+            chartColumn.maxTries = 10;
+            chartColumn.cur = 0;
+
             for (di = 0; di < filters.length; di++) {
                 filter = filters[di];
-                var chartSearchOptions = $scope.createSearchOptions();
-                chartSearchOptions.strWorkflowStateFilter = filterConfig.strWorkflowStateFilter;
-                chartSearchOptions[filterConfig.dateFilterGE] = filter[1];
-                chartSearchOptions[filterConfig.dateFilterLE] = filter[2];
-                chartSearchOptions.curIdx = di;
+                var dataPointSearchOptions = $scope.createSearchOptions();
+                dataPointSearchOptions.strWorkflowStateFilter = filterConfig.strWorkflowStateFilter;
+                dataPointSearchOptions[filterConfig.dateFilterGE] = filter[1];
+                dataPointSearchOptions[filterConfig.dateFilterLE] = filter[2];
+                dataPointSearchOptions.curIdx = di;
 
-                // search data
-                $scope.doChartSearch(chart, dataColumns[ci + 1], chartSearchOptions);
+                chartColumn.dataPointState[di] = 0;
+                chartColumn.dataPointSearchOptions[di] = dataPointSearchOptions;
             }
+
+            // search data
+            $scope.doChartSearch(chart, chartColumn);
         }
-        // reload after 5 s
-        setTimeout(function() {
-            chart.load({
-                columns: dataColumns
-            });
-        }, 5000);
     };
 
     $scope.createSearchOptions = function (){
-        var chartSearchOptions = {
+        var dataPointSearchOptions = {
             curIdx: 0,
             curPage: 1,
             pageSize: 1,
@@ -217,32 +223,59 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             planEndeIsNull: ''
         };
 
-        return chartSearchOptions;
+        return dataPointSearchOptions;
     };
 
-    $scope.doChartSearch = function (chart, dataColumn, chartSearchOptions) {
-        yaioUtils.getService('YaioNodeRepository').searchNode(chartSearchOptions)
+    $scope.doChartSearch = function (chart, chartColumn) {
+        for (var di = 0; di < chartColumn.dataPointSearchOptions.length; di++) {
+            $scope.doChartPointSearch(chart, chartColumn, di);
+        }
+        $scope.updateChart(chart, chartColumn);
+    };
+
+    $scope.doChartPointSearch = function (chart, chartColumn, idx) {
+        var dataPointSearchOptions = chartColumn.dataPointSearchOptions[idx];
+        yaioUtils.getService('YaioNodeRepository').searchNode(dataPointSearchOptions)
             .then(function(angularResponse) {
                 // success handler
-                dataColumn[chartSearchOptions.curIdx + 1] = angularResponse.data.count;
-
-                // update chart
-                chart.load({
-                    columns: [
-                        dataColumn
-                    ]
-                });
+                chartColumn.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;
+                chartColumn.dataPointState[dataPointSearchOptions.curIdx] = 1;
             }, function(angularResponse) {
                 // error handler
                 var data = angularResponse.data;
                 var header = angularResponse.header;
                 var config = angularResponse.config;
-                var message = 'error loading nodes with searchOptions: ' + chartSearchOptions;
+                var message = 'error loading nodes with searchOptions: ' + dataPointSearchOptions;
                 yaioUtils.getService('Logger').logError(message, true);
                 message = 'error data: ' + data + ' header:' + header + ' config:' + config;
                 yaioUtils.getService('Logger').logError(message, false);
             });
     };
+
+    $scope.updateChart = function (chart, chartColumn) {
+        var ready = true;
+        for (var di = 0; di < chartColumn.dataPointSearchOptions.length; di++) {
+            if (chartColumn.dataPointState[di] !== 1) {
+                ready = false;
+            }
+        }
+
+        // update chart
+        chart.load({
+            columns: [
+                chartColumn.dataColumn
+            ]
+        });
+
+        //
+        chartColumn.cur++;
+        if (!ready && chartColumn.cur < chartColumn.maxTries) {
+            setTimeout(function() {
+                $scope.updateChart(chart, chartColumn);
+            }, chartColumn.timeOut);
+        }
+    };
+
 
     // init
     $scope._init();
