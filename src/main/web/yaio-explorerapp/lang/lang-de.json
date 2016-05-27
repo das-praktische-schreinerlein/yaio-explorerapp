@@ -137,6 +137,8 @@
     "common.select.searchSort.typeDown": "Typ absteigend",
     "common.select.searchSort.workflowStateUp": "WorkflowStatus aufsteigend",
     "common.select.searchSort.workflowStateDown": "WorkflowStatus absteigend",
+    "editor.common.action.calcEndeFromStart": "-->",
+    "editor.common.action.setDoneAsPlanned": "Erledigt wie geplant",
     "editor.common.label.docLayoutTagCommand": "Befehl",
     "editor.common.label.docLayoutAddStyleClass": "CSS-Klasse",
     "editor.common.label.docLayoutFlgCloseDiv": "Block schließen?",

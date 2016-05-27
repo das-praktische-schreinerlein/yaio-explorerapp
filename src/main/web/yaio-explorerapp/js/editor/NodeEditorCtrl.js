@@ -149,6 +149,32 @@ yaioApp.controller('NodeEditorCtrl', function($rootScope, $scope, $location, $ro
             });
     };
 
+    /**
+     * calc enddate from start+aufwand
+     * @param {String} type   tape of enddate to calc (ist/plan)
+     */
+    $scope.calcEndeFromStart = function(type) {
+        if (type === 'ist') {
+            $scope.nodeForEdit.istEnde = $scope.nodeForEdit.istStart;
+        } else if (type === 'plan') {
+            $scope.nodeForEdit.planEnde = $scope.nodeForEdit.planStart;
+        }
+
+        return false;
+    };
+
+    /**
+     * set done as planned (set stand 100% and set aufwand/start/ende on ist as on plan)
+     */
+    $scope.setDoneAsPlanned = function() {
+        $scope.nodeForEdit.istAufwand = $scope.nodeForEdit.planAufwand;
+        $scope.nodeForEdit.istStart = $scope.nodeForEdit.planStart;
+        $scope.nodeForEdit.istEnde = $scope.nodeForEdit.planEnde;
+        $scope.nodeForEdit.istStand = 100;
+        $scope.doIstStandChanged();
+        return false;
+    };
+
     /** 
      * callbackhandler to perform actions when type has changed - updates istStand
      * calls yaioUtils.getService('YaioNodeEditor').calcIstStandFromState() for the node

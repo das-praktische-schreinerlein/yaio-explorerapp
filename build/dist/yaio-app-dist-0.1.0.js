@@ -9090,6 +9090,25 @@ yaioApp.controller('NodeEditorCtrl', function($rootScope, $scope, $location, $ro
             });
     };
 
+    $scope.calcEndeFromStart = function(type) {
+        if (type === 'ist') {
+            $scope.nodeForEdit.istEnde = $scope.nodeForEdit.istStart;
+        } else if (type === 'plan') {
+            $scope.nodeForEdit.planEnde = $scope.nodeForEdit.planStart;
+        }
+
+        return false;
+    };
+
+    $scope.setDoneAsPlanned = function() {
+        $scope.nodeForEdit.istAufwand = $scope.nodeForEdit.planAufwand;
+        $scope.nodeForEdit.istStart = $scope.nodeForEdit.planStart;
+        $scope.nodeForEdit.istEnde = $scope.nodeForEdit.planEnde;
+        $scope.nodeForEdit.istStand = 100;
+        $scope.doIstStandChanged();
+        return false;
+    };
+
     /** 
      * callbackhandler to perform actions when type has changed - updates istStand
      * calls yaioUtils.getService('YaioNodeEditor').calcIstStandFromState() for the node
