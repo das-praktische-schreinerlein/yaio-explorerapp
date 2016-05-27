@@ -70,7 +70,8 @@
               <input type="text" placeholder="dd.mm.jjjj" name="planStart" pattern="\d{2}\.\d{2}\.\d{4}"  maxsize="10" class="inputtype_date" ng-model="nodeForEdit.planStart" id="inputPlanStartTaskNode" ng-change=""> 
 
               <!-- show textfield -->
-              <label for="planEnde" translate="editor.common.label.planEnde">Ende</label> 
+              <a class="button" ng-click="calcEndeFromStart('plan')" translate="editor.common.action.calcEndeFromStart">Calc</a>
+              <label for="planEnde" translate="editor.common.label.planEnde">Ende</label>
               <input type="text" placeholder="dd.mm.jjjj" name="planEnde" pattern="\d{2}\.\d{2}\.\d{4}"  maxsize="10" class="inputtype_date" ng-model="nodeForEdit.planEnde" id="inputPlanEndeTaskNode" ng-change=""> 
 
               <fielderrors for="planAufwand"></fielderrors>
@@ -90,13 +91,15 @@
                 <input type="text" name="istStart" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}"  maxsize="10" class="inputtype_date" ng-model="nodeForEdit.istStart" id="inputIstStartTaskNode" ng-change="">
   
                 <!-- show textfield -->
-                <label for="istEnde" translate="editor.common.label.istEnde">Ende</label> 
+                <a class="button" ng-click="calcEndeFromStart('ist')" translate="editor.common.action.calcEndeFromStart">Calc</a>
+                <label for="istEnde" translate="editor.common.label.istEnde">Ende</label>
                 <input type="text" name="istEnde" placeholder="dd.mm.jjjj" pattern="\d{2}\.\d{2}\.\d{4}"  maxsize="10" class="inputtype_date" ng-model="nodeForEdit.istEnde" id="inputIstEndeTaskNode" ng-change=""> 
   
                 <!-- show textfield -->
                 <label for="istStand" translate="editor.common.label.istStand">Stand</label> 
-                <input type="number" min="0" max="100" placeholder="x.x" name="istStand" class="inputtype_stand" ng-model="nodeForEdit.istStand " id="inputIstStandTaskNode" ng-change="doIstStandChanged()"> 
-  
+                <input type="number" min="0" max="100" placeholder="x.x" name="istStand" class="inputtype_stand" ng-model="nodeForEdit.istStand " id="inputIstStandTaskNode" ng-change="doIstStandChanged()">
+                <a class="button" ng-click="setDoneAsPlanned()" translate="editor.common.action.setDoneAsPlanned">DoneAsPlanned</a>
+
                 <fielderrors for="istAufwand"></fielderrors>
                 <fielderrors for="istStart"></fielderrors>
                 <fielderrors for="istEnde"></fielderrors>
