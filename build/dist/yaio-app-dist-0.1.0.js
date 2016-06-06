@@ -8985,12 +8985,21 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
      * TODO
      * @param {String} chartDivSelector   jquery-selector to add the chart on
      * @param {String} chartConfigKey     key for chartConfig from $scope.chartDataConfigs
+     * @param {Number} before             show x days before baseDate
+     * @param {Number} after              show x days after baseDate
      */
-    $scope.generateCalendarChartYear = function(chartDivSelector, chartConfigKey) {
+    $scope.generateCalendarChartYear = function(chartDivSelector, chartConfigKey, before, after) {
         var chartConfig = $scope._getChartDataConfig(chartConfigKey);
 
+        if (!before > 0) {
+            before = 184;
+        }
+        if (!after > 0) {
+            after = 184;
+        }
+
         var filters = [], date, dateStr;
-        for (var di = -365; di <= 1; di++) {
+        for (var di = -before; di <= after; di++) {
             date = new Date($scope.chartOptions.baseDate);
             date.setDate(date.getDate() + di);
             dateStr = yaioUtils.getService('DataUtils').formatGermanDate(date);
