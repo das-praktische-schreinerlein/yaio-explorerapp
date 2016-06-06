@@ -22,9 +22,45 @@
             <button class="button" ng-click="dashboardOptions.mode = 'dashboard'; doNewDashboardSearch();" lang='tech' translate="label.workboard.headline.extendToDashboard">Extend to Dashboard</button>
             <button class="button" ng-click="dashboardOptions.mode = 'workboard'; doNewDashboardSearch();" lang='tech' translate="label.workboard.headline.focusDashboard">Focus</button>
         </div>
-        <div class='boxline boxline-dashboard' ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-chart.html'" ng-controller="NodeChartCtrl">
+        <div>
+            <style>
+
+                body {
+                    font: 10px sans-serif;
+                    shape-rendering: crispEdges;
+                }
+
+                .day {
+                    fill: #fff;
+                    stroke: #ccc;
+                }
+
+                .month {
+                    fill: none;
+                    stroke: #000;
+                    stroke-width: 2px;
+                }
+
+                .RdYlGn .qempty{fill:rgb(255,255,230)}
+                .RdYlGn .q0{fill:rgb(255,255,181)}
+                .RdYlGn .q1{fill:rgb(217,239,139)}
+                .RdYlGn .q2{fill:rgb(166,217,106)}
+                .RdYlGn .q3{fill:rgb(102,189,99)}
+                .RdYlGn .q4{fill:rgb(26,152,80)}
+                .RdYlGn .q5{fill:rgb(0,104,55)}
+
+            </style>
+
         </div>
     </div>
+
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-calchart-planned.html'" ng-controller="NodeChartCtrl"></div>
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-calchart-running.html'" ng-controller="NodeChartCtrl"></div>
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-calchart-done.html'" ng-controller="NodeChartCtrl"></div>
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-linechart-overview-day.html'" ng-controller="NodeChartCtrl"></div>
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-linechart-overview-week.html'" ng-controller="NodeChartCtrl"></div>
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-linechart-overview-month.html'" ng-controller="NodeChartCtrl"></div>
+    <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-linechart-overview-year.html'" ng-controller="NodeChartCtrl"></div>
 </div>
 
 <script type="text/javascript">

@@ -1,0 +1,7 @@
+<div ng-init="chartOptions.label = 'label.chartboard.chartOverviewYear';
+              chartOptions.praefix = 'chartOverviewYear';
+              chartOptions.chartId = 'workboard-chart-overview-year';
+              chartOptions.chartGenerator = generateLineChartYear;
+              chartOptions.chartArgs = ['#' + chartOptions.chartId + ' .chart', ['done', 'running', 'planned'], 5, 1];">
+    <div id="workboard-chart-overview-year" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-line.html'"></div>
+ </div>

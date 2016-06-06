@@ -1,0 +1,6 @@
+<div class='box yaio-box'>
+    <div class='boxline boxline-dashboard boxline-dashboard-{{chartOptions.praefix}} boxline-dashboard-{{chartOptions.praefix}}' id="ue_chartboard_{{chartOptions.praefix}}">
+        <span lang='tech' translate="{{chartOptions.label}}">{{chartOptions.label}}</span>
+    </div>
+    <div class="chart" ng-init="callChartGenerator(chartOptions.chartGenerator, chartOptions.chartArgs);"></div>
+</div>

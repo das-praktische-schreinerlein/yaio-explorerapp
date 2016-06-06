@@ -1,0 +1,7 @@
+<div ng-init="chartOptions.label = 'label.chartboard.calChartPlanned';
+              chartOptions.praefix = 'calChartPlanned';
+              chartOptions.chartId = 'workboard-chart-cal-planned';
+              chartOptions.chartGenerator = generateCalendarChartYear;
+              chartOptions.chartArgs = ['#' + chartOptions.chartId + ' .chart', 'planned'];">
+    <div id="workboard-chart-cal-planned" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-line.html'"></div>
+ </div>
