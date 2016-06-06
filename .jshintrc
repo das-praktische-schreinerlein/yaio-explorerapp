@@ -94,6 +94,7 @@
         "ace": true,
         "angular": true,
         "c3": true,
+        "d3": true,
         "findAndReplaceDOMText": true,
         "FlashObject": true,
         "hightlighjs": true,
