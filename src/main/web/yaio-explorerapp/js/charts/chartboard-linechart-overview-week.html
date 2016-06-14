@@ -1,0 +1,7 @@
+<div ng-init="chartOptions.label = 'label.chartboard.chartOverviewWeek';
+              chartOptions.praefix = 'chartOverviewWeek';
+              chartOptions.chartId = 'chartboard-chart-overview-week';
+              chartOptions.chartGenerator = generateLineChartWeek;
+              chartOptions.chartArgs = ['#' + chartOptions.chartId + ' .chart', ['done', 'running', 'planned'], 8, 4];">
+    <div id="chartboard-chart-overview-week" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/charts/chartboard-line.html'"></div>
+ </div>

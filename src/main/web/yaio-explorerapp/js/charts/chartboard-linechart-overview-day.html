@@ -1,0 +1,7 @@
+<div ng-init="chartOptions.label = 'label.chartboard.chartOverviewDay';
+              chartOptions.praefix = 'chartOverviewDay';
+              chartOptions.chartId = 'chartboard-chart-overview-day';
+              chartOptions.chartGenerator = generateLineChartDay;
+              chartOptions.chartArgs = ['#' + chartOptions.chartId + ' .chart', ['done', 'running', 'planned'], 30, 15];">
+    <div id="chartboard-chart-overview-day" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/charts/chartboard-line.html'"></div>
+ </div>

@@ -1,0 +1,7 @@
+<div ng-init="chartOptions.label = 'label.chartboard.chartAufwandDay';
+              chartOptions.praefix = 'chartAufwandDay';
+              chartOptions.chartId = 'chartboard-chart-aufwand-day';
+              chartOptions.chartGenerator = generateLineChartDay;
+              chartOptions.chartArgs = ['#' + chartOptions.chartId + ' .chart', ['planAufwandPerDay', 'istAufwandPerDay'], 150, 150];">
+    <div id="chartboard-chart-aufwand-day" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/charts/chartboard-line.html'"></div>
+ </div>

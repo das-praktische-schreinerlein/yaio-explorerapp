@@ -145,6 +145,7 @@
                     srcBase + 'yaio-explorerapp/js/lang/LanguageConfig.js',
                     srcBase + 'yaio-explorerapp/js/lang/LanguageCtrl.js',
                     srcBase + 'yaio-explorerapp/js/frontpage/FrontpageCtrl.js',
+                    srcBase + 'yaio-explorerapp/js/charts/*.js',
                     srcBase + 'yaio-explorerapp/js/dashboard/*.js',
                     srcBase + 'yaio-explorerapp/js/editor/NodeEditorCtrl.js',
                     srcBase + 'yaio-explorerapp/js/importer/ImporterCtrl.js',
