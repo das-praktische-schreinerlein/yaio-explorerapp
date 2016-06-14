@@ -374,29 +374,20 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
             'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
-        var value, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
+        var value, newDate, defaultTimeStr;
         for (idx = 0; idx < searchFields.length; idx++) {
             searchField = searchFields[idx];
             value = searchOptions[searchField];
             if (searchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
-                if (typeof value === 'string') {
-                    lstDateTime = value.split(' ');
-                    lstDate = lstDateTime[0].split('.');
-                    strTime = '12:00:00';
+                if (typeof value === 'string' || typeof value === 'object') {
+                    defaultTimeStr = '12:00:00';
                     if (searchField.match(/.*GE$/)) {
-                        strTime = '00:00:00';
+                        defaultTimeStr = '00:00:00';
                     } else if (searchField.match(/.*LE$/)) {
-                        strTime = '23:59:59';
+                        defaultTimeStr = '23:59:59';
                     }
-
-                    if (lstDateTime.length > 1) {
-                        strTime = lstDateTime[1] + ':00';
-                    }
-                    newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
-                    newDate = new Date(newDateTimeStr);
+                    newDate = me.appBase.YaioBase.parseGermanDate(value, defaultTimeStr);
                     value = newDate.getTime();
-                } else if (typeof value === 'object') {
-                    value = value.getTime();
                 }
                 staticSearchOptions[searchField] = value;
             }
