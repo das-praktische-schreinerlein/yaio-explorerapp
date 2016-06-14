@@ -52,13 +52,15 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
 
 
         $scope.chartDataConfigs = {
-            created: { 'label': 'created', 'dateFilterGE': 'createdGE', 'dateFilterLE': 'createdLE', 'strWorkflowStateFilter': ''},
-            startPlanned: { 'label': 'start planned', 'dateFilterGE': 'planStartGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': ''},
-            started: { 'label': 'started', 'dateFilterGE': 'istStartGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': ''},
-            endPlanned: { 'label': 'end planned', 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planEndeLE', 'strWorkflowStateFilter': ''},
-            done: { 'label': 'done', 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istEndeLE', 'strWorkflowStateFilter': 'DONE'},
-            planned: { 'label': 'planned', 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': ''},
-            running: { 'label': 'running', 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': ''}
+            istAufwandPerDay: { 'label': 'istAufwandPerDay', 'calltypes': {'statistic': 'istAufwandPerDay'}, 'dateFilterGE': 'start', 'dateFilterLE': 'end', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 3},
+            planAufwandPerDay: { 'label': 'planAufwandPerDay', 'calltypes': {'statistic': 'planAufwandPerDay'}, 'dateFilterGE': 'start', 'dateFilterLE': 'end', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 3},
+            created: { 'label': 'created', 'calltypes': {'search': true}, 'dateFilterGE': 'createdGE', 'dateFilterLE': 'createdLE', 'strWorkflowStateFilter': ''},
+            startPlanned: { 'label': 'start planned', 'calltypes': {'statistic': 'planStartPerDay', 'search': true}, 'dateFilterGE': 'planStartGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            started: { 'label': 'started', 'calltypes': {'statistic': 'istStartPerDay', 'search': true}, 'dateFilterGE': 'istStartGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            endPlanned: { 'label': 'end planned', 'calltypes': {'statistic': 'planEndPerDay', 'search': true}, 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planEndeLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            done: { 'label': 'done', 'calltypes': {'statistic': 'istDonePerDay', 'search': true}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istEndeLE', 'strWorkflowStateFilter': 'DONE', 'statisticReturnIdx': 2},
+            planned: { 'label': 'planned', 'calltypes': {'statistic': 'planRunningPerDay', 'search': true}, 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            running: { 'label': 'running', 'calltypes': {'statistic': 'istRunningPerDay', 'search': true}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2}
         };
     };
 
@@ -89,7 +91,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
                 tick: {
                 format: '%d.%m.%Y'
             }
-        });
+        }, { 'interval': 'day'});
     };
 
     /**
@@ -117,7 +119,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             tick: {
                 format: '%d.%m.%Y'
             }
-        });
+        }, { 'interval': 'week'});
     };
 
     /**
@@ -145,7 +147,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
                 tick: {
                 format: '%m.%Y'
             }
-        });
+        }, { 'interval': 'month'});
     };
 
     /**
@@ -173,7 +175,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             tick: {
                 format: '%Y'
             }
-        });
+        }, { 'interval': 'year'});
     };
 
     /**
@@ -182,8 +184,9 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
      * @param {Array} chartConfigs        chartConfigs from $scope.chartDataConfigs
      * @param {Array} filters             filters to call the server with [germanDate, start, ende, axis-date in ISO)
      * @param {function|string} xFormat   callback-function or formatstring for x-axis of c3.generate
+     * @param {Object} options            additional options (interval...)
      */
-    $scope._generateLineChartDate = function(chartDivSelector, chartConfigs, filters, xFormat) {
+    $scope._generateLineChartDate = function(chartDivSelector, chartConfigs, filters, xFormat, options) {
         var chartId = 'dateChart' + new Date().getTime();
 
         $(chartDivSelector).children().remove();
@@ -226,6 +229,9 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             chartColumn.timeOut = 2000;
             chartColumn.maxTries = 30;
             chartColumn.cur = 0;
+            chartColumn.interval = options.interval;
+            chartColumn.start = filters[0][1];
+            chartColumn.end = filters[filters.length-1][2];
 
             for (di = 0; di < filters.length; di++) {
                 filter = filters[di];
@@ -240,7 +246,15 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             }
 
             // search data
-            $scope._doLineChartSearch(chart, chartColumn);
+            if (!yaioUtils.getService('DataUtils').isUndefinedStringValue(chartConfig.calltypes.statistic) &&
+                options.interval === 'day') {
+                $scope._doLineChartStatisticCall(chart, chartColumn);
+            } else if (chartConfig.calltypes.search === true) {
+                $scope._doLineChartSearch(chart, chartColumn);
+            } else {
+                console.error('unknown calltype:', chartConfig);
+                return;
+            }
             $scope._updateLineChart(chart, chartColumn);
         }
     };
@@ -279,6 +293,39 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         };
 
         return dataPointSearchOptions;
+    };
+
+    /**
+     * execute statistic-call to get value of a chartpoint: callback sets chartColumn.dataColumn and chartColumn.dataPointState
+     * @param {Object} chart         chat-object generated by c3.generate
+     * @param {Object} chartColumn   object with fields: dataColumn, chartConfig, dataPointState,
+     *                               dataPointSearchOptions, timeOut, maxTries, cur
+     */
+    $scope._doLineChartStatisticCall = function (chart, chartColumn) {
+        var dataPointSearchOptions = chartColumn.dataPointSearchOptions[0];
+        var chartConfig = chartColumn.chartConfig, value, idx, url;
+        yaioUtils.getService('YaioNodeRepository').callStatistics(chartConfig.calltypes.statistic, chartColumn.start, chartColumn.end, dataPointSearchOptions)
+            .then(function(angularResponse) {
+                // success handler
+                var values = angularResponse.data.values;
+                values.map(function (element) {
+                    idx = element[0];
+                    value = element[chartConfig.statisticReturnIdx];
+                    value = (value === null ? 0 : Math.round(value * 100) / 100);
+                    chartColumn.dataColumn[idx] = value;
+                    chartColumn.dataPointState[idx] = 1;
+                    url = $scope._createSearchUri(chartColumn.dataPointSearchOptions[idx]);
+                });
+            }, function(angularResponse) {
+                // error handler
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading nodes with searchOptions: ' + dataPointSearchOptions;
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
     };
 
     /**
@@ -361,10 +408,10 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
     $scope.generateCalendarChartYear = function(chartDivSelector, chartConfigKey, before, after) {
         var chartConfig = $scope._getChartDataConfig(chartConfigKey);
 
-        if (!before > 0) {
+        if (yaioUtils.getService('DataUtils').isEmptyStringValue(before)) {
             before = 184;
         }
-        if (!after > 0) {
+        if (yaioUtils.getService('DataUtils').isEmptyStringValue(after)) {
             after = 184;
         }
 
@@ -402,7 +449,6 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             cellSize = 17; // cell size
         $scope.cellSize = cellSize;
 
-//        var format = d3.time.format('%Y-%m-%d');
         var format = d3.time.format('%d.%m.%Y');
 
         var startYear = yaioUtils.getService('YaioBase').parseGermanDate(filters[0][1]).getFullYear();
@@ -450,6 +496,8 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         chartColumn.timeOut = 2000;
         chartColumn.maxTries = 10;
         chartColumn.cur = 0;
+        chartColumn.start = filters[0][1];
+        chartColumn.end = filters[filters.length-1][2];
 
         for (di = 0; di < filters.length; di++) {
             filter = filters[di];
@@ -466,8 +514,71 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         }
 
         // search data
-        $scope._doCalendarChartSearch(rect, chartColumn);
+        if (!yaioUtils.getService('DataUtils').isUndefinedStringValue(chartConfig.calltypes.statistic)) {
+            $scope._doCalendarChartStatisticCall(rect, chartColumn);
+        } else if (chartConfig.calltypes.search === true) {
+            $scope._doCalendarChartSearch(rect, chartColumn);
+        } else {
+            console.error('unknown calltype:', chartConfig);
+            return;
+        }
     };
+
+    /**
+     * execute statistic-call to get value of a chartpoint: callback sets chartColumn.dataColumn and chartColumn.dataPointState
+     * @param {Object} chart         chat-object generated by c3.generate
+     * @param {Object} chartColumn   object with fields: dataColumn, chartConfig, dataPointState,
+     *                               dataPointSearchOptions, timeOut, maxTries, cur
+     */
+    $scope._doCalendarChartStatisticCall = function (chart, chartColumn) {
+        var dataPointSearchOptions;
+        chartColumn.dataPointSearchOptions.map(function (dataPointSearchOptions) {
+            chart.filter(function(d) { return d === dataPointSearchOptions.date; })
+                .attr('class', function(d) { return 'day ' + $scope._getColorStyle(0); });
+        });
+
+        dataPointSearchOptions = chartColumn.dataPointSearchOptions[0];
+        var chartConfig = chartColumn.chartConfig, value, idx, date, dateParts;
+        yaioUtils.getService('YaioNodeRepository').callStatistics(chartConfig.calltypes.statistic, chartColumn.start, chartColumn.end, dataPointSearchOptions)
+            .then(function(angularResponse) {
+                // success handler
+                var values = angularResponse.data.values;
+                values.map(function (element) {
+                    idx = element[0]-1;
+                    dateParts = element[1].split('-');
+                    date = dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0];
+                    value = element[chartConfig.statisticReturnIdx];
+                    value = (value === null ? 0 : Math.round(value * 100) / 100);
+                    chartColumn.dataColumn[idx+1] = value; // because of label as first element
+                    chartColumn.dataPointState[idx] = 1;
+                    var url = '#' + $scope._createSearchUri(chartColumn.dataPointSearchOptions[idx]);
+
+                    var rect = chart.filter(function(d) {
+                        return d === date;
+                    });
+                    rect.attr('class', function(d) {
+                            return 'day ' + $scope._getColorStyle(value);
+                        })
+                        .on('click', function () {
+                            window.open(url);
+                        });
+                    rect.select('title')
+                        .text(function(d) {
+                            return d + ': ' + value + ' ' + dataPointSearchOptions.label + ' [click to search]';
+                        });
+                });
+            }, function(angularResponse) {
+                // error handler
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading nodes with searchOptions: ' + dataPointSearchOptions;
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
+    };
+
 
     /**
      * execute search to get values of all chartpoints in chartColumn.dataPointSearchOptions
@@ -493,7 +604,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         yaioUtils.getService('YaioNodeRepository').searchNode(dataPointSearchOptions)
             .then(function(angularResponse) {
                 // success handler
-                chartColumn.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;
+                chartColumn.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;  // because of label as first element
                 chartColumn.dataPointState[dataPointSearchOptions.curIdx] = 1;
                 chart.filter(function(d) { return d === dataPointSearchOptions.date; })
                     .attr('class', function(d) { return 'day ' + $scope._getColorStyle(angularResponse.data.count); })
@@ -538,6 +649,19 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         return $scope._getColorStyleForRange(value);
     };
 
+    /**
+     * create the search-uri to use
+     * @param {Object} searchOptions  current searchoptions (filter..) to use
+     * @returns {String}              new search-uri
+     */
+    $scope._createSearchUri = function(searchOptions) {
+        var newSearchOptions = {};
+        Object.keys(searchOptions).map(function (element) {
+            newSearchOptions[element] = searchOptions[element];
+        });
+
+        return yaioUtils.getService('YaioNodeSearch').createSearchUri(newSearchOptions, 1, 20, newSearchOptions.baseSysUID);
+    };
 
 
     // init
