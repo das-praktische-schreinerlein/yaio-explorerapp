@@ -337,68 +337,49 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
             + '/' + encodeURI(searchOptions.baseSysUID)
             + '/';
 
-        // no empty fulltext for webservice -> we use there another route 
+        // no empty fulltext for webservice -> we use there another route
         if (searchOptions.fulltext && searchOptions.fulltext.length > 0) {
             uri = uri + encodeURI(searchOptions.fulltext) + '/';
         }
-        
-        // copy availiable serverSearchOptions
-        var serverSearchOptions = {};
-        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 
-            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
-            'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
-        ];
-        var searchField;
-        for (var idx = 0; idx < searchFields.length; idx++) {
-            searchField = searchFields[idx];
-            if (searchOptions.hasOwnProperty(searchField)) {
-                serverSearchOptions[searchField] = searchOptions[searchField];
-            }
-        }
-        if (serverSearchOptions.hasOwnProperty('strNotNodePraefix')) {
-            // replace * with sql %
-            serverSearchOptions.strNotNodePraefix = serverSearchOptions.strNotNodePraefix.replace(/\*/g, '%');
-        }
-        if (serverSearchOptions.hasOwnProperty('strMetaNodeTypeTagsFilter')) {
-            // replace space with ,
-            serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
-        }
-        // convert dateValues
-        searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
-        ];
-        var value, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
-        for (idx = 0; idx < searchFields.length; idx++) {
-            searchField = searchFields[idx];
-            value = serverSearchOptions[searchField];
-            if (serverSearchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
-                if (typeof value === 'string') {
-                    lstDateTime = value.split(' ');
-                    lstDate = lstDateTime[0].split('.');
-                    strTime = '12:00:00';
-                    if (searchField.match(/.*GE$/)) {
-                        strTime = '00:00:00';
-                    } else if (searchField.match(/.*LE$/)) {
-                        strTime = '23:59:59';
-                    }
 
-                    if (lstDateTime.length > 1) {
-                        strTime = lstDateTime[1] + ':00';
-                    }
-                    newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
-                    newDate = new Date(newDateTimeStr);
-                    value = newDate.getTime();
-                } else if (typeof value === 'object') {
-                    value = value.getTime();
-                }
-                serverSearchOptions[searchField] = value;
-            }
-        }
+        // copy availiable serverSearchOptions
+        var serverSearchOptions = me._prepareSearchOptions(searchOptions, true);
 
         // load data
         var url = me.config.restSearchUrl + uri;
+        var ajaxCall = function () {
+            return me.appBase.get('Angular.$http').post(url, serverSearchOptions, {
+                withCredentials: true,
+                headers : {
+                    'content-type' : 'application/json;charset=utf-8'
+                }
+            });
+        };
+
+        // do http
+        console.log(msg + ' CALL url:' + url);
+        return ajaxCall();
+    };
+
+    /**
+     * @inheritdoc
+     */
+    me.callStatistics = function(statisticName, start, end, searchOptions) {
+        var msg = '_callStatistics searchOptions: ' + searchOptions;
+        var startDate = me.appBase.YaioBase.parseGermanDate(start);
+        var endDate = me.appBase.YaioBase.parseGermanDate(end);
+        var uri = encodeURI(startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate())
+            + '/' + encodeURI(endDate.getFullYear() + '-' + (endDate.getMonth()+1) + '-' + endDate.getDate())
+            + '/' + encodeURI(searchOptions.baseSysUID)
+            + '/' + encodeURI(searchOptions.fulltext ? searchOptions.fulltext : 'DirtyEmptyFulltextPlaceHolder')
+            + '/';
+
+        var serverSearchOptions = me._prepareSearchOptions(searchOptions, false);
+
+        // load data
+        var url = me.config.restSearchUrl + uri;
+        // TODO
+        url = '/statistics/' + statisticName + '/' + uri;
         var ajaxCall = function () {
             return me.appBase.get('Angular.$http').post(url, serverSearchOptions, {
                     withCredentials: true,
@@ -537,6 +518,68 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
             }
         });
     };
+
+    /**
+     * prepare the searchOptions (convert strings to arrays, dates to int...)
+     * @param {Object} searchOptions       filters
+     * @returns {Object}                   prepared filters
+     */
+    me._prepareSearchOptions = function (searchOptions, flgWithDates) {
+        // copy availiable serverSearchOptions
+        var serverSearchOptions = {};
+        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter',
+            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
+            'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+
+        var searchField;
+        for (var idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            if (searchOptions.hasOwnProperty(searchField)) {
+                serverSearchOptions[searchField] = searchOptions[searchField];
+            }
+        }
+        if (serverSearchOptions.hasOwnProperty('strNotNodePraefix')) {
+            // replace * with sql %
+            serverSearchOptions.strNotNodePraefix = serverSearchOptions.strNotNodePraefix.replace(/\*/g, '%');
+        }
+        if (serverSearchOptions.hasOwnProperty('strMetaNodeTypeTagsFilter')) {
+            // replace space with ,
+            serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
+        }
+
+        // convert dateValues
+        searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
+        var value, newDate, defaultTimeStr;
+        for (idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            value = serverSearchOptions[searchField];
+            if (serverSearchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
+                if (typeof value === 'string' || typeof value === 'object') {
+                    defaultTimeStr = '12:00:00';
+                    if (searchField.match(/.*GE$/)) {
+                        defaultTimeStr = '00:00:00';
+                    } else if (searchField.match(/.*LE$/)) {
+                        defaultTimeStr = '23:59:59';
+                    }
+                    newDate = me.appBase.YaioBase.parseGermanDate(value, defaultTimeStr);
+                    value = newDate.getTime();
+                }
+                serverSearchOptions[searchField] = value;
+            }
+            if (!flgWithDates) {
+                serverSearchOptions[searchField] = undefined;
+            }
+
+        }
+
+        return serverSearchOptions;
+    };
+
 
     me._init();
     

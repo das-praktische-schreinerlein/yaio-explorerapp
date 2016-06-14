@@ -224,6 +224,18 @@ Yaio.NodeRepository = function(appBase, config, defaultConfig) {
     };
 
     /**
+     * call statistics
+     * @param {String} statisticName                      name of the statisticfunction
+     * @param {Object} searchOptions                      filters
+     * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if call succeed or failed
+     */
+    me.callStatistics = function(statisticName, start, end, searchOptions) {
+        var msg = 'callStatistics ' + statisticName + 'for searchOptions:' + searchOptions;
+        console.log(msg + ' START');
+        return me._callStatistics(statisticName, start, end, searchOptions);
+    };
+
+    /**
      * implementation of: get symlinked nodedata for basenode
      * @param {Object} basenode                           node-data to get symlink-data
      * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if read succeed or failed with parameters { yaioNodeActionResponse, textStatus, jqXhr}
@@ -310,6 +322,16 @@ Yaio.NodeRepository = function(appBase, config, defaultConfig) {
      */
     me._searchNode = function(searchOptions) {
         return me.appBase.YaioDataSourceManager.getCurrentConnection().searchNode(searchOptions);
+    };
+
+    /**
+     * implementation of: callStatistics
+     * @param {String} statisticName                      name of the statisticfunction
+     * @param {Object} searchOptions                      filters
+     * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if call succeed or failed
+     */
+    me._callStatistics = function(statisticName, start, end, searchOptions) {
+        return me.appBase.YaioDataSourceManager.getCurrentConnection().callStatistics(statisticName, start, end, searchOptions);
     };
 
     me._init();

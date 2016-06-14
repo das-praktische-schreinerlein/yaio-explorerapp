@@ -191,6 +191,17 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
     };
 
     /**
+     * implementation of: call statistics
+     * @abstract
+     * @param {String} statisticName                      name of the statisticfunction
+     * @param {Object} searchOptions                      filters...
+     * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if call succeed or failed
+     */
+    me.callStatistics = function(statisticName, start, end, searchOptions) {
+        me.logNotImplemented();
+    };
+
+    /**
      * implementation of: login to service
      * @abstract
      * @param {Object} credentials                        credentials to login with
