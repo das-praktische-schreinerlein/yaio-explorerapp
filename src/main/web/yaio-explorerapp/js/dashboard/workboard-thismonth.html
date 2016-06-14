@@ -1,8 +1,8 @@
     <div ng-init="boardOptions.label = 'label.workboard.thismonth';
                   boardOptions.praefix = 'thismonth';
-                  boardOptions.dateVon = yaioUtils.getFirstDayOfMonth(boardOptions.baseDate);
+                  boardOptions.dateVon = yaioUtils.getService('YaioBase').getFirstDayOfMonth(boardOptions.baseDate);
                   boardOptions.dateVonFilter = boardOptions.dateVon;
-                  boardOptions.dateBis = yaioUtils.getLastDayOfMonth(boardOptions.baseDate);
+                  boardOptions.dateBis = yaioUtils.getService('YaioBase').getLastDayOfMonth(boardOptions.baseDate);
                   boardOptions.dateBisFilter = boardOptions.dateBis;">
        <div ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/workboard-list-starts_ends_done.html'"></div>
     </div>

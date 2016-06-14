@@ -33,7 +33,7 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
 
         $scope.dashboardOptions = {
             baseSysUID: yaioUtils.getConfig().masterSysUId,
-            baseDate: yaioUtils.now(),
+            baseDate: yaioUtils.getService('YaioBase').now(),
             mode: 'dashboard'
         };
 
@@ -80,7 +80,7 @@ yaioApp.controller('DashboardCtrl', function($rootScope, $scope, $location, $rou
         yaioUtils.getService('YaioNodeRepository').getNodeById($scope.dashboardOptions.baseSysUID, {})
             .then(function sucess(angularResponse) {
                 // handle success
-                $scope.rootNodeHierarchy = yaioUtils.getNodeHierarchy(angularResponse.data.node);
+                $scope.rootNodeHierarchy = yaioUtils.getService('YaioBase').getNodeHierarchy(angularResponse.data.node);
                 $scope.rootNodeHierarchy.push(angularResponse.data.node);
                 $scope.rootNodeChildren = angularResponse.data.childNodes;
             }, function error(angularResponse) {

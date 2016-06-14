@@ -29,7 +29,7 @@ yaioApp.controller('WorkboardLineCtrl', function($rootScope, $scope, $location, 
         $scope.yaioUtils = yaioUtils;
 
         $scope.boardOptions = {
-            baseDate: yaioUtils.now(),
+            baseDate: yaioUtils.getService('YaioBase').now(),
             pageSize: 5
         };
 
