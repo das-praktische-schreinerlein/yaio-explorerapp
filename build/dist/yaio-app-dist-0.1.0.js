@@ -312,6 +312,7 @@ window.YaioAppBase = function() {
         me.configureService('Yaio.FileLoader', function() { return Yaio.FileLoader(me); });
         me.configureService('Yaio.Layout', function() { return Yaio.Layout(me); });
         me.configureService('Yaio.NodeEditor', function() { return Yaio.NodeEditor(me); });
+        me.configureService('Yaio.NodeSearch', function() { return Yaio.NodeSearch(me); });
         me.configureService('Yaio.MarkdownConverter', function() { return Yaio.MarkdownConverter(me); });
         me.configureService('Yaio.MarkdownRenderer', function() { return Yaio.MarkdownRenderer(me); });
         me.configureService('Yaio.ExplorerConverter', function() { return Yaio.ExplorerConverter(me); });
@@ -350,6 +351,7 @@ window.YaioAppBase = function() {
         me.configureService('YaioFileLoader', function() { return me.get('Yaio.FileLoader'); });
         me.configureService('YaioLayout', function() { return me.get('Yaio.Layout'); });
         me.configureService('YaioNodeEditor', function() { return me.get('Yaio.NodeEditor'); });
+        me.configureService('YaioNodeSearch', function() { return me.get('Yaio.NodeSearch'); });
         me.configureService('YaioMarkdownConverter', function() { return me.get('YmfMarkdownConverter'); });
         me.configureService('YaioMarkdownRenderer', function() { return me.get('YmfMarkdownRenderer'); });
         me.configureService('YaioExplorerConverter', function() { return me.get('Yaio.ExplorerConverter'); });
@@ -1235,6 +1237,77 @@ Yaio.NodeEditor = function(appBase) {
             + ' set:' + fieldNameId + '=' + value);
 
     };
+
+    me._init();
+    
+    return me;
+};
+/** 
+ * servicefunctions for the search
+ *  
+ * @FeatureDomain                WebGUI
+ * @author                       Michael Schreiner <michael.schreiner@your-it-fellow.de>
+ * @category                     collaboration
+ * @copyright                    Copyright (c) 2014, Michael Schreiner
+ * @license                      http://mozilla.org/MPL/2.0/ Mozilla Public License 2.0
+ */
+
+
+/**
+ * service-functions to manage/control the node-search
+ * @param {YaioAppBase} appBase                    the appbase to get other services
+ * @returns {Yaio.NodeSearch}                      an service-instance
+ * @augments JsHelferlein.ServiceBase
+ * @constructor
+ */
+Yaio.NodeSearch = function(appBase) {
+    'use strict';
+
+    // my own instance
+    var me = JsHelferlein.ServiceBase(appBase);
+
+    /**
+     * initialize the object
+     */
+    me._init = function() {
+    };
+
+    /**
+     * create the search-uri to use
+     * @param {Object} searchOptions  current searchoptions (filter..) to use
+     * @param {int} page              pagenumber to load
+     * @param {int} pageSize          optional pageSize (if not set searchOptions.pageSize will be used)
+     * @param {int} baseSysUID        optional baseSysUID (if not set searchOptions.baseSysUID will be used)
+     * @returns {String}              new search-uri
+     */
+    me.createSearchUri = function(searchOptions, page, pageSize, baseSysUID) {
+        var additionalFilter = 'classFilter=' + searchOptions.strClassFilter + ';' +
+            'workflowStateFilter=' + searchOptions.strWorkflowStateFilter + ';' +
+            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
+            'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
+            'metaNodeSubTypeFilter=' + searchOptions.strMetaNodeSubTypeFilter + ';';
+        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull',
+            'flgConcreteToDosOnly'
+        ];
+        var additionalSearchField;
+        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
+            additionalSearchField = additionalSearchFields[idx];
+            additionalFilter += additionalSearchField + '=' + searchOptions[additionalSearchField] + ';';
+        }
+
+        return '/search'
+            + '/' + encodeURI(page)
+            + '/' + encodeURI(pageSize > 0 ? pageSize : searchOptions.pageSize)
+            + '/' + encodeURI(searchOptions.searchSort)
+            + '/' + encodeURI(!me.appBase.DataUtils.isEmptyStringValue(baseSysUID) ? baseSysUID : searchOptions.baseSysUID)
+            + '/' + encodeURI(searchOptions.fulltext)
+            + '/' + encodeURI(additionalFilter)
+            + '/';
+    };
+
+
 
     me._init();
     
@@ -3466,6 +3539,17 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
     };
 
     /**
+     * implementation of: call statistics
+     * @abstract
+     * @param {String} statisticName                      name of the statisticfunction
+     * @param {Object} searchOptions                      filters...
+     * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if call succeed or failed
+     */
+    me.callStatistics = function(statisticName, start, end, searchOptions) {
+        me.logNotImplemented();
+    };
+
+    /**
      * implementation of: login to service
      * @abstract
      * @param {Object} credentials                        credentials to login with
@@ -4143,6 +4227,18 @@ Yaio.NodeRepository = function(appBase, config, defaultConfig) {
     };
 
     /**
+     * call statistics
+     * @param {String} statisticName                      name of the statisticfunction
+     * @param {Object} searchOptions                      filters
+     * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if call succeed or failed
+     */
+    me.callStatistics = function(statisticName, start, end, searchOptions) {
+        var msg = 'callStatistics ' + statisticName + 'for searchOptions:' + searchOptions;
+        console.log(msg + ' START');
+        return me._callStatistics(statisticName, start, end, searchOptions);
+    };
+
+    /**
      * implementation of: get symlinked nodedata for basenode
      * @param {Object} basenode                           node-data to get symlink-data
      * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if read succeed or failed with parameters { yaioNodeActionResponse, textStatus, jqXhr}
@@ -4229,6 +4325,16 @@ Yaio.NodeRepository = function(appBase, config, defaultConfig) {
      */
     me._searchNode = function(searchOptions) {
         return me.appBase.YaioDataSourceManager.getCurrentConnection().searchNode(searchOptions);
+    };
+
+    /**
+     * implementation of: callStatistics
+     * @param {String} statisticName                      name of the statisticfunction
+     * @param {Object} searchOptions                      filters
+     * @returns {JQueryPromise<T>|JQueryDeferred<T>|any}  promise if call succeed or failed
+     */
+    me._callStatistics = function(statisticName, start, end, searchOptions) {
+        return me.appBase.YaioDataSourceManager.getCurrentConnection().callStatistics(statisticName, start, end, searchOptions);
     };
 
     me._init();
@@ -4649,68 +4755,49 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
             + '/' + encodeURI(searchOptions.baseSysUID)
             + '/';
 
-        // no empty fulltext for webservice -> we use there another route 
+        // no empty fulltext for webservice -> we use there another route
         if (searchOptions.fulltext && searchOptions.fulltext.length > 0) {
             uri = uri + encodeURI(searchOptions.fulltext) + '/';
         }
-        
-        // copy availiable serverSearchOptions
-        var serverSearchOptions = {};
-        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter', 
-            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
-            'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
-        ];
-        var searchField;
-        for (var idx = 0; idx < searchFields.length; idx++) {
-            searchField = searchFields[idx];
-            if (searchOptions.hasOwnProperty(searchField)) {
-                serverSearchOptions[searchField] = searchOptions[searchField];
-            }
-        }
-        if (serverSearchOptions.hasOwnProperty('strNotNodePraefix')) {
-            // replace * with sql %
-            serverSearchOptions.strNotNodePraefix = serverSearchOptions.strNotNodePraefix.replace(/\*/g, '%');
-        }
-        if (serverSearchOptions.hasOwnProperty('strMetaNodeTypeTagsFilter')) {
-            // replace space with ,
-            serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
-        }
-        // convert dateValues
-        searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
-        ];
-        var value, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
-        for (idx = 0; idx < searchFields.length; idx++) {
-            searchField = searchFields[idx];
-            value = serverSearchOptions[searchField];
-            if (serverSearchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
-                if (typeof value === 'string') {
-                    lstDateTime = value.split(' ');
-                    lstDate = lstDateTime[0].split('.');
-                    strTime = '12:00:00';
-                    if (searchField.match(/.*GE$/)) {
-                        strTime = '00:00:00';
-                    } else if (searchField.match(/.*LE$/)) {
-                        strTime = '23:59:59';
-                    }
 
-                    if (lstDateTime.length > 1) {
-                        strTime = lstDateTime[1] + ':00';
-                    }
-                    newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
-                    newDate = new Date(newDateTimeStr);
-                    value = newDate.getTime();
-                } else if (typeof value === 'object') {
-                    value = value.getTime();
-                }
-                serverSearchOptions[searchField] = value;
-            }
-        }
+        // copy availiable serverSearchOptions
+        var serverSearchOptions = me._prepareSearchOptions(searchOptions, true);
 
         // load data
         var url = me.config.restSearchUrl + uri;
+        var ajaxCall = function () {
+            return me.appBase.get('Angular.$http').post(url, serverSearchOptions, {
+                withCredentials: true,
+                headers : {
+                    'content-type' : 'application/json;charset=utf-8'
+                }
+            });
+        };
+
+        // do http
+        console.log(msg + ' CALL url:' + url);
+        return ajaxCall();
+    };
+
+    /**
+     * @inheritdoc
+     */
+    me.callStatistics = function(statisticName, start, end, searchOptions) {
+        var msg = '_callStatistics searchOptions: ' + searchOptions;
+        var startDate = me.appBase.YaioBase.parseGermanDate(start);
+        var endDate = me.appBase.YaioBase.parseGermanDate(end);
+        var uri = encodeURI(startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate())
+            + '/' + encodeURI(endDate.getFullYear() + '-' + (endDate.getMonth()+1) + '-' + endDate.getDate())
+            + '/' + encodeURI(searchOptions.baseSysUID)
+            + '/' + encodeURI(searchOptions.fulltext ? searchOptions.fulltext : 'DirtyEmptyFulltextPlaceHolder')
+            + '/';
+
+        var serverSearchOptions = me._prepareSearchOptions(searchOptions, false);
+
+        // load data
+        var url = me.config.restSearchUrl + uri;
+        // TODO
+        url = '/statistics/' + statisticName + '/' + uri;
         var ajaxCall = function () {
             return me.appBase.get('Angular.$http').post(url, serverSearchOptions, {
                     withCredentials: true,
@@ -4849,6 +4936,68 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
             }
         });
     };
+
+    /**
+     * prepare the searchOptions (convert strings to arrays, dates to int...)
+     * @param {Object} searchOptions       filters
+     * @returns {Object}                   prepared filters
+     */
+    me._prepareSearchOptions = function (searchOptions, flgWithDates) {
+        // copy availiable serverSearchOptions
+        var serverSearchOptions = {};
+        var searchFields = ['strTypeFilter', 'strReadIfStatusInListOnly', 'maxEbene', 'strClassFilter', 'strWorkflowStateFilter',
+            'strNotNodePraefix', 'flgConcreteToDosOnly', 'strMetaNodeTypeTagsFilter', 'strMetaNodeSubTypeFilter',
+            'istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
+            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'
+        ];
+
+        var searchField;
+        for (var idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            if (searchOptions.hasOwnProperty(searchField)) {
+                serverSearchOptions[searchField] = searchOptions[searchField];
+            }
+        }
+        if (serverSearchOptions.hasOwnProperty('strNotNodePraefix')) {
+            // replace * with sql %
+            serverSearchOptions.strNotNodePraefix = serverSearchOptions.strNotNodePraefix.replace(/\*/g, '%');
+        }
+        if (serverSearchOptions.hasOwnProperty('strMetaNodeTypeTagsFilter')) {
+            // replace space with ,
+            serverSearchOptions.strMetaNodeTypeTagsFilter = serverSearchOptions.strMetaNodeTypeTagsFilter.replace(/ /g, ',');
+        }
+
+        // convert dateValues
+        searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
+            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
+        ];
+        var value, newDate, defaultTimeStr;
+        for (idx = 0; idx < searchFields.length; idx++) {
+            searchField = searchFields[idx];
+            value = serverSearchOptions[searchField];
+            if (serverSearchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
+                if (typeof value === 'string' || typeof value === 'object') {
+                    defaultTimeStr = '12:00:00';
+                    if (searchField.match(/.*GE$/)) {
+                        defaultTimeStr = '00:00:00';
+                    } else if (searchField.match(/.*LE$/)) {
+                        defaultTimeStr = '23:59:59';
+                    }
+                    newDate = me.appBase.YaioBase.parseGermanDate(value, defaultTimeStr);
+                    value = newDate.getTime();
+                }
+                serverSearchOptions[searchField] = value;
+            }
+            if (!flgWithDates) {
+                serverSearchOptions[searchField] = undefined;
+            }
+
+        }
+
+        return serverSearchOptions;
+    };
+
 
     me._init();
     
@@ -5270,9 +5419,10 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     };
 
     /**
-     * TODO
-     * @param nodeId
-     * @param flgCopy
+     * get node data from nodeId from storage
+     * @param {String} nodeId         nodeId to read data for
+     * @param {Boolean} flgCopy       return a copy or origin
+     * @returns {Object}              node-data for nodeid
      * @private
      */
     me._getNodeDataById = function(nodeId, flgCopy) {
@@ -5301,10 +5451,10 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     };
 
     /**
-     * TODO
-     * @param nodeId
-     * @param flgCopy
-     * @returns {Array}
+     * get children of nodeId from storage
+     * @param {String} nodeId         nodeId to read data for
+     * @param {Boolean} flgCopy       return a copy or origin
+     * @returns {Array}               array of nodeObj with children for nodeid
      * @private
      */
     me._getChildNodesById = function(nodeId, flgCopy) {
@@ -5531,7 +5681,7 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
     };
 
     /**
-     * get node data fro nodeId from storage
+     * get node data from nodeId from storage
      * @param {String} nodeId         nodeId to read data for
      * @param {Boolean} flgCopy       return a copy or origin
      * @returns {Object}              node-data for nodeid
@@ -5792,29 +5942,20 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
         searchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
             'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
-        var value, lstDate, lstDateTime, strTime, newDateTimeStr, newDate;
+        var value, newDate, defaultTimeStr;
         for (idx = 0; idx < searchFields.length; idx++) {
             searchField = searchFields[idx];
             value = searchOptions[searchField];
             if (searchOptions.hasOwnProperty(searchField) && !me.appBase.DataUtils.isEmptyStringValue(value)) {
-                if (typeof value === 'string') {
-                    lstDateTime = value.split(' ');
-                    lstDate = lstDateTime[0].split('.');
-                    strTime = '12:00:00';
+                if (typeof value === 'string' || typeof value === 'object') {
+                    defaultTimeStr = '12:00:00';
                     if (searchField.match(/.*GE$/)) {
-                        strTime = '00:00:00';
+                        defaultTimeStr = '00:00:00';
                     } else if (searchField.match(/.*LE$/)) {
-                        strTime = '23:59:59';
+                        defaultTimeStr = '23:59:59';
                     }
-
-                    if (lstDateTime.length > 1) {
-                        strTime = lstDateTime[1] + ':00';
-                    }
-                    newDateTimeStr = lstDate[1] +'/' + lstDate[0] + '/' + lstDate[2] + ' ' + strTime;
-                    newDate = new Date(newDateTimeStr);
+                    newDate = me.appBase.YaioBase.parseGermanDate(value, defaultTimeStr);
                     value = newDate.getTime();
-                } else if (typeof value === 'object') {
-                    value = value.getTime();
                 }
                 staticSearchOptions[searchField] = value;
             }
@@ -8517,11 +8658,11 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, $rout
      * @returns {String}              new search-uri
      */
     $scope.createSearchUri = function() {
-        var additionalFilter = 'classFilter=' + $scope.searchOptions.strClassFilter + ';' +
-            'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
-            'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';' +
-            'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
+        var newSearchOptions = {};
+        Object.keys($scope.searchOptions).map(function (element) {
+            newSearchOptions[element] = $scope.searchOptions[element];
+        });
+
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
             'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
@@ -8530,25 +8671,11 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, $rout
             additionalSearchField = additionalSearchFields[idx];
             value = $scope.searchOptions[additionalSearchField];
             if (!yaioUtils.getService('DataUtils').isEmptyStringValue(value)) {
-                value = yaioUtils.getService('DataUtils').formatGermanDate(value);
-            } else {
-                value = '';
+                newSearchOptions[additionalSearchField] = yaioUtils.getService('DataUtils').formatGermanDate(value);
             }
-            additionalFilter += additionalSearchField + '=' + value + ';';
         }
-        additionalSearchFields = ['flgConcreteToDosOnly', 'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'];
-        for (idx = 0; idx < additionalSearchFields.length; idx++) {
-            additionalSearchField = additionalSearchFields[idx];
-            additionalFilter += additionalSearchField + '=' + $scope.searchOptions[additionalSearchField] + ';';
-        }
-        return '/search'
-            + '/' + encodeURI('1')
-            + '/' + encodeURI('20')
-            + '/' + encodeURI($scope.searchOptions.searchSort)
-            + '/' + encodeURI($scope.searchOptions.baseSysUID)
-            + '/' + encodeURI($scope.searchOptions.fulltext)
-            + '/' + encodeURI(additionalFilter)
-            + '/';
+
+        return yaioUtils.getService('YaioNodeSearch').createSearchUri(newSearchOptions, 1, 20, $scope.searchOptions.baseSysUID);
     };
     
     /** 
@@ -8682,13 +8809,15 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
 
 
         $scope.chartDataConfigs = {
-            created: { 'label': 'created', 'dateFilterGE': 'createdGE', 'dateFilterLE': 'createdLE', 'strWorkflowStateFilter': ''},
-            startPlanned: { 'label': 'start planned', 'dateFilterGE': 'planStartGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': ''},
-            started: { 'label': 'started', 'dateFilterGE': 'istStartGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': ''},
-            endPlanned: { 'label': 'end planned', 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planEndeLE', 'strWorkflowStateFilter': ''},
-            done: { 'label': 'done', 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istEndeLE', 'strWorkflowStateFilter': 'DONE'},
-            planned: { 'label': 'planned', 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': ''},
-            running: { 'label': 'running', 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': ''}
+            istAufwandPerDay: { 'label': 'istAufwandPerDay', 'calltypes': {'statistic': 'istAufwandPerDay'}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 3},
+            planAufwandPerDay: { 'label': 'planAufwandPerDay', 'calltypes': {'statistic': 'planAufwandPerDay'}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 3},
+            created: { 'label': 'created', 'calltypes': {'search': true}, 'dateFilterGE': 'createdGE', 'dateFilterLE': 'createdLE', 'strWorkflowStateFilter': ''},
+            startPlanned: { 'label': 'start planned', 'calltypes': {'statistic': 'planStartPerDay', 'search': true}, 'dateFilterGE': 'planStartGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            started: { 'label': 'started', 'calltypes': {'statistic': 'istStartPerDay', 'search': true}, 'dateFilterGE': 'istStartGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            endPlanned: { 'label': 'end planned', 'calltypes': {'statistic': 'planEndPerDay', 'search': true}, 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planEndeLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            done: { 'label': 'done', 'calltypes': {'statistic': 'istDonePerDay', 'search': true}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istEndeLE', 'strWorkflowStateFilter': 'DONE', 'statisticReturnIdx': 2},
+            planned: { 'label': 'planned', 'calltypes': {'statistic': 'planRunningPerDay', 'search': true}, 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
+            running: { 'label': 'running', 'calltypes': {'statistic': 'istRunningPerDay', 'search': true}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2}
         };
     };
 
@@ -8719,7 +8848,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
                 tick: {
                 format: '%d.%m.%Y'
             }
-        });
+        }, { 'interval': 'day'});
     };
 
     /**
@@ -8747,7 +8876,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             tick: {
                 format: '%d.%m.%Y'
             }
-        });
+        }, { 'interval': 'week'});
     };
 
     /**
@@ -8775,7 +8904,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
                 tick: {
                 format: '%m.%Y'
             }
-        });
+        }, { 'interval': 'month'});
     };
 
     /**
@@ -8803,7 +8932,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             tick: {
                 format: '%Y'
             }
-        });
+        }, { 'interval': 'year'});
     };
 
     /**
@@ -8812,8 +8941,9 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
      * @param {Array} chartConfigs        chartConfigs from $scope.chartDataConfigs
      * @param {Array} filters             filters to call the server with [germanDate, start, ende, axis-date in ISO)
      * @param {function|string} xFormat   callback-function or formatstring for x-axis of c3.generate
+     * @param {Object} options            additional options (interval...)
      */
-    $scope._generateLineChartDate = function(chartDivSelector, chartConfigs, filters, xFormat) {
+    $scope._generateLineChartDate = function(chartDivSelector, chartConfigs, filters, xFormat, options) {
         var chartId = 'dateChart' + new Date().getTime();
 
         $(chartDivSelector).children().remove();
@@ -8839,12 +8969,22 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             data: {
                 x: 'dates',
                 type: 'area',
-                columns: dataColumns
+                columns: dataColumns,
+                onclick: function (d, element) {
+                    var idx = d.index;
+                    var columnName = d.id;
+                    var chartColumn = this.chartColumns[columnName];
+                    var url = '#' + $scope._createSearchUri(chartColumn.dataPointSearchOptions[idx]);
+                    window.open(url);
+                }
             },
             axis: {
                 x: xFormat
             }
         });
+
+        var chartColumns = {};
+        chart.chartColumns = chartColumns;
 
         for (ci = 0; ci < chartConfigs.length; ci++) {
             var chartConfig = chartConfigs[ci];
@@ -8856,6 +8996,12 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             chartColumn.timeOut = 2000;
             chartColumn.maxTries = 30;
             chartColumn.cur = 0;
+            chartColumn.interval = options.interval;
+            chartColumn.start = filters[0][1];
+            chartColumn.end = filters[filters.length-1][2];
+
+            // add to chartColumns
+            chartColumns[chartConfig.label] = chartColumn;
 
             for (di = 0; di < filters.length; di++) {
                 filter = filters[di];
@@ -8870,7 +9016,15 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             }
 
             // search data
-            $scope._doLineChartSearch(chart, chartColumn);
+            if (!yaioUtils.getService('DataUtils').isUndefinedStringValue(chartConfig.calltypes.statistic) &&
+                options.interval === 'day') {
+                $scope._doLineChartStatisticCall(chart, chartColumn);
+            } else if (chartConfig.calltypes.search === true) {
+                $scope._doLineChartSearch(chart, chartColumn);
+            } else {
+                console.error('unknown calltype:', chartConfig);
+                return;
+            }
             $scope._updateLineChart(chart, chartColumn);
         }
     };
@@ -8912,6 +9066,38 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
     };
 
     /**
+     * execute statistic-call to get value of chartpoints: callback sets chartColumn.dataColumn and chartColumn.dataPointState
+     * @param {Object} chart         chat-object generated by c3.generate
+     * @param {Object} chartColumn   object with fields: dataColumn, chartConfig, dataPointState,
+     *                               dataPointSearchOptions, timeOut, maxTries, cur
+     */
+    $scope._doLineChartStatisticCall = function (chart, chartColumn) {
+        var dataPointSearchOptions = chartColumn.dataPointSearchOptions[0];
+        var chartConfig = chartColumn.chartConfig, value, idx;
+        yaioUtils.getService('YaioNodeRepository').callStatistics(chartConfig.calltypes.statistic, chartColumn.start, chartColumn.end, dataPointSearchOptions)
+            .then(function(angularResponse) {
+                // success handler
+                var values = angularResponse.data.values;
+                values.map(function (element) {
+                    idx = element[0]-1;
+                    value = element[chartConfig.statisticReturnIdx];
+                    value = (value === null ? 0 : Math.round(value * 100) / 100);
+                    chartColumn.dataColumn[idx+1] = value; // because of label as first element
+                    chartColumn.dataPointState[idx] = 1;
+                });
+            }, function(angularResponse) {
+                // error handler
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading nodes with searchOptions: ' + dataPointSearchOptions;
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
+    };
+
+    /**
      * execute search to get values of all chartpoints in chartColumn.dataPointSearchOptions
      * @param {Object} chart         chat-object generated by c3.generate
      * @param {Object} chartColumn   object with fields: dataColumn, chartConfig, dataPointState,
@@ -8935,7 +9121,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         yaioUtils.getService('YaioNodeRepository').searchNode(dataPointSearchOptions)
             .then(function(angularResponse) {
                 // success handler
-                chartColumn.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;
+                chartColumn.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;  // because of label as first element
                 chartColumn.dataPointState[dataPointSearchOptions.curIdx] = 1;
             }, function(angularResponse) {
                 // error handler
@@ -8982,7 +9168,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
     };
 
     /**
-     * TODO
+     * generate a calendar-chart (like github-commit-chart) for full years
      * @param {String} chartDivSelector   jquery-selector to add the chart on
      * @param {String} chartConfigKey     key for chartConfig from $scope.chartDataConfigs
      * @param {Number} before             show x days before baseDate
@@ -8991,10 +9177,10 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
     $scope.generateCalendarChartYear = function(chartDivSelector, chartConfigKey, before, after) {
         var chartConfig = $scope._getChartDataConfig(chartConfigKey);
 
-        if (!before > 0) {
+        if (yaioUtils.getService('DataUtils').isEmptyStringValue(before)) {
             before = 184;
         }
-        if (!after > 0) {
+        if (yaioUtils.getService('DataUtils').isEmptyStringValue(after)) {
             after = 184;
         }
 
@@ -9010,7 +9196,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
     };
 
     /**
-     * TODO
+     * generate a calendar-chart (like github-commit-chart) for full years
      * @param {String} chartDivSelector   jquery-selector to add the chart on
      * @param {Array} filters             dateFilters array
      * @param {Object} chartConfig        chartConfig from $scope.chartDataConfigs
@@ -9032,7 +9218,6 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
             cellSize = 17; // cell size
         $scope.cellSize = cellSize;
 
-//        var format = d3.time.format('%Y-%m-%d');
         var format = d3.time.format('%d.%m.%Y');
 
         var startYear = yaioUtils.getService('YaioBase').parseGermanDate(filters[0][1]).getFullYear();
@@ -9080,6 +9265,8 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         chartColumn.timeOut = 2000;
         chartColumn.maxTries = 10;
         chartColumn.cur = 0;
+        chartColumn.start = filters[0][1];
+        chartColumn.end = filters[filters.length-1][2];
 
         for (di = 0; di < filters.length; di++) {
             filter = filters[di];
@@ -9096,8 +9283,71 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         }
 
         // search data
-        $scope._doCalendarChartSearch(rect, chartColumn);
+        if (!yaioUtils.getService('DataUtils').isUndefinedStringValue(chartConfig.calltypes.statistic)) {
+            $scope._doCalendarChartStatisticCall(rect, chartColumn);
+        } else if (chartConfig.calltypes.search === true) {
+            $scope._doCalendarChartSearch(rect, chartColumn);
+        } else {
+            console.error('unknown calltype:', chartConfig);
+            return;
+        }
     };
+
+    /**
+     * execute statistic-call to get value of chartpoints: callback sets chartColumn.dataColumn and chartColumn.dataPointState
+     * @param {Object} chart         chat-object generated by c3.generate
+     * @param {Object} chartColumn   object with fields: dataColumn, chartConfig, dataPointState,
+     *                               dataPointSearchOptions, timeOut, maxTries, cur
+     */
+    $scope._doCalendarChartStatisticCall = function (chart, chartColumn) {
+        var dataPointSearchOptions;
+        chartColumn.dataPointSearchOptions.map(function (dataPointSearchOptions) {
+            chart.filter(function(d) { return d === dataPointSearchOptions.date; })
+                .attr('class', function(d) { return 'day ' + $scope._getColorStyle(0); });
+        });
+
+        dataPointSearchOptions = chartColumn.dataPointSearchOptions[0];
+        var chartConfig = chartColumn.chartConfig, value, idx, date, dateParts;
+        yaioUtils.getService('YaioNodeRepository').callStatistics(chartConfig.calltypes.statistic, chartColumn.start, chartColumn.end, dataPointSearchOptions)
+            .then(function(angularResponse) {
+                // success handler
+                var values = angularResponse.data.values;
+                values.map(function (element) {
+                    idx = element[0]-1;
+                    dateParts = element[1].split('-');
+                    date = dateParts[2] + '.' + dateParts[1] + '.' + dateParts[0];
+                    value = element[chartConfig.statisticReturnIdx];
+                    value = (value === null ? 0 : Math.round(value * 100) / 100);
+                    chartColumn.dataColumn[idx+1] = value; // because of label as first element
+                    chartColumn.dataPointState[idx] = 1;
+                    var url = '#' + $scope._createSearchUri(chartColumn.dataPointSearchOptions[idx]);
+
+                    var rect = chart.filter(function(d) {
+                        return d === date;
+                    });
+                    rect.attr('class', function(d) {
+                            return 'day ' + $scope._getColorStyle(value);
+                        })
+                        .on('click', function () {
+                            window.open(url);
+                        });
+                    rect.select('title')
+                        .text(function(d) {
+                            return d + ': ' + value + ' ' + dataPointSearchOptions.label + ' [click to search]';
+                        });
+                });
+            }, function(angularResponse) {
+                // error handler
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading nodes with searchOptions: ' + dataPointSearchOptions;
+                yaioUtils.getService('Logger').logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                yaioUtils.getService('Logger').logError(message, false);
+            });
+    };
+
 
     /**
      * execute search to get values of all chartpoints in chartColumn.dataPointSearchOptions
@@ -9123,7 +9373,7 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         yaioUtils.getService('YaioNodeRepository').searchNode(dataPointSearchOptions)
             .then(function(angularResponse) {
                 // success handler
-                chartColumn.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;
+                chartColumn.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;  // because of label as first element
                 chartColumn.dataPointState[dataPointSearchOptions.curIdx] = 1;
                 chart.filter(function(d) { return d === dataPointSearchOptions.date; })
                     .attr('class', function(d) { return 'day ' + $scope._getColorStyle(angularResponse.data.count); })
@@ -9168,6 +9418,19 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
         return $scope._getColorStyleForRange(value);
     };
 
+    /**
+     * create the search-uri to use
+     * @param {Object} searchOptions  current searchoptions (filter..) to use
+     * @returns {String}              new search-uri
+     */
+    $scope._createSearchUri = function(searchOptions) {
+        var newSearchOptions = {};
+        Object.keys(searchOptions).map(function (element) {
+            newSearchOptions[element] = searchOptions[element];
+        });
+
+        return yaioUtils.getService('YaioNodeSearch').createSearchUri(newSearchOptions, 1, 20, newSearchOptions.baseSysUID);
+    };
 
 
     // init
@@ -10303,30 +10566,15 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
      * @returns {String}              new search-uri
      */
     $scope.createSearchUri = function(searchOptions, page, pageSize, baseSysUID) {
-        var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
-            'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
-            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
-            'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
-        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull',
-            'flgConcreteToDosOnly'
-        ];
-        var additionalSearchField;
-        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
-            additionalSearchField = additionalSearchFields[idx];
-            additionalFilter += additionalSearchField + '=' + searchOptions[additionalSearchField] + ';';
-        }
+        var newSearchOptions = {};
+        Object.keys(searchOptions).map(function (element) {
+            newSearchOptions[element] = searchOptions[element];
+        });
+        newSearchOptions.strClassFilter = searchOptions.arrClassFilter.join(',');
+        newSearchOptions.strWorkflowStateFilter = searchOptions.arrWorkflowStateFilter.join(',');
+        newSearchOptions.strMetaNodeSubTypeFilter = searchOptions.arrMetaNodeSubTypeFilter.join(',');
 
-        return '/search'
-            + '/' + encodeURI(page)
-            + '/' + encodeURI(pageSize > 0 ? pageSize : searchOptions.pageSize)
-            + '/' + encodeURI(searchOptions.searchSort)
-            + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : searchOptions.baseSysUID)
-            + '/' + encodeURI(searchOptions.fulltext)
-            + '/' + encodeURI(additionalFilter)
-            + '/';
+        return yaioUtils.getService('YaioNodeSearch').createSearchUri(newSearchOptions, page, pageSize, baseSysUID);
     };
     
     /** 
