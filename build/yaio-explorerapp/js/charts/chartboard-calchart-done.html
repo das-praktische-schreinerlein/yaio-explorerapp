@@ -1,7 +1,7 @@
 <div ng-init="chartOptions.label = 'label.chartboard.calChartDone';
               chartOptions.praefix = 'calChartDone';
-              chartOptions.chartId = 'workboard-chart-cal-done';
+              chartOptions.chartId = 'chartboard-chart-cal-done';
               chartOptions.chartGenerator = generateCalendarChartYear;
               chartOptions.chartArgs = ['#' + chartOptions.chartId + ' .chart', 'done', 365, 1];">
-    <div id="workboard-chart-cal-done" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-line.html'"></div>
+    <div id="chartboard-chart-cal-done" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/charts/chartboard-line.html'"></div>
  </div>

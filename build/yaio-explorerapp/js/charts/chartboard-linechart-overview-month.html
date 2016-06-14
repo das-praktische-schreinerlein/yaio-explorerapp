@@ -1,7 +1,7 @@
 <div ng-init="chartOptions.label = 'label.chartboard.chartOverviewMonth';
               chartOptions.praefix = 'chartOverviewMonth';
-              chartOptions.chartId = 'workboard-chart-overview-month';
+              chartOptions.chartId = 'chartboard-chart-overview-month';
               chartOptions.chartGenerator = generateLineChartMonth;
               chartOptions.chartArgs = ['#' + chartOptions.chartId + ' .chart', ['done', 'running', 'planned'], 12, 6];">
-    <div id="workboard-chart-overview-month" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/dashboard/chartboard-line.html'"></div>
+    <div id="chartboard-chart-overview-month" ng-include="yaioUtils.getConfig().resBaseUrl + 'js/charts/chartboard-line.html'"></div>
  </div>

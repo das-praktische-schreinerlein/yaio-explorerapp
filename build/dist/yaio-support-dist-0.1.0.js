@@ -313,6 +313,7 @@ window.YaioAppBase = function() {
         me.configureService('Yaio.Layout', function() { return Yaio.Layout(me); });
         me.configureService('Yaio.NodeEditor', function() { return Yaio.NodeEditor(me); });
         me.configureService('Yaio.NodeSearch', function() { return Yaio.NodeSearch(me); });
+        me.configureService('Yaio.NodeCharts', function() { return Yaio.NodeCharts(me); });
         me.configureService('Yaio.MarkdownConverter', function() { return Yaio.MarkdownConverter(me); });
         me.configureService('Yaio.MarkdownRenderer', function() { return Yaio.MarkdownRenderer(me); });
         me.configureService('Yaio.ExplorerConverter', function() { return Yaio.ExplorerConverter(me); });
@@ -352,6 +353,7 @@ window.YaioAppBase = function() {
         me.configureService('YaioLayout', function() { return me.get('Yaio.Layout'); });
         me.configureService('YaioNodeEditor', function() { return me.get('Yaio.NodeEditor'); });
         me.configureService('YaioNodeSearch', function() { return me.get('Yaio.NodeSearch'); });
+        me.configureService('YaioNodeCharts', function() { return me.get('Yaio.NodeCharts'); });
         me.configureService('YaioMarkdownConverter', function() { return me.get('YmfMarkdownConverter'); });
         me.configureService('YaioMarkdownRenderer', function() { return me.get('YmfMarkdownRenderer'); });
         me.configureService('YaioExplorerConverter', function() { return me.get('Yaio.ExplorerConverter'); });
@@ -514,6 +516,86 @@ Yaio.Base = function(appBase) {
         }
 
         return res;
+    };
+
+    me.now = function() {
+        var date = new Date();
+        return date;
+    };
+
+    me.getDayOfWeek = function(date, dayOfWeek) {
+        date = new Date(date.getTime ());
+        var weekDay = date.getDay();
+        if (weekDay === 0) {
+            weekDay = 7;
+        }
+        date.setDate(date.getDate() + (dayOfWeek - weekDay) % 7);
+        return date;
+    };
+
+    me.getWithTime00 = function(date) {
+        date = new Date(date.getTime ());
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
+    };
+
+    me.getWithTime24 = function(date) {
+        date = new Date(date.getTime ());
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+        date.setMilliseconds(999);
+        return date;
+    };
+
+    me.getFirstDayOfMonth = function(date) {
+        date = new Date(date.getTime ());
+        date.setFullYear(date.getFullYear(), date.getMonth(), 1);
+        return date;
+    };
+
+    me.getLastDayOfMonth = function(date) {
+        date = new Date(date.getTime ());
+        date.setFullYear(date.getFullYear(), date.getMonth()+1, 0);
+        return date;
+    };
+
+    me.getLastMonth = function(date) {
+        date = new Date(date.getTime ());
+        date.setFullYear(date.getFullYear(), date.getMonth()-1, date.getDate());
+        return date;
+    };
+
+    me.getNextMonth = function(date) {
+        date = new Date(date.getTime ());
+        date.setFullYear(date.getFullYear(), date.getMonth()+1, date.getDate());
+        return date;
+    };
+
+    me.getStartOfTime = function() {
+        var date = new Date();
+        date.setFullYear('1976', '04', '28');
+        return date;
+    };
+
+    /**
+     * calc parentHierarchy for node
+     * @param {Object} node          node to get parent-hierarchy
+     * @returns {Array}              parent-objects
+     */
+    me.getNodeHierarchy = function(node) {
+        // create nodehierarchy
+        var nodeHierarchy = [];
+        var parentNode = node.parentNode;
+        while (!me.appBase.DataUtils.isEmptyStringValue(parentNode)) {
+            nodeHierarchy.push(parentNode);
+            parentNode = parentNode.parentNode;
+        }
+        nodeHierarchy.reverse();
+        return nodeHierarchy;
     };
 
     me._init();
