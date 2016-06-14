@@ -312,9 +312,10 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     };
 
     /**
-     * TODO
-     * @param nodeId
-     * @param flgCopy
+     * get node data from nodeId from storage
+     * @param {String} nodeId         nodeId to read data for
+     * @param {Boolean} flgCopy       return a copy or origin
+     * @returns {Object}              node-data for nodeid
      * @private
      */
     me._getNodeDataById = function(nodeId, flgCopy) {
@@ -343,10 +344,10 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     };
 
     /**
-     * TODO
-     * @param nodeId
-     * @param flgCopy
-     * @returns {Array}
+     * get children of nodeId from storage
+     * @param {String} nodeId         nodeId to read data for
+     * @param {Boolean} flgCopy       return a copy or origin
+     * @returns {Array}               array of nodeObj with children for nodeid
      * @private
      */
     me._getChildNodesById = function(nodeId, flgCopy) {

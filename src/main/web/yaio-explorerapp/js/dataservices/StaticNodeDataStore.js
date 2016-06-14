@@ -113,7 +113,7 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
     };
 
     /**
-     * get node data fro nodeId from storage
+     * get node data from nodeId from storage
      * @param {String} nodeId         nodeId to read data for
      * @param {Boolean} flgCopy       return a copy or origin
      * @returns {Object}              node-data for nodeid
