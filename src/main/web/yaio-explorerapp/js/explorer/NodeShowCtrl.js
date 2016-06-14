@@ -172,7 +172,7 @@ yaioApp.controller('NodeShowCtrl', function($rootScope, $scope, $location, $rout
             console.log('NodeShowCtrl - OK loading nodes:' + yaioNodeActionResponse.stateMsg);
             $scope.node = yaioNodeActionResponse.node;
 
-            $scope.nodeHierarchy = yaioUtils.getNodeHierarchy(yaioNodeActionResponse.node);
+            $scope.nodeHierarchy = yaioUtils.getService('YaioBase').getNodeHierarchy(yaioNodeActionResponse.node);
 
             // load only when templates loaded, because we need some time for rendering angular :-(
             var tries = 20;

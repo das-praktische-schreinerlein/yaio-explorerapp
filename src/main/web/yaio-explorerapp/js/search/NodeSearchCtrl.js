@@ -227,7 +227,7 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
         yaioUtils.getService('YaioNodeRepository').getNodeById($scope.searchOptions.baseSysUID, {})
             .then(function sucess(angularResponse) {
                 // handle success
-                $scope.rootNodeHierarchy = yaioUtils.getNodeHierarchy(angularResponse.data.node);
+                $scope.rootNodeHierarchy = yaioUtils.getService('YaioBase').getNodeHierarchy(angularResponse.data.node);
                 $scope.rootNodeHierarchy.push(angularResponse.data.node);
                 $scope.rootNodeChildren = angularResponse.data.childNodes;
             }, function error(angularResponse) {
