@@ -72,11 +72,11 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, $rout
      * @returns {String}              new search-uri
      */
     $scope.createSearchUri = function() {
-        var additionalFilter = 'classFilter=' + $scope.searchOptions.strClassFilter + ';' +
-            'workflowStateFilter=' + $scope.searchOptions.strWorkflowStateFilter + ';' +
-            'notNodePraefix=' + $scope.searchOptions.strNotNodePraefix + ';' +
-            'metaNodeTypeTagsFilter=' + $scope.searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + $scope.searchOptions.strMetaNodeSubTypeFilter + ';';
+        var newSearchOptions = {};
+        Object.keys($scope.searchOptions).map(function (element) {
+            newSearchOptions[element] = $scope.searchOptions[element];
+        });
+
         var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
             'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE'
         ];
@@ -85,25 +85,11 @@ yaioApp.controller('DashBoardNodeSearchCtrl', function($rootScope, $scope, $rout
             additionalSearchField = additionalSearchFields[idx];
             value = $scope.searchOptions[additionalSearchField];
             if (!yaioUtils.getService('DataUtils').isEmptyStringValue(value)) {
-                value = yaioUtils.getService('DataUtils').formatGermanDate(value);
-            } else {
-                value = '';
+                newSearchOptions[additionalSearchField] = yaioUtils.getService('DataUtils').formatGermanDate(value);
             }
-            additionalFilter += additionalSearchField + '=' + value + ';';
         }
-        additionalSearchFields = ['flgConcreteToDosOnly', 'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull'];
-        for (idx = 0; idx < additionalSearchFields.length; idx++) {
-            additionalSearchField = additionalSearchFields[idx];
-            additionalFilter += additionalSearchField + '=' + $scope.searchOptions[additionalSearchField] + ';';
-        }
-        return '/search'
-            + '/' + encodeURI('1')
-            + '/' + encodeURI('20')
-            + '/' + encodeURI($scope.searchOptions.searchSort)
-            + '/' + encodeURI($scope.searchOptions.baseSysUID)
-            + '/' + encodeURI($scope.searchOptions.fulltext)
-            + '/' + encodeURI(additionalFilter)
-            + '/';
+
+        return yaioUtils.getService('YaioNodeSearch').createSearchUri(newSearchOptions, 1, 20, $scope.searchOptions.baseSysUID);
     };
     
     /** 

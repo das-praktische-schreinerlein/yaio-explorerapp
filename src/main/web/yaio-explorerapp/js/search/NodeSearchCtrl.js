@@ -180,30 +180,15 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
      * @returns {String}              new search-uri
      */
     $scope.createSearchUri = function(searchOptions, page, pageSize, baseSysUID) {
-        var additionalFilter = 'classFilter=' + searchOptions.arrClassFilter.join(',') + ';' +
-            'workflowStateFilter=' + searchOptions.arrWorkflowStateFilter.join(',') + ';' +
-            'notNodePraefix=' + searchOptions.strNotNodePraefix + ';' +
-            'metaNodeTypeTagsFilter=' + searchOptions.strMetaNodeTypeTagsFilter + ';' +
-            'metaNodeSubTypeFilter=' + searchOptions.arrMetaNodeSubTypeFilter.join(',') + ';';
-        var additionalSearchFields = ['istStartGE', 'istStartLE', 'istEndeGE', 'istEndeLE',
-            'planStartGE', 'planStartLE', 'planEndeGE', 'planEndeLE',
-            'istStartIsNull', 'istEndeIsNull', 'planStartIsNull', 'planEndeIsNull',
-            'flgConcreteToDosOnly'
-        ];
-        var additionalSearchField;
-        for (var idx = 0; idx < additionalSearchFields.length; idx++) {
-            additionalSearchField = additionalSearchFields[idx];
-            additionalFilter += additionalSearchField + '=' + searchOptions[additionalSearchField] + ';';
-        }
+        var newSearchOptions = {};
+        Object.keys(searchOptions).map(function (element) {
+            newSearchOptions[element] = searchOptions[element];
+        });
+        newSearchOptions.strClassFilter = searchOptions.arrClassFilter.join(',');
+        newSearchOptions.strWorkflowStateFilter = searchOptions.arrWorkflowStateFilter.join(',');
+        newSearchOptions.strMetaNodeSubTypeFilter = searchOptions.arrMetaNodeSubTypeFilter.join(',');
 
-        return '/search'
-            + '/' + encodeURI(page)
-            + '/' + encodeURI(pageSize > 0 ? pageSize : searchOptions.pageSize)
-            + '/' + encodeURI(searchOptions.searchSort)
-            + '/' + encodeURI(!yaioUtils.getService('DataUtils').isEmptyStringValue(baseSysUID) ? baseSysUID : searchOptions.baseSysUID)
-            + '/' + encodeURI(searchOptions.fulltext)
-            + '/' + encodeURI(additionalFilter)
-            + '/';
+        return yaioUtils.getService('YaioNodeSearch').createSearchUri(newSearchOptions, page, pageSize, baseSysUID);
     };
     
     /** 
