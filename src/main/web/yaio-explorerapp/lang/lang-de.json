@@ -272,6 +272,7 @@
     "label.chartboard.calChartDone": "Tagesübersicht erledigte Aufgaben",
     "label.chartboard.calChartPlanned": "Tagesübersicht geplante Aufgaben",
     "label.chartboard.calChartRunning": "Tagesübersicht laufende Aufgaben",
+    "label.chartboard.chartAufwandDay": "Geplanter und realer Aufwand pro Tag (h werden über gesamten Aufgabenzeitraum verteilt)",
     "label.chartboard.chartOverviewDay": "Tagesvergleich laufende/geplante/erledigte Aufgaben",
     "label.chartboard.chartOverviewWeek": "Wochenvergleich laufende/geplante/erledigte Aufgaben",
     "label.chartboard.chartOverviewMonth": "Monatsvergleich laufende/geplante/erledigte Aufgaben",
