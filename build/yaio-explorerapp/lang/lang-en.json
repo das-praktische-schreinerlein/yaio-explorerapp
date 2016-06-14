@@ -261,6 +261,7 @@
     "label.chartboard.calChartDone": "overview tasks done",
     "label.chartboard.calChartPlanned": "overview tasks planned",
     "label.chartboard.calChartRunning": "overview tasks running",
+    "label.chartboard.chartAufwandDay": "planned and used effort per day (h are spread on the whole timeframe of the task)",
     "label.chartboard.chartOverviewDay": "daily compare: running/planned/done tasks",
     "label.chartboard.chartOverviewWeek": "weekly compare: running/planned/done tasks",
     "label.chartboard.chartOverviewMonth": "monthly compare: running/planned/done tasks",
