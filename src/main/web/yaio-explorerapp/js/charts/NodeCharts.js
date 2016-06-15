@@ -54,6 +54,39 @@ Yaio.NodeCharts = function(appBase) {
     };
 
     /**
+     * checks that all datasets are available
+     * @param {Array} chartConfigKeys     keys for chartConfig from $scope.chartDataConfigs
+     * returns {Boolean}                  true if min one dataset available
+     */
+    me.checkDataSetsAvailability = function(chartConfigKeys) {
+        var availability = true;
+        chartConfigKeys.map(function (key) {availability = availability && me.checkDataSetAvailability(key);} );
+        return availability;
+    };
+
+    /**
+     * checks that dataset are available
+     * @param {String} chartConfigKey     key for chartConfig from me.chartDataConfigs
+     * returns {Boolean}                  true if dataset available
+     */
+    me.checkDataSetAvailability = function(chartConfigKey) {
+        var config = me._getChartDataConfig(chartConfigKey);
+        if (me.appBase.DataUtils.isUndefined(config)) {
+            return false;
+        }
+
+        if (config.calltypes.search === true) {
+            return true;
+        }
+
+        if (!me.appBase.DataUtils.isUndefinedStringValue(config.calltypes.statistic)) {
+            return me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false);
+        }
+
+        return false;
+    };
+
+    /**
      * generate a chart with (chartConfigKeys) for x days around baseDate
      * @param {String} chartDivSelector   jquery-selector to add the chart on
      * @param {Array} chartConfigKeys     keys for chartConfig from me.chartDataConfigs
@@ -254,6 +287,7 @@ Yaio.NodeCharts = function(appBase) {
 
             // search data
             if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic) &&
+                me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false) &&
                 options.interval === 'day') {
                 me._doLineChartStatisticCall(chart, chartColumn);
             } else if (chartConfig.calltypes.search === true) {
@@ -487,7 +521,8 @@ Yaio.NodeCharts = function(appBase) {
         }
 
         // search data
-        if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic)) {
+        if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic) &&
+                me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false)) {
             me._doCalendarChartStatisticCall(rect, chartColumn);
         } else if (chartConfig.calltypes.search === true) {
             me._doCalendarChartSearch(rect, chartColumn);

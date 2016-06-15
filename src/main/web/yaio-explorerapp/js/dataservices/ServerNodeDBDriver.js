@@ -377,9 +377,7 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         var serverSearchOptions = me._prepareSearchOptions(searchOptions, false);
 
         // load data
-        var url = me.config.restSearchUrl + uri;
-        // TODO
-        url = '/statistics/' + statisticName + '/' + uri;
+        var url = me.config.restStatisticBaseUrl + statisticName + '/' + uri;
         var ajaxCall = function () {
             return me.appBase.get('Angular.$http').post(url, serverSearchOptions, {
                     withCredentials: true,

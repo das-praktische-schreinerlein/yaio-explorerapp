@@ -1,4 +1,4 @@
-<div class='box yaio-box'>
+<div class='box yaio-box' ng-if="checkDataSetsAvailability(chartOptions.chartArgs[1]);">
     <div class='boxline boxline-dashboard boxline-dashboard-{{chartOptions.praefix}} boxline-dashboard-{{chartOptions.praefix}}' id="ue_chartboard_{{chartOptions.praefix}}">
         <span lang='tech' translate="{{chartOptions.label}}">{{chartOptions.label}}</span>
     </div>

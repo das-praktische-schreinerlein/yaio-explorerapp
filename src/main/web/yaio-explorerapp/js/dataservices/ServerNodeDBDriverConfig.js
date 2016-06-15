@@ -59,7 +59,8 @@ Yaio.ServerNodeDBDriverConfig = function(urlBase, name, desc) {
         me.restRemoveUrl                = me.restBaseUrl + 'delete/';
         me.restSearchUrl                = me.restBaseUrl + 'search/';
         me.restExportsBaseUrl           = me.urlBase + '/exports/';
-        
+        me.restStatisticBaseUrl           = me.urlBase + '/statistics/';
+
         // dms
         me.dmsDownloadUrl               = me.urlBase + '/dms/download/';
         me.dmsEmbedUrl                  = me.urlBase + '/dms/embed/';

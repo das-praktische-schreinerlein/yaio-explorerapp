@@ -452,7 +452,7 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
             if (staticSearchOptions.notPraefix.length > 0 &&
                 me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodePraefix, staticSearchOptions.notPraefix, true, true)) {
                 // blacklisted praefixes found
-                console.log('fulltextSearch ignore nodeId ' + nodeId + ' because of ' + node.metaNodePraefix);
+                //console.log('fulltextSearch ignore nodeId ' + nodeId + ' because of ' + node.metaNodePraefix);
                 continue;
             }
 

@@ -4453,6 +4453,8 @@ Yaio.ServerAccessManager = function(appBase, config, defaultConfig) {
         me.setAvailiableNodeAction('remove', me.config.restRemoveUrl);
         me.setAvailiableNodeAction('search', me.config.restSearchUrl);
         me.setAvailiableNodeAction('dashboard', '#/dashboard');
+        me.setAvailiableNodeAction('chartboard', '#/chartboard');
+        me.setAvailiableNodeAction('statistics', me.config.restStatisticBaseUrl);
 
         if (me.config.dmsAvailable) {
             me.setAvailiableNodeAction('dmsDownload', me.config.dmsDownloadUrl);
@@ -4877,9 +4879,7 @@ Yaio.ServerNodeDBDriver = function(appBase, config, defaultConfig) {
         var serverSearchOptions = me._prepareSearchOptions(searchOptions, false);
 
         // load data
-        var url = me.config.restSearchUrl + uri;
-        // TODO
-        url = '/statistics/' + statisticName + '/' + uri;
+        var url = me.config.restStatisticBaseUrl + statisticName + '/' + uri;
         var ajaxCall = function () {
             return me.appBase.get('Angular.$http').post(url, serverSearchOptions, {
                     withCredentials: true,
@@ -5133,7 +5133,8 @@ Yaio.ServerNodeDBDriverConfig = function(urlBase, name, desc) {
         me.restRemoveUrl                = me.restBaseUrl + 'delete/';
         me.restSearchUrl                = me.restBaseUrl + 'search/';
         me.restExportsBaseUrl           = me.urlBase + '/exports/';
-        
+        me.restStatisticBaseUrl           = me.urlBase + '/statistics/';
+
         // dms
         me.dmsDownloadUrl               = me.urlBase + '/dms/download/';
         me.dmsEmbedUrl                  = me.urlBase + '/dms/embed/';
@@ -6102,7 +6103,7 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
             if (staticSearchOptions.notPraefix.length > 0 &&
                 me.appBase.get('YaioExportedData').VolltextTreffer(node.metaNodePraefix, staticSearchOptions.notPraefix, true, true)) {
                 // blacklisted praefixes found
-                console.log('fulltextSearch ignore nodeId ' + nodeId + ' because of ' + node.metaNodePraefix);
+                //console.log('fulltextSearch ignore nodeId ' + nodeId + ' because of ' + node.metaNodePraefix);
                 continue;
             }
 
@@ -8584,6 +8585,20 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
     };
 
     /**
+     * checks that all datasets are available
+     * @param {Array|String} chartConfigKeys     keys for chartConfig from $scope.chartDataConfigs
+     * returns {Boolean}                  true if min one dataset available
+     */
+    $scope.checkDataSetsAvailability = function(chartConfigKeys) {
+        if (typeof chartConfigKeys === 'string') {
+            return $scope.yaioUtils.getService('YaioNodeCharts').checkDataSetsAvailability([chartConfigKeys]);
+        } else if (typeof chartConfigKeys === 'object') {
+            return $scope.yaioUtils.getService('YaioNodeCharts').checkDataSetsAvailability(chartConfigKeys);
+        }
+        return false;
+    };
+
+    /**
      * create search-options to call YaioNodeRepository.searchNode
      * @returns {Object}      searchOptions for YaioNodeRepository.searchNode
      */
@@ -8658,6 +8673,39 @@ Yaio.NodeCharts = function(appBase) {
             planned: { 'label': 'planned', 'calltypes': {'statistic': 'planRunningPerDay', 'search': true}, 'dateFilterGE': 'planEndeGE', 'dateFilterLE': 'planStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2},
             running: { 'label': 'running', 'calltypes': {'statistic': 'istRunningPerDay', 'search': true}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 2}
         };
+    };
+
+    /**
+     * checks that all datasets are available
+     * @param {Array} chartConfigKeys     keys for chartConfig from $scope.chartDataConfigs
+     * returns {Boolean}                  true if min one dataset available
+     */
+    me.checkDataSetsAvailability = function(chartConfigKeys) {
+        var availability = true;
+        chartConfigKeys.map(function (key) {availability = availability && me.checkDataSetAvailability(key);} );
+        return availability;
+    };
+
+    /**
+     * checks that dataset are available
+     * @param {String} chartConfigKey     key for chartConfig from me.chartDataConfigs
+     * returns {Boolean}                  true if dataset available
+     */
+    me.checkDataSetAvailability = function(chartConfigKey) {
+        var config = me._getChartDataConfig(chartConfigKey);
+        if (me.appBase.DataUtils.isUndefined(config)) {
+            return false;
+        }
+
+        if (config.calltypes.search === true) {
+            return true;
+        }
+
+        if (!me.appBase.DataUtils.isUndefinedStringValue(config.calltypes.statistic)) {
+            return me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false);
+        }
+
+        return false;
     };
 
     /**
@@ -8861,6 +8909,7 @@ Yaio.NodeCharts = function(appBase) {
 
             // search data
             if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic) &&
+                me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false) &&
                 options.interval === 'day') {
                 me._doLineChartStatisticCall(chart, chartColumn);
             } else if (chartConfig.calltypes.search === true) {
@@ -9094,7 +9143,8 @@ Yaio.NodeCharts = function(appBase) {
         }
 
         // search data
-        if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic)) {
+        if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic) &&
+                me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false)) {
             me._doCalendarChartStatisticCall(rect, chartColumn);
         } else if (chartConfig.calltypes.search === true) {
             me._doCalendarChartSearch(rect, chartColumn);

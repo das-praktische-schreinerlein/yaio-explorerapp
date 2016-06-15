@@ -41,6 +41,8 @@ Yaio.ServerAccessManager = function(appBase, config, defaultConfig) {
         me.setAvailiableNodeAction('remove', me.config.restRemoveUrl);
         me.setAvailiableNodeAction('search', me.config.restSearchUrl);
         me.setAvailiableNodeAction('dashboard', '#/dashboard');
+        me.setAvailiableNodeAction('chartboard', '#/chartboard');
+        me.setAvailiableNodeAction('statistics', me.config.restStatisticBaseUrl);
 
         if (me.config.dmsAvailable) {
             me.setAvailiableNodeAction('dmsDownload', me.config.dmsDownloadUrl);

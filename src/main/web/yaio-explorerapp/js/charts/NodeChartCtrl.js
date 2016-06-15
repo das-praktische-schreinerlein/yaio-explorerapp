@@ -121,6 +121,20 @@ yaioApp.controller('NodeChartCtrl', function($rootScope, $scope, $routeParams, y
     };
 
     /**
+     * checks that all datasets are available
+     * @param {Array|String} chartConfigKeys     keys for chartConfig from $scope.chartDataConfigs
+     * returns {Boolean}                  true if min one dataset available
+     */
+    $scope.checkDataSetsAvailability = function(chartConfigKeys) {
+        if (typeof chartConfigKeys === 'string') {
+            return $scope.yaioUtils.getService('YaioNodeCharts').checkDataSetsAvailability([chartConfigKeys]);
+        } else if (typeof chartConfigKeys === 'object') {
+            return $scope.yaioUtils.getService('YaioNodeCharts').checkDataSetsAvailability(chartConfigKeys);
+        }
+        return false;
+    };
+
+    /**
      * create search-options to call YaioNodeRepository.searchNode
      * @returns {Object}      searchOptions for YaioNodeRepository.searchNode
      */
