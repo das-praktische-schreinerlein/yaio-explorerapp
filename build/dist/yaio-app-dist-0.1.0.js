@@ -8728,7 +8728,7 @@ Yaio.NodeCharts = function(appBase) {
             filters.push([dateStr, dateStr, dateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        me._generateLineChartDate(chartDivSelector, chartConfigs, filters, {
+        me.generateLineDateChartFull(chartDivSelector, chartConfigs, filters, {
             type: 'timeseries',
             tick: {
                 format: '%d.%m.%Y'
@@ -8758,7 +8758,7 @@ Yaio.NodeCharts = function(appBase) {
             filters.push([dateStr, startDateStr, endDateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        me._generateLineChartDate(chartDivSelector, chartConfigs, filters, {
+        me.generateLineDateChartFull(chartDivSelector, chartConfigs, filters, {
             type: 'timeseries',
             tick: {
                 format: '%d.%m.%Y'
@@ -8788,7 +8788,7 @@ Yaio.NodeCharts = function(appBase) {
             filters.push([dateStr, startDateStr, endDateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        me._generateLineChartDate(chartDivSelector, chartConfigs, filters, {
+        me.generateLineDateChartFull(chartDivSelector, chartConfigs, filters, {
             type: 'timeseries',
             tick: {
                 format: '%m.%Y'
@@ -8818,7 +8818,7 @@ Yaio.NodeCharts = function(appBase) {
             filters.push([dateStr, startDateStr, endDateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        me._generateLineChartDate(chartDivSelector, chartConfigs, filters, {
+        me.generateLineDateChartFull(chartDivSelector, chartConfigs, filters, {
             type: 'timeseries',
             tick: {
                 format: '%Y'
@@ -8830,15 +8830,38 @@ Yaio.NodeCharts = function(appBase) {
      * generate a chart with (planned start, planned end, started and done) for filters
      * @param {String} chartDivSelector   jquery-selector to add the chart on
      * @param {Array} chartConfigs        chartConfigs from me.chartDataConfigs
-     * @param {Array} filters             filters to call the server with [germanDate, start, ende, axis-date in ISO)
+     * @param {Array} dateFilters         filters to call the server with [germanDate, start, ende, axis-date in ISO)
      * @param {function|string} xFormat   callback-function or formatstring for x-axis of c3.generate
      * @param {Object} options            additional options (interval...)
      * @param {Object} searchOptions      nodefilter for YaioNodeRepository.searchNode
      */
-    me._generateLineChartDate = function(chartDivSelector, chartConfigs, filters, xFormat, options, searchOptions) {
+    me.generateLineDateChartFull = function(chartDivSelector, chartConfigs, dateFilters, xFormat, options, searchOptions) {
         // configure columns
-        var dataColumns = me._prepareDataColumns(chartConfigs, filters);
-        var chartLines = me._prepareChartLineConfigs(chartConfigs, filters, options, searchOptions, dataColumns);
+        var dataColumns = me._prepareDataColumns(chartConfigs, dateFilters);
+        var chartLines = me._prepareChartLineConfigs(chartConfigs, dateFilters, options, searchOptions, dataColumns);
+        me.generateLineDateChart(chartDivSelector, dataColumns[0], chartLines, xFormat, options);
+    };
+
+    /**
+     * generate a chart with (planned start, planned end, started and done) for chartLines
+     * @param {String} chartDivSelector   jquery-selector to add the chart on
+     * @param {Array} dateDataColumns     preconfigured dataColumns for date-line: start with label
+     * @param {Array} chartLines          array of objects with fields: dataColumn, chartConfig, dataPointState,
+     *                                    dataPointSearchOptions, timeOut, maxTries, cur
+     * @param {function|string} xFormat   callback-function or formatstring for x-axis of c3.generate
+     * @param {Object} options            additional options (interval...)
+     */
+    me.generateLineDateChart = function(chartDivSelector, dateDataColumns, chartLines, xFormat, options) {
+        // configure
+        var dataColumns = [dateDataColumns];
+        var chartConfigs = [];
+        Object.keys(chartLines).map(function (chartLineKey) {
+            var chartLine = chartLines[chartLineKey];
+            var chartConfig = chartLine.chartConfig;
+            var dataColumn = chartLine.dataColumn;
+            dataColumns.push(dataColumn);
+            chartConfigs.push(chartConfig);
+        });
 
         var chartId = 'dateChart' + new Date().getTime();
         $(chartDivSelector).children().remove();
@@ -8850,7 +8873,7 @@ Yaio.NodeCharts = function(appBase) {
                 x: 'dates',
                 type: 'area',
                 columns: dataColumns,
-                onclick: function (d, element) {
+                onclick: function (d) {
                     var idx = d.index;
                     var lineName = d.id;
                     var chartLine = this.chartLines[lineName];
@@ -9011,21 +9034,33 @@ Yaio.NodeCharts = function(appBase) {
             filters.push([dateStr, dateStr, dateStr, date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()]);
         }
 
-        me._generateCalendarChart(chartDivSelector, filters, chartConfig, searchOptions);
+        me.generateCalendarChartFull(chartDivSelector, filters, chartConfig, searchOptions);
     };
 
     /**
      * generate a calendar-chart (like github-commit-chart) for full years
      * @param {String} chartDivSelector   jquery-selector to add the chart on
-     * @param {Array} filters             dateFilters array
+     * @param {Array} dateFilters         dateFilters array
      * @param {Object} chartConfig        chartConfig from me.chartDataConfigs
      * @param {Object} searchOptions      nodefilter for YaioNodeRepository.searchNode
      */
-    me._generateCalendarChart = function(chartDivSelector, filters, chartConfig, searchOptions) {
+    me.generateCalendarChartFull = function(chartDivSelector, dateFilters, chartConfig, searchOptions) {
         // configure columns
-        var dataColumns = me._prepareDataColumns([chartConfig], filters);
-        var chartLines = me._prepareChartLineConfigs([chartConfig], filters, {}, searchOptions, dataColumns);
+        var dataColumns = me._prepareDataColumns([chartConfig], dateFilters);
+        var chartLines = me._prepareChartLineConfigs([chartConfig], dateFilters, {}, searchOptions, dataColumns);
         var chartLine = chartLines[chartConfig.label];
+
+        me.generateCalendarChart(chartDivSelector, chartLine);
+    };
+
+    /**
+     * generate a calendar-chart (like github-commit-chart) for full years
+     * @param {String} chartDivSelector   jquery-selector to add the chart on
+     * @param {Object} chartLine          object with fields: dataColumn, chartConfig, dataPointState,
+     *                                    dataPointSearchOptions, timeOut, maxTries, cur
+     */
+    me.generateCalendarChart = function(chartDivSelector, chartLine) {
+        var chartConfig = chartLine.chartConfig;
 
         var width = 960,
             height = 136,
@@ -9034,8 +9069,8 @@ Yaio.NodeCharts = function(appBase) {
 
         var format = d3.time.format('%d.%m.%Y');
 
-        var startYear = me.appBase.YaioBase.parseGermanDate(filters[0][1]).getFullYear();
-        var endYear = me.appBase.YaioBase.parseGermanDate(filters[filters.length-1][2]).getFullYear();
+        var startYear = me.appBase.YaioBase.parseGermanDate(chartLine.start).getFullYear();
+        var endYear = me.appBase.YaioBase.parseGermanDate(chartLine.end).getFullYear();
 
         var svg = d3.select(chartDivSelector).selectAll('svg')
             .data(d3.range(startYear, endYear+1))
@@ -9073,7 +9108,7 @@ Yaio.NodeCharts = function(appBase) {
 
         // search data
         if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic) &&
-                me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false)) {
+            me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false)) {
             me._doCalendarChartStatisticCall(rect, chartLine);
         } else if (chartConfig.calltypes.search === true) {
             me._doCalendarChartSearch(rect, chartLine);
@@ -9184,10 +9219,10 @@ Yaio.NodeCharts = function(appBase) {
     /**
      * prepare datacolumns for chartConfig and filters
      * @param {Array} chartConfigs        chartConfigs from me.chartDataConfigs
-     * @param {Array} filters             filters to call the server with [germanDate, start, ende, axis-date in ISO)
+     * @param {Array} dateFilters         filters to call the server with [germanDate, start, ende, axis-date in ISO)
      * @returns {Array}                   the preconfigured dataColumns: first is date-line/ all arrays start with label
      */
-    me._prepareDataColumns = function(chartConfigs, filters) {
+    me._prepareDataColumns = function(chartConfigs, dateFilters) {
         // configure columns
         var dataColumns = [], filter;
         dataColumns.push(['dates']);
@@ -9195,8 +9230,8 @@ Yaio.NodeCharts = function(appBase) {
             dataColumns.push([chartConfigs[ci].label]);
         }
 
-        for (var di = 0; di < filters.length; di++) {
-            filter = filters[di];
+        for (var di = 0; di < dateFilters.length; di++) {
+            filter = dateFilters[di];
             dataColumns[0].push(filter[3]);
             for (ci = 0; ci < chartConfigs.length; ci++) {
                 dataColumns[ci+1].push(0);
@@ -9209,13 +9244,13 @@ Yaio.NodeCharts = function(appBase) {
     /**
      * prpeare chart
      * @param {Array} chartConfigs        chartConfigs from me.chartDataConfigs
-     * @param {Array} filters             filters to call the server with [germanDate, start, ende, axis-date in ISO)
+     * @param {Array} dateFilters         filters to call the server with [germanDate, start, ende, axis-date in ISO)
      * @param {Object} options            additional options (interval...)
      * @param {Object} searchOptions      nodefilter for YaioNodeRepository.searchNode
      * @param {Array} dataColumns         preconfigured dataColumns: first is date-line/ all arrays start with label
      * @returns {Object}                  Object with preconfigured chartLineConfigs
      */
-    me._prepareChartLineConfigs = function(chartConfigs, filters, options, searchOptions, dataColumns) {
+    me._prepareChartLineConfigs = function(chartConfigs, dateFilters, options, searchOptions, dataColumns) {
 
         var chartLines = {}, ci, di, filter;
         for (ci = 0; ci < chartConfigs.length; ci++) {
@@ -9229,14 +9264,14 @@ Yaio.NodeCharts = function(appBase) {
             chartLine.maxTries = 30;
             chartLine.cur = 0;
             chartLine.interval = options.interval;
-            chartLine.start = filters[0][1];
-            chartLine.end = filters[filters.length-1][2];
+            chartLine.start = dateFilters[0][1];
+            chartLine.end = dateFilters[dateFilters.length-1][2];
 
             // add to chartLines
             chartLines[chartConfig.label] = chartLine;
 
-            for (di = 0; di < filters.length; di++) {
-                filter = filters[di];
+            for (di = 0; di < dateFilters.length; di++) {
+                filter = dateFilters[di];
                 var dataPointSearchOptions = me._createSearchOptions(searchOptions);
                 dataPointSearchOptions.strWorkflowStateFilter = chartConfig.strWorkflowStateFilter;
                 dataPointSearchOptions[chartConfig.dateFilterGE] = filter[1];
