@@ -30,7 +30,7 @@ describe('yaio search', function() {
                 return yaioSearchPage.openSearchFromFrontPage();
             });
         protractor.utils.waitUntilElementClickable($(yaioSearchPage.buttonDoSearch), protractor.utils.CONST_WAIT_NODEHIRARCHY);
-        expect($(yaioSearchPage.buttonDoSearch).isPresent()).toEqual(true);
+        expect($(yaioSearchPage.buttonTabTogglerTable).isPresent()).toEqual(true);
     });
 
     /**
@@ -48,6 +48,10 @@ describe('yaio search', function() {
         // set defined order
         $(yaioSearchPage.selectSort).sendKeys('nodeNummer absteigend');
         return $(yaioSearchPage.buttonDoSearch).click()
+            .then( function switchListStyle() {
+                // switch to liststyle
+                return $(yaioSearchPage.buttonTabTogglerTable).click();
+            })
             .then( function getFirstElement() {
                 // get first element
                 return element.all(by.repeater('node in nodes | filter:search')).first().getAttribute('data-value');
@@ -75,8 +79,9 @@ describe('yaio search', function() {
             });
     });
 
-    it('should get initial searchpage with 20 Nodes and pagination > 7 but without searchwords', function doCheckInitialSearchPage() {
+    it('should get initial searchpage with 20 Nodes and pagination > 1 and without searchwords', function doCheckInitialSearchPage() {
         // count visible nodes, pages, searchwords
+        $(yaioSearchPage.buttonTabTogglerTable).click();
         return yaioNodePage.getVisibleNodes()
             .then( function (nodes) {
                 // check nodecount
@@ -88,7 +93,7 @@ describe('yaio search', function() {
             }) 
             .then(function setCount(count) {
                 // check pagination count
-                expect(count).toBeGreaterThan(7);
+                expect(count).toBeGreaterThan(1);
             })
             .then( function calcSearchWords() {
                 // extract searchwords
@@ -108,7 +113,7 @@ describe('yaio search', function() {
         return yaioSearchPage.clickAndCheckSearchResLink('.yaio-icon-center');
     });
 
-    it('should search for "der" with less pagination and show more than 20 searchwords', function doCheckSearchPage() {
+    it('should search for "der" with less pagination and show more than 19 searchwords', function doCheckSearchPage() {
         // count pages
         var firstCount = 0;
         $$(yaioSearchPage.paginationLinkStyles).count()
@@ -129,6 +134,10 @@ describe('yaio search', function() {
                 // check for lesser resultpages
                 expect(count).toBeLessThan(firstCount);
             })
+            .then( function switchListStyle() {
+                // switch to liststyle
+                return $(yaioSearchPage.buttonTabTogglerTable).click();
+            })
             .then( function calcSearchWords() {
                 // extract searchwords
                 return $$(yaioSearchPage.fieldSearchDataStyle).count();
@@ -148,6 +157,7 @@ describe('yaio search', function() {
         };
 
         // When and Then
+        $(yaioSearchPage.buttonTabTogglerTable).click();
 
         // check first Node
         return yaioNodePage.getVisibleNodes()
@@ -179,10 +189,15 @@ describe('yaio search', function() {
 
         // When
         $(yaioSearchPage.inputFullText).sendKeys('der');
-        $(yaioSearchPage.buttonDoSearch).click();
-
         // check first Node for 'der' in desc
-        return yaioNodePage.getVisibleNodes()
+        return $(yaioSearchPage.buttonDoSearch).click()
+            .then( function switchListStyle() {
+                // switch to liststyle
+                return $(yaioSearchPage.buttonTabTogglerTable).click();
+            })
+            .then(function getVisibleNodes() {
+                return yaioNodePage.getVisibleNodes();
+            })
             .then( function (nodes) {
                 // extract nodeid from new task
                 return yaioNodePage.extractNodeIdFromNodeNameElement(nodes[0]);
@@ -190,13 +205,13 @@ describe('yaio search', function() {
             .then(function doneExtractNodeId(nodeId) {
                 // show desc of testnode
                 var deferred = protractor.promise.defer();
-                
+
                 // call service-function
                 var container = yaioNodePage.showDescForNode(nodeId, checkContentHandler);
                 container.getText().then(function() {
                     deferred.fulfill(container);
                 });
-                
+
                 return deferred.promise;
             });
     });

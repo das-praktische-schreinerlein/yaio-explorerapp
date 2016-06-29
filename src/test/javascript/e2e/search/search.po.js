@@ -17,10 +17,11 @@ var YAIOSearchPage = function() {
     me.inputFullText = '#inputSearchOptionsFulltext';
     me.selectSort = '#inputSearchOptionsSearchSortt';
     me.inputSearchOptionsStrNotNodePraefix = '#inputSearchOptionsStrNotNodePraefix';
+    me.buttonTabTogglerTable = '#tabTogglerTable';
     
     // pagination
-    me.paginationLinkStyles = 'ul.pagination > li';
-    me.linkPaginationLastPage = 'ul.pagination > li:last-of-type > span';
+    me.paginationLinkStyles = 'paging ul.pagination > li';
+    me.linkPaginationLastPage = 'paging ul.pagination > li:last-of-type > span';
 
     // searchwords
     me.fieldSearchDataStyle = '.field_nodeSearchData > b';
@@ -41,7 +42,7 @@ var YAIOSearchPage = function() {
         expect($(me.buttonDoSearch).isDisplayed()).toEqual(true);
 
         // reload with static url because we want no hidden searchresult (defaults of SearchOptionsStrNotNodePraefix)
-        browser.get(browser.params.yaioConfig.yaioBaseAppUrl + '/search/1/20/lastChangeDown/MasterplanMasternode1////blablub/');
+        browser.get(browser.params.yaioConfig.yaioBaseAppUrl + '/search/1/20/lastChangeDown/MasterplanMasternode1//notNodePraefix=Sy/');
         
         // expect SearchButton
         protractor.utils.waitUntilElementClickable($(me.buttonDoSearch), protractor.utils.CONST_WAIT_ELEMENT);
