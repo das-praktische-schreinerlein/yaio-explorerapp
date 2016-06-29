@@ -89,7 +89,7 @@ describe('yaio search', function() {
             })
             .then ( function checkPagination() {
                 // extract pagination
-                return $$(yaioSearchPage.paginationLinkStyles).count()
+                return $$(yaioSearchPage.paginationLinkStyles).count();
             }) 
             .then(function setCount(count) {
                 // check pagination count
