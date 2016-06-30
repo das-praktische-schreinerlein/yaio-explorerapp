@@ -135,9 +135,7 @@ describe('yaio nodelifecycle', function() {
     it('should create/delete a UrlResNode', function doCreateSymLink() {
         // When and Then
 
-return;        
-/**
-// navigate to Node
+        // navigate to Node
         yaioNodePage.navigateToNode(yaioNodePage.jsFuncTestHierarchy)
             .then(function doneNavigate(){
                 // create urlres
@@ -172,7 +170,6 @@ return;
 
                 return deferred.promise;
             });
-**/            
     });
 });
 

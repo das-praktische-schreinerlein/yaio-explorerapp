@@ -345,14 +345,15 @@ var YAIONodePage = function() {
      */
     me.openAndEditDescForNodeType = function (nodeType, newText, flgToggle) {
         var filterDescForm_Off = $('#filterDesc' + nodeType + 'Form_Off');
-        var editorInputNodeDesc = $('#editorInputNodeDesc' + nodeType + 'Node');
-        var inputAceElm = $('#editorInputNodeDesc' + nodeType + 'Node > textarea.ace_text-input');
 
         // toggle and set desc
         if (flgToggle) {
             filterDescForm_Off.click();
         }
+        var editorInputNodeDesc = $('#editorInputNodeDesc' + nodeType + 'Node');
         protractor.utils.waitUntilElementPresent(editorInputNodeDesc, protractor.utils.CONST_WAIT_ELEMENT);
+        var inputAceElm = $('#editorInputNodeDesc' + nodeType + 'Node > textarea.ace_text-input');
+        protractor.utils.waitUntilElementPresent(inputAceElm, protractor.utils.CONST_WAIT_ELEMENT);
         browser.actions().doubleClick(editorInputNodeDesc).perform();
         return inputAceElm.sendKeys(newText);
     };
