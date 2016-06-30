@@ -37,7 +37,8 @@ describe('yaio wysiwyg', function() {
     /**
      * define tests
      */
-    it('should focus on node, open wysiwyg-editor and add markdown, close editor and open preview', function doCheckButtons() {
+/**
+    it('BROKEN - should focus on node, open wysiwyg-editor and add markdown, close editor and open preview', function doCheckButtons() {
         // TODO: broken - openWysiwyg4inputNodeDescTaskNode does not exists in phantomjs
         if (true) {
             return;
@@ -81,7 +82,7 @@ describe('yaio wysiwyg', function() {
                 expect(editorPreview.getInnerHtml()).toContain(expected.trim());
             });
     });
-
+**/
     it('should open wysiwyg-editor, submit markdown, add more markdown in a second step', function doCheckButtons() {
         // Given
         var markdownText = '# Ue1\n\n## Ue2\n';
