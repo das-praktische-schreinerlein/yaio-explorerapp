@@ -18,13 +18,14 @@ var YAIOWysiwygPage = function() {
      */
     me.checkWysiwygContent = function (markdownText, expected) {
         var editorInput = $(me.editorInput);
-        var inputAceElm = $(me.inputAceElm);
-        
+
         // prepare
         protractor.utils.waitUntilElementPresent(editorInput, protractor.utils.CONST_WAIT_ELEMENT);
         return browser.actions().doubleClick(editorInput).perform()
             .then(function sendData() {
                 // send markdown
+                var inputAceElm = $(me.inputAceElm);
+                protractor.utils.waitUntilElementPresent(inputAceElm, protractor.utils.CONST_WAIT_ELEMENT);
                 return inputAceElm.sendKeys(markdownText);
             })
             .then(function checkContent() {
