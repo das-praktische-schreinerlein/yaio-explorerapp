@@ -66,6 +66,7 @@ window.YaioAppBase = function() {
         me.configureService('Yaio.StaticNodeDataStore', function() { return Yaio.StaticNodeDataStore(me); });
         me.configureService('Yaio.StaticNodeDBDriver', function() { return Yaio.StaticNodeDBDriver(me, Yaio.StaticNodeDBDriverConfig()); });
         me.configureService('Yaio.FileNodeDBDriver', function() { return Yaio.FileNodeDBDriver(me, Yaio.FileNodeDBDriverConfig()); });
+        me.configureService('Yaio.UrlDownloadNodeDBDriver', function() { return Yaio.UrlDownloadNodeDBDriver(me, Yaio.UrlDownloadNodeDBDriverConfig()); });
         me.configureService('Yaio.NodeRepository', function() { return Yaio.NodeRepository(me); });
         me.configureService('Yaio.NodeDataRenderer', function() { return Yaio.NodeDataRenderer(me); });
         me.configureService('Yaio.NodeGanttRenderer', function() { return Yaio.NodeGanttRenderer(me); });
@@ -105,12 +106,14 @@ window.YaioAppBase = function() {
         me.configureService('YaioStaticNodeDataStore', function() { return me.get('Yaio.StaticNodeDataStore'); });
         me.configureService('YaioStaticNodeDBDriver', function() { return me.get('Yaio.StaticNodeDBDriver'); });
         me.configureService('YaioFileNodeDBDriver', function() { return me.get('Yaio.FileNodeDBDriver'); });
+        me.configureService('YaioUrlDownloadNodeDBDriver', function() { return me.get('Yaio.UrlDownloadNodeDBDriver'); });
         me.configureService('YaioServerNodeDBDriver_Local', function() { return me.get('Yaio.ServerNodeDBDriver_Local'); });
         me.configureService('YaioNodeRepository', function() { return me.get('Yaio.NodeRepository'); });
         me.configureService('YaioAccessManager', function() { return me.get('YaioNodeRepository').getAccessManager(); });
         me.configureService('YaioDataSourceManager', function() {
             var dsm = me.get('Yaio.DataSourceManager');
             dsm.addConnection('YaioFileNodeDBDriver', function () { return me.get('YaioFileNodeDBDriver'); });
+            dsm.addConnection('YaioUrlDownloadNodeDBDriver', function () { return me.get('YaioUrlDownloadNodeDBDriver'); });
             dsm.addConnection('YaioStaticNodeDBDriver', function () { return me.get('YaioStaticNodeDBDriver'); });
             dsm.addConnection('YaioServerNodeDBDriver_Local', function () { return me.get('YaioServerNodeDBDriver_Local'); });
             return dsm;

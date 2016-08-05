@@ -37,6 +37,7 @@ window.YaioAppBaseConfig = function() {
     
     // server-configs
     me.plantUmlBaseUrl              = 'http://www.plantuml.com/';
+    me.exampleDownloadUrl           = '/fixtures/examples/index.json';
 
     // App urls
     me.appRootUrl                   = '/';

@@ -151,7 +151,9 @@
                 {expand: true, cwd: '<%= srcBase %>pages/', src: ['*.html'], dest: '<%= destBase %>', flatten: false},
                 {expand: true, cwd: '<%= srcBase %>', src: ['yaio-explorerapp/**/*.html', 'yaio-explorerapp/**/*.json', 'yaio-explorerapp/static/**'], dest: '<%= destBase %>', flatten: false},
                 {expand: true, cwd: '<%= tplSrcBase %>', src: ['exporttemplates/*.html'], dest: '<%= destBase %>', flatten: false},
-                {expand: true, cwd: '<%= resSrcBase %>static/', src: ['images/**/*.*'], dest: '<%= destBase %>', flatten: false}            ]
+                {expand: true, cwd: '<%= resSrcBase %>static/', src: ['images/**/*.*'], dest: '<%= destBase %>', flatten: false},
+                {expand: true, cwd: '<%= resSrcBase %>fixtures/', src: ['**/*.*'], dest: '<%= destBase %>/fixtures/', flatten: false}
+            ]
         }
     };
 
