@@ -484,6 +484,12 @@ h4 {
      height: auto;
      padding: 1px;
 }
+.form-hint {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    padding: 1px;
+}
 
 .error-message {
     display: none;

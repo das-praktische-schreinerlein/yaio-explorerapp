@@ -3969,12 +3969,6 @@ Yaio.FileAccessManager = function(appBase, config, defaultConfig) {
     // my own instance
     var me = Yaio.StaticAccessManager(appBase, config, defaultConfig);
 
-    /**
-     * initialize the object
-     */
-    me._init = function() {
-    };
-    
     me._init();
     
     return me;
@@ -4039,6 +4033,13 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
                     // set new name
                     me.config.name = 'Dateiupload: ' + file.name;
 
+                    // activate editor
+                    if (me.$('#yaioLoadJSONFileActivateEditor').prop('checked')) {
+                        me.getAccessManager().activateEditor();
+                    } else {
+                        me.getAccessManager().deactivateEditor();
+                    }
+
                     dfd.resolve('OK');
                 };
 
@@ -4052,7 +4053,7 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
         fileDialog.addEventListener('change', handleLoadJSONFileSelectHandler, false);
         me.$( '#yaioloadjsonuploader-box' ).dialog({
             modal: true,
-            width: '200px',
+            width: '600px',
             buttons: {
               'Schließen': function() {
                 me.$( this ).dialog( 'close' );
@@ -5171,10 +5172,7 @@ Yaio.StaticAccessManager = function(appBase, config, defaultConfig) {
     me._init = function() {
         // urls
         // we have problems with sysUID and nodeRef me.setAvailiableNodeAction('createsymlink', true);
-        me.setAvailiableNodeAction('edit', true);
-        me.setAvailiableNodeAction('create', true);
-        me.setAvailiableNodeAction('move', true);
-        me.setAvailiableNodeAction('remove', true);
+        me.deactivateEditor();
         me.setAvailiableNodeAction('search', true);
         me.setAvailiableNodeAction('dashboard', '#/dashboard');
         
@@ -5199,6 +5197,21 @@ Yaio.StaticAccessManager = function(appBase, config, defaultConfig) {
             return me.availiableNodeActions[key] + nodeId + '.html';
         }
         return me.availiableNodeActions[key];
+    };
+
+
+    me.activateEditor = function () {
+        me.setAvailiableNodeAction('edit', true);
+        me.setAvailiableNodeAction('create', true);
+        me.setAvailiableNodeAction('move', true);
+        me.setAvailiableNodeAction('remove', true);
+    };
+
+    me.deactivateEditor = function () {
+        me.setAvailiableNodeAction('edit', false);
+        me.setAvailiableNodeAction('create', false);
+        me.setAvailiableNodeAction('move', false);
+        me.setAvailiableNodeAction('remove', false);
     };
 
     me._init();
@@ -5281,7 +5294,7 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     me.exportNodeActionResponseJSONById = function(nodeId) {
         return JSON.stringify(me._exportNodeActionResponseById(nodeId));
     };
-    
+
     /*****************************************
      *****************************************
      * Service-Funktions (webservice)
@@ -6262,10 +6275,7 @@ Yaio.UrlDownloadAccessManager = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
-        me.setAvailiableNodeAction('edit', false);
-        me.setAvailiableNodeAction('create', false);
-        me.setAvailiableNodeAction('move', false);
-        me.setAvailiableNodeAction('remove', false);
+        me.deactivateEditor();
         me.setAvailiableNodeAction('search', true);
         me.setAvailiableNodeAction('dashboard', '#/dashboard');
 
@@ -6359,6 +6369,13 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
                     // set new name
                     me.config.name = 'UrlDownload: ' + url;
 
+                    // activate editor
+                    if (me.$('#yaioLoadJSONUrlActivateEditor').prop('checked')) {
+                        me.getAccessManager().activateEditor();
+                    } else {
+                        me.getAccessManager().deactivateEditor();
+                    }
+
                     dfd.resolve('OK');
                 }
             });
@@ -6400,13 +6417,13 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
             if (lastSlash >= 0) {
                 baseUrl = indexUrl.substring(0, lastSlash+1);
             }
-            me._readExampleDownloadUrls(indexUrl).then(function () {
+            me._readExampleDownloads(indexUrl).then(function () {
                 me._initExampleDownloadUrlDialog(baseUrl);
             });
         }
     };
 
-    me._readExampleDownloadUrls = function (url) {
+    me._readExampleDownloads = function (url) {
         // return promise
         var dfd = new $.Deferred();
         var res = dfd.promise();
