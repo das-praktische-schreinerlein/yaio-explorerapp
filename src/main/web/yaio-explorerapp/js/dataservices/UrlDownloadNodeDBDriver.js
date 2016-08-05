@@ -87,6 +87,13 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
                     // set new name
                     me.config.name = 'UrlDownload: ' + url;
 
+                    // activate editor
+                    if (me.$('#yaioLoadJSONUrlActivateEditor').prop('checked')) {
+                        me.getAccessManager().activateEditor();
+                    } else {
+                        me.getAccessManager().deactivateEditor();
+                    }
+
                     dfd.resolve('OK');
                 }
             });

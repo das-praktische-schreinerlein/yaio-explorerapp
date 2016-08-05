@@ -71,6 +71,13 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
                     // set new name
                     me.config.name = 'Dateiupload: ' + file.name;
 
+                    // activate editor
+                    if (me.$('#yaioLoadJSONFileActivateEditor').prop('checked')) {
+                        me.getAccessManager().activateEditor();
+                    } else {
+                        me.getAccessManager().deactivateEditor();
+                    }
+
                     dfd.resolve('OK');
                 };
 
@@ -84,7 +91,7 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
         fileDialog.addEventListener('change', handleLoadJSONFileSelectHandler, false);
         me.$( '#yaioloadjsonuploader-box' ).dialog({
             modal: true,
-            width: '200px',
+            width: '600px',
             buttons: {
               'Schließen': function() {
                 me.$( this ).dialog( 'close' );

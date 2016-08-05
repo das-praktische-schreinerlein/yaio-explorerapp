@@ -87,7 +87,7 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
     me.exportNodeActionResponseJSONById = function(nodeId) {
         return JSON.stringify(me._exportNodeActionResponseById(nodeId));
     };
-    
+
     /*****************************************
      *****************************************
      * Service-Funktions (webservice)

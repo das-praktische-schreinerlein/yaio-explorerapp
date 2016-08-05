@@ -33,10 +33,7 @@ Yaio.StaticAccessManager = function(appBase, config, defaultConfig) {
     me._init = function() {
         // urls
         // we have problems with sysUID and nodeRef me.setAvailiableNodeAction('createsymlink', true);
-        me.setAvailiableNodeAction('edit', true);
-        me.setAvailiableNodeAction('create', true);
-        me.setAvailiableNodeAction('move', true);
-        me.setAvailiableNodeAction('remove', true);
+        me.deactivateEditor();
         me.setAvailiableNodeAction('search', true);
         me.setAvailiableNodeAction('dashboard', '#/dashboard');
         
@@ -61,6 +58,21 @@ Yaio.StaticAccessManager = function(appBase, config, defaultConfig) {
             return me.availiableNodeActions[key] + nodeId + '.html';
         }
         return me.availiableNodeActions[key];
+    };
+
+
+    me.activateEditor = function () {
+        me.setAvailiableNodeAction('edit', true);
+        me.setAvailiableNodeAction('create', true);
+        me.setAvailiableNodeAction('move', true);
+        me.setAvailiableNodeAction('remove', true);
+    };
+
+    me.deactivateEditor = function () {
+        me.setAvailiableNodeAction('edit', false);
+        me.setAvailiableNodeAction('create', false);
+        me.setAvailiableNodeAction('move', false);
+        me.setAvailiableNodeAction('remove', false);
     };
 
     me._init();

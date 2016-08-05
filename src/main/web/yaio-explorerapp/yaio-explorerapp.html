@@ -102,18 +102,33 @@
                         </div>
 
                         <div id="yaioloadjsonuploader-box" class="hidden">
-                           <input type="file" id="yaioLoadJSONFile" name="yaioLoadJSONFile" value="Load YaioJSON" />
+                            <label for="yaioLoadJSONFile" translate="editor.common.label.inputLoadJsonFile">Upload-File:</label>
+                            <input type="file" id="yaioLoadJSONFile" name="yaioLoadJSONFile" value="Load YaioJSON" />
+
+                            <br />
+                            <span translate="editor.hint.checkboxActivateEditor" class="form-hint">experimental</span>
+                            <br />
+                            <label for="yaioLoadJSONFileActivateEditor" translate="editor.common.label.checkboxJsonFileActivateEditor">editor:</label>
+                            <input type="checkbox" name="yaioLoadJSONFileActivateEditor" class="inputtype_checkbox" id="yaioLoadJSONFileActivateEditor">
+                            <span translate="editor.common.label.checkboxJsonFileActivateEditor2">activate editor</span>
                         </div>
 
                         <div id="yaioloadjsondownloader-box" class="hidden">
                             <label for="yaioLoadJSONUrl" translate="editor.common.label.inputExampleDownloadUrl">Download-Url:</label>
                             <input type="text" placeholder="http://" id="yaioLoadJSONUrl" name="yaioLoadJSONUrl" />
-                            <br />
 
+                            <br />
                             <label for="yaioLoadJSONUrl" translate="editor.common.label.selectExampleDownloadUrls">Beispiele:</label>
                             <select type="text" onclick="javascript:yaioLoadJSONUrl.value = yaioLoadJSONUrlExampleDownloadUrls.value" name="yaioLoadJSONUrlExampleDownloadUrls" class="inputtype_select use_select2" id="yaioLoadJSONUrlExampleDownloadUrls">
                                 <option value="" translate="common.select.pleaseselect">Bitte wählen
                             </select>
+
+                            <br />
+                            <span translate="editor.hint.checkboxActivateEditor" class="form-hint jsh-md-background-info ">experimental</span>
+                            <br />
+                            <label for="yaioLoadJSONUrlActivateEditor" translate="editor.common.label.checkboxJsonUrlActivateEditor">editor:</label>
+                            <input type="checkbox" name="yaioLoadJSONUrlActivateEditor" class="inputtype_checkbox" id="yaioLoadJSONUrlActivateEditor">
+                            <span translate="editor.common.label.checkboxJsonUrlActivateEditor2">activate editor</span>
                         </div>
 
 <!-- INCLUDESTATICJSON_SNIP -->

@@ -31,10 +31,7 @@ Yaio.UrlDownloadAccessManager = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
-        me.setAvailiableNodeAction('edit', false);
-        me.setAvailiableNodeAction('create', false);
-        me.setAvailiableNodeAction('move', false);
-        me.setAvailiableNodeAction('remove', false);
+        me.deactivateEditor();
         me.setAvailiableNodeAction('search', true);
         me.setAvailiableNodeAction('dashboard', '#/dashboard');
 

@@ -27,12 +27,6 @@ Yaio.FileAccessManager = function(appBase, config, defaultConfig) {
     // my own instance
     var me = Yaio.StaticAccessManager(appBase, config, defaultConfig);
 
-    /**
-     * initialize the object
-     */
-    me._init = function() {
-    };
-    
     me._init();
     
     return me;
