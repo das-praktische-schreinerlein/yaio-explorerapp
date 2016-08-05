@@ -168,6 +168,8 @@
     "editor.common.label.notPraefix": "Ignoriere NodePräfixe",
     "editor.common.label.dateIsNull": "Datum leer",
     "editor.common.label.flgConcreteToDosOnly": "Nur ToDos mit Aufwand",
+    "editor.common.label.inputExampleDownloadUrl": "Download-Url",
+    "editor.common.label.selectExampleDownloadUrls": "Beispiele",
     "editor.common.legend.StateSearch": "Filter für Typ/Status",
     "editor.common.legend.MetaSearch": "Filter für Metadaten",
     "editor.common.legend.Details": "Bemerkungen",
