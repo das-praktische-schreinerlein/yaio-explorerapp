@@ -168,6 +168,7 @@
     "editor.common.label.notPraefix": "ignore nodeprefixes",
     "editor.common.label.dateIsNull": "date empty",
     "editor.common.label.flgConcreteToDosOnly": "only todos with effort",
+    "editor.common.label.inputLoadJsonFile": "File",
     "editor.common.label.inputExampleDownloadUrl": "url",
     "editor.common.label.selectExampleDownloadUrls": "examples",
     "editor.common.label.checkboxJsonFileActivateEditor": "editor",
