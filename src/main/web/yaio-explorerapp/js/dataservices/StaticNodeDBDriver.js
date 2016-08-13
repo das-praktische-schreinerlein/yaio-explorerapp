@@ -284,7 +284,15 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
         me.appBase.get('YaioStaticNodeDataStore').resetNodeList();
         me.flgDataLoaded = false;
 
-        var yaioNodeActionReponse = JSON.parse(json);
+        var yaioNodeActionReponse;
+        try {
+            yaioNodeActionReponse = JSON.parse(json);
+        } catch (e) {
+            // anscheinend  nicht definiert
+            me.appBase.Logger.logError(e.toString(), true);
+            return;
+        }
+
         var masterNode = yaioNodeActionReponse.node;
 
         // create Masternode if not exists

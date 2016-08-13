@@ -3665,6 +3665,17 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
         me.logNotImplemented();
     };
 
+    me.getConnectPromise = function () {
+        return me.connectPromise;
+    };
+
+    me.createConnectPromise = function () {
+        me.connectPromise = new $.Deferred();
+        return me.connectPromise;
+    };
+
+
+
     /**
      * implementation of: create an accessmanager for this service
      * @abstract
@@ -3993,74 +4004,57 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
+        me.connectPromise = undefined;
+    };
+
+    me.loadFile = function (file) {
+        var dfd = new $.Deferred();
+        var res = dfd.promise();
+        var reader = new FileReader();
+
+        // config reader
+        reader.onload = function (res) {
+            console.log('read fileName:' + file.name);
+
+            // update serviceconfig
+            me.configureDataService();
+            me.reconfigureBaseApp();
+
+            // set content as json
+            window.yaioFileJSON = res.target.result;
+
+            // load content
+            me._loadStaticJson(window.yaioFileJSON);
+
+            // set new name
+            me.config.name = 'Dateiupload: ' + file.name;
+
+            // resolve connect
+            me.getConnectPromise().resolve('OK');
+
+            // resolve fileLoad
+            dfd.resolve('OK');
+        };
+
+        // read the file
+        console.log('start read file:' + file);
+        reader.readAsText(file);
+
+        return res;
     };
 
     /**
      * connect the dataservice
-     * - load uploaded jsonfile from #yaioLoadJSONFile
-     * - updateServiceConfig
-     * - updateAppConfig
-     * - load initial data)
      * @returns {JQueryPromise<T>|JQueryPromise<*>}    promise if connect succeed or failed
      */
     me.connectService = function() {
         // return promise
-        var dfd = new $.Deferred();
+        var dfd = me.createConnectPromise();
         var res = dfd.promise();
         
-        // define handler
-        var handleLoadJSONFileSelectHandler = function handleLoadJSONFileSelect(evt) {
-            var files = evt.target.files; // FileList object
-            var reader = new FileReader();
-
-            if (files.length === 1) {
-                var file = files[0];
-
-                // config reader
-                reader.onload = function (res) {
-                    console.log('read fileName:' + file.name);
-
-                    // update serviceconfig
-                    me.configureDataService();
-                    me.reconfigureBaseApp();
-
-                    // set content as json
-                    window.yaioFileJSON = res.target.result;
-
-                    // load content
-                    me._loadStaticJson(window.yaioFileJSON);
-
-                    // set new name
-                    me.config.name = 'Dateiupload: ' + file.name;
-
-                    // activate editor
-                    if (me.$('#yaioLoadJSONFileActivateEditor').prop('checked')) {
-                        me.getAccessManager().activateEditor();
-                    } else {
-                        me.getAccessManager().deactivateEditor();
-                    }
-
-                    dfd.resolve('OK');
-                };
-
-                // read the file
-                reader.readAsText(file);
-            }
-        };
-        
         // initFileUploader
-        var fileDialog = document.getElementById('yaioLoadJSONFile');
-        fileDialog.addEventListener('change', handleLoadJSONFileSelectHandler, false);
-        me.$( '#yaioloadjsonuploader-box' ).dialog({
-            modal: true,
-            width: '600px',
-            buttons: {
-              'Schließen': function() {
-                me.$( this ).dialog( 'close' );
-              }
-            }
-        });
-        
+        me.appBase.UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
+
         return res;
     };
 
@@ -5491,7 +5485,15 @@ Yaio.StaticNodeDBDriver = function(appBase, config, defaultConfig) {
         me.appBase.get('YaioStaticNodeDataStore').resetNodeList();
         me.flgDataLoaded = false;
 
-        var yaioNodeActionReponse = JSON.parse(json);
+        var yaioNodeActionReponse;
+        try {
+            yaioNodeActionReponse = JSON.parse(json);
+        } catch (e) {
+            // anscheinend  nicht definiert
+            me.appBase.Logger.logError(e.toString(), true);
+            return;
+        }
+
         var masterNode = yaioNodeActionReponse.node;
 
         // create Masternode if not exists
@@ -6314,122 +6316,14 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
-        me._initExampleDownloads();
     };
 
-    /**
-     * connect the dataservice
-     * - load json-file from url defined in element #yaioLoadJSONUrl.value
-     * - updateServiceConfig
-     * - updateAppConfig
-     * - load initial data)
-     * @returns {JQueryPromise<T>|JQueryPromise<*>}    promise if connect succeed or failed
-     */
-    me.connectService = function() {
-        // return promise
-        var dfd = new $.Deferred();
-        var res = dfd.promise();
-        
-        // define handler
-        var handleDownloadJSONFileSelectHandler = function handleDownloadJSONFile(url) {
-            var svcLogger = me.appBase.get('Logger');
-
-            var msg = 'connectService for url:' + url;
-
-            me.$.ajax({
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                xhrFields: {
-                    // for CORS
-                    withCredentials: true
-                },
-                url: url,
-                type: 'GET',
-                error: function (jqXHR, textStatus, errorThrown) {
-                    // log the error to the console
-                    svcLogger.logError('ERROR  ' + msg + ' The following error occured: ' + textStatus + ' ' + errorThrown, false);
-                    svcLogger.logError('cant load ' + msg + ' error:' + textStatus, true);
-                },
-                complete: function () {
-                    console.log('completed load ' + msg);
-                },
-                success: function (data) {
-                    // update serviceconfig
-                    me.configureDataService();
-                    me.reconfigureBaseApp();
-
-                    // set content as json
-                    window.yaioFileJSON = JSON.stringify(data);
-
-                    // load content
-                    me._loadStaticJson(window.yaioFileJSON);
-
-                    // set new name
-                    me.config.name = 'UrlDownload: ' + url;
-
-                    // activate editor
-                    if (me.$('#yaioLoadJSONUrlActivateEditor').prop('checked')) {
-                        me.getAccessManager().activateEditor();
-                    } else {
-                        me.getAccessManager().deactivateEditor();
-                    }
-
-                    dfd.resolve('OK');
-                }
-            });
-        };
-        
-        // initFileUploader
-        var downloadDialog = document.getElementById('yaioLoadJSONUrl');
-        me.$( '#yaioloadjsondownloader-box' ).dialog({
-            modal: true,
-            width: '600px',
-            buttons: {
-              'Schließen': function() {
-                me.$( this ).dialog( 'close' );
-              },
-              'Download': function() {
-                  handleDownloadJSONFileSelectHandler(downloadDialog.value);
-                  me.$( this ).dialog( 'close' );
-              }
-            }
-        });
-        
-        return res;
-    };
-
-    /*****************************************
-     *****************************************
-     * Service-Funktions (webservice)
-     *****************************************
-     *****************************************/
-    me._createAccessManager = function() {
-        return Yaio.UrlDownloadAccessManager(me.appBase, me.config);
-    };
-
-    me._initExampleDownloads = function () {
-        var indexUrl = me.appBase.config.exampleDownloadUrl;
-        if (indexUrl) {
-            var lastSlash = indexUrl.lastIndexOf('/');
-            var baseUrl = '';
-            if (lastSlash >= 0) {
-                baseUrl = indexUrl.substring(0, lastSlash+1);
-            }
-            me._readExampleDownloads(indexUrl).then(function () {
-                me._initExampleDownloadUrlDialog(baseUrl);
-            });
-        }
-    };
-
-    me._readExampleDownloads = function (url) {
-        // return promise
+    me.downloadFile = function (url) {
         var dfd = new $.Deferred();
         var res = dfd.promise();
         var svcLogger = me.appBase.get('Logger');
+        var msg = 'connectService for url:' + url;
 
-        var msg = '_initExampleDownloadUrls';
         me.$.ajax({
             headers: {
                 'Accept': 'application/json',
@@ -6450,7 +6344,23 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
                 console.log('completed load ' + msg);
             },
             success: function (data) {
-                me._exampleDownloadUrls = data;
+                // update serviceconfig
+                me.configureDataService();
+                me.reconfigureBaseApp();
+
+                // set content as json
+                window.yaioFileJSON = JSON.stringify(data);
+
+                // load content
+                me._loadStaticJson(window.yaioFileJSON);
+
+                // set new name
+                me.config.name = 'UrlDownload: ' + url;
+
+                // resolve connect
+                me.getConnectPromise().resolve('OK');
+
+                // resolve fileDownload
                 dfd.resolve('OK');
             }
         });
@@ -6458,26 +6368,29 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
         return res;
     };
 
-    me._initExampleDownloadUrlDialog = function (baseUrl) {
-        var $select = $('#yaioLoadJSONUrlExampleDownloadUrls');
+    /**
+     * connect the dataservice
+     * @returns {JQueryPromise<T>|JQueryPromise<*>}    promise if connect succeed or failed
+     */
+    me.connectService = function() {
+        // return promise
+        var dfd = me.createConnectPromise();
+        var res = dfd.promise();
 
-        Object.keys(me._exampleDownloadUrls).forEach(function(id) {
-            var url = me._exampleDownloadUrls[id].url;
-            if (!url.startsWith('http') && !url.startsWith('/')) {
-                url = baseUrl + url;
-            }
-            $select.append(
-                new Option(me._exampleDownloadUrls[id].name, url, false, false)
-            ).trigger('change');
-        });
+        me.appBase.UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonDownload');
 
-        $select.on('select2:select', function (evt) {
-            // How to select a value
-            var current = $select.select2('val');
-            $('#yaioLoadJSONUrl').val(current);
-        });
+        return res;
     };
-    
+
+    /*****************************************
+     *****************************************
+     * Service-Funktions (webservice)
+     *****************************************
+     *****************************************/
+    me._createAccessManager = function() {
+        return Yaio.UrlDownloadAccessManager(me.appBase, me.config);
+    };
+
     me._init();
     
     return me;
@@ -11207,6 +11120,169 @@ yaioApp.controller('NodeSearchCtrl', function($rootScope, $scope, $location, $ro
     $scope.showCardView = function() {
         $('div.container-yaio-search-nodecards').css('display', 'block');
         $('div.container-yaio-search-table').css('display', 'none');
+    };
+
+    // init
+    $scope._init();
+});
+
+/**
+ * angular-controller for serving page-element: datasource-selector json-download
+ * @controller
+ */
+yaioApp.controller('SourceJsonDownloadCtrl', function($rootScope, $scope, $location, $routeParams, yaioUtils) {
+    'use strict';
+
+    /**
+     * init the controller
+     * @private
+     */
+    $scope._init = function () {
+        // include utils
+        $scope.yaioUtils = yaioUtils;
+    };
+
+    $scope.initForm = function() {
+        $scope._initExampleDownloads();
+    };
+
+    $scope.doDownloadFile = function () {
+        var url = $('#inputtextSourceSelectorJsonDownload').val();
+        var downloadDriver = yaioUtils.getAppBase().YaioUrlDownloadNodeDBDriver;
+        downloadDriver.downloadFile(url).done(function success() {
+            // activate editor
+            if (downloadDriver.$('#inputcheckboxSourceSelectorLoadJSONDownloadActivateEditor').prop('checked')) {
+                downloadDriver.getAccessManager().activateEditor();
+            } else {
+                downloadDriver.getAccessManager().deactivateEditor();
+            }
+
+            yaioUtils.getAppBase().UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonDownload');
+        });
+    };
+
+    $scope.discardDownloadFile = function () {
+        yaioUtils.getAppBase().UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonDownload');
+    };
+
+
+    $scope._initExampleDownloads = function () {
+        var indexUrl = yaioUtils.getAppBase().config.exampleDownloadUrl;
+        if (indexUrl) {
+            var lastSlash = indexUrl.lastIndexOf('/');
+            var baseUrl = '';
+            if (lastSlash >= 0) {
+                baseUrl = indexUrl.substring(0, lastSlash+1);
+            }
+            $scope._readExampleDownloads(indexUrl).then(function () {
+                $scope._initExampleDownloadUrlDialog(baseUrl);
+            });
+        }
+    };
+
+    $scope._readExampleDownloads = function (url) {
+        // return promise
+        var dfd = new $.Deferred();
+        var res = dfd.promise();
+        var svcLogger = yaioUtils.getAppBase().get('Logger');
+
+        var msg = '_initExampleDownloadUrls';
+        yaioUtils.getAppBase().$.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            xhrFields: {
+                // for CORS
+                withCredentials: true
+            },
+            url: url,
+            type: 'GET',
+            error: function (jqXHR, textStatus, errorThrown) {
+                // log the error to the console
+                svcLogger.logError('ERROR  ' + msg + ' The following error occured: ' + textStatus + ' ' + errorThrown, false);
+                svcLogger.logError('cant load ' + msg + ' error:' + textStatus, true);
+            },
+            complete: function () {
+                console.log('completed load ' + msg);
+            },
+            success: function (data) {
+                $scope._exampleDownloadUrls = data;
+                dfd.resolve('OK');
+            }
+        });
+
+        return res;
+    };
+
+    $scope._initExampleDownloadUrlDialog = function (baseUrl) {
+        var $select = $('#inputSelectSourceSelectorJsonDownloadUrl');
+        $select.select2();
+
+        Object.keys($scope._exampleDownloadUrls).forEach(function(id) {
+            var url = $scope._exampleDownloadUrls[id].url;
+            if (!url.startsWith('http') && !url.startsWith('/')) {
+                url = baseUrl + url;
+            }
+            $select.append(
+                new Option($scope._exampleDownloadUrls[id].name, url, false, false)
+            ).trigger('change');
+        });
+
+        $select.on('select2:select', function (evt) {
+            // How to select a value
+            var current = $select.select2('val');
+            $('#inputtextSourceSelectorJsonDownload').val(current);
+        });
+    };
+
+
+    // init
+    $scope._init();
+});
+
+/**
+ * angular-controller for serving page-element: datasource-selector json-upload
+ * @controller
+ */
+yaioApp.controller('SourceJsonFileCtrl', function($rootScope, $scope, $location, $routeParams, yaioUtils) {
+    'use strict';
+
+    /**
+     * init the controller
+     * @private
+     */
+    $scope._init = function () {
+        // include utils
+        $scope.yaioUtils = yaioUtils;
+    };
+
+    $scope.initForm = function() {
+        var fileDialog = document.getElementById('inputfileSourceSelectorJsonFile');
+        fileDialog.addEventListener('change', function (evt) {
+            var files = evt.target.files;
+            if (files.length === 1) {
+                $('#inputfileSourceSelectorJsonFile').data('file', files[0]);
+            }
+        }, true);
+    };
+
+    $scope.doUploadFile = function () {
+        var file = $('#inputfileSourceSelectorJsonFile').data('file');
+        var fileDriver = yaioUtils.getAppBase().YaioFileNodeDBDriver;
+        fileDriver.loadFile(file).done(function success() {
+            // activate editor
+            if (fileDriver.$('#inputcheckboxSourceSelectorLoadJSONFileActivateEditor').prop('checked')) {
+                fileDriver.getAccessManager().activateEditor();
+            } else {
+                fileDriver.getAccessManager().deactivateEditor();
+            }
+            yaioUtils.getAppBase().UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
+        });
+    };
+
+    $scope.discardUploadFile = function () {
+        yaioUtils.getAppBase().UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
     };
 
     // init

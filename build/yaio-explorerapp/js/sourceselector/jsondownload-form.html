@@ -1,0 +1,37 @@
+<!--
+*************************
+*    Form:   SourceSelectorJsonDownload
+*************************
+-->
+<div ng-init="initForm()">
+<div class="hidden box container-yaio-sourceselector-jsondownload" id="containerFormYaioSourceSelectorJsonDownload">
+  <h4 translate="editor.formSourceSelectorJsonDownload.ue">JsonDownload laden:</h4>
+  <p translate="editor.formSourceSelectorJsonDownload.intro" class="msg-form-intro" id="nodeFormSourceSelectorJsonDownloadIntro"></p>
+
+  <form with-errors class="" id="nodeFormSourceSelectorJsonDownload" name="nodeFormSourceSelectorJsonDownload" method="post" enctype="multipart/form-data" target="_blank">
+
+    <fieldset>
+      <label for="inputtextSourceSelectorJsonDownload" class="label_text" translate="editor.formSourceSelectorJsonDownload.label.url" required>url</label>
+      <input type="text" name="inputtextSourceSelectorJsonDownload" class="inputtype_text" id="inputtextSourceSelectorJsonDownload" value="">
+      <fielderrors for="inputtextSourceSelectorJsonDownload"></fielderrors>
+
+      <br />
+      <label for="inputSelectSourceSelectorJsonDownloadUrl" translate="editor.formSourceSelectorJsonDownload.label.selectExampleDownloadUrls">Beispiele:</label>
+      <select type="text" onclick="javascript:inputtextSourceSelectorJsonDownload.value = inputSelectSourceSelectorJsonDownloadUrl.value" name="inputSelectSourceSelectorJsonDownloadUrl" class="inputtype_select use_select2" id="inputSelectSourceSelectorJsonDownloadUrl">
+        <option value="" translate="common.select.pleaseselect">Bitte wählen
+      </select>
+
+      <br />
+      <span translate="editor.hint.checkboxActivateEditor" class="form-hint  jsh-md-background-info">experimental</span>
+      <br />
+      <label for="inputcheckboxSourceSelectorLoadJSONDownloadActivateEditor" translate="editor.formSourceSelectorJsonDownload.label.checkboxActivateEditor">editor:</label>
+      <input type="checkbox" name="inputcheckboxSourceSelectorLoadJSONFileActivateEditor" class="inputtype_checkbox" id="inputcheckboxSourceSelectorLoadJSONDownloadActivateEditor">
+      <span translate="editor.formSourceSelectorJsonDownload.label.checkboxActivateEditor2">activate editor</span>
+    </fieldset>
+
+    <fieldset>
+      <button ng-click="doDownloadFile()" ng-disabled="nodeFormSourceSelectorJsonDownload.$invalid" class="btn btn-primary" translate="common.buttonSend">Send</button>
+      <button ng-click="discardDownloadFile()" class="btn btn-primary" translate="common.buttonDiscard">Discard</button>
+    </fieldset>
+  </form>
+</div>*

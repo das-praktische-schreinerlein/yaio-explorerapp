@@ -231,6 +231,17 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
         me.logNotImplemented();
     };
 
+    me.getConnectPromise = function () {
+        return me.connectPromise;
+    };
+
+    me.createConnectPromise = function () {
+        me.connectPromise = new $.Deferred();
+        return me.connectPromise;
+    };
+
+
+
     /**
      * implementation of: create an accessmanager for this service
      * @abstract

@@ -31,74 +31,57 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
+        me.connectPromise = undefined;
+    };
+
+    me.loadFile = function (file) {
+        var dfd = new $.Deferred();
+        var res = dfd.promise();
+        var reader = new FileReader();
+
+        // config reader
+        reader.onload = function (res) {
+            console.log('read fileName:' + file.name);
+
+            // update serviceconfig
+            me.configureDataService();
+            me.reconfigureBaseApp();
+
+            // set content as json
+            window.yaioFileJSON = res.target.result;
+
+            // load content
+            me._loadStaticJson(window.yaioFileJSON);
+
+            // set new name
+            me.config.name = 'Dateiupload: ' + file.name;
+
+            // resolve connect
+            me.getConnectPromise().resolve('OK');
+
+            // resolve fileLoad
+            dfd.resolve('OK');
+        };
+
+        // read the file
+        console.log('start read file:' + file);
+        reader.readAsText(file);
+
+        return res;
     };
 
     /**
      * connect the dataservice
-     * - load uploaded jsonfile from #yaioLoadJSONFile
-     * - updateServiceConfig
-     * - updateAppConfig
-     * - load initial data)
      * @returns {JQueryPromise<T>|JQueryPromise<*>}    promise if connect succeed or failed
      */
     me.connectService = function() {
         // return promise
-        var dfd = new $.Deferred();
+        var dfd = me.createConnectPromise();
         var res = dfd.promise();
         
-        // define handler
-        var handleLoadJSONFileSelectHandler = function handleLoadJSONFileSelect(evt) {
-            var files = evt.target.files; // FileList object
-            var reader = new FileReader();
-
-            if (files.length === 1) {
-                var file = files[0];
-
-                // config reader
-                reader.onload = function (res) {
-                    console.log('read fileName:' + file.name);
-
-                    // update serviceconfig
-                    me.configureDataService();
-                    me.reconfigureBaseApp();
-
-                    // set content as json
-                    window.yaioFileJSON = res.target.result;
-
-                    // load content
-                    me._loadStaticJson(window.yaioFileJSON);
-
-                    // set new name
-                    me.config.name = 'Dateiupload: ' + file.name;
-
-                    // activate editor
-                    if (me.$('#yaioLoadJSONFileActivateEditor').prop('checked')) {
-                        me.getAccessManager().activateEditor();
-                    } else {
-                        me.getAccessManager().deactivateEditor();
-                    }
-
-                    dfd.resolve('OK');
-                };
-
-                // read the file
-                reader.readAsText(file);
-            }
-        };
-        
         // initFileUploader
-        var fileDialog = document.getElementById('yaioLoadJSONFile');
-        fileDialog.addEventListener('change', handleLoadJSONFileSelectHandler, false);
-        me.$( '#yaioloadjsonuploader-box' ).dialog({
-            modal: true,
-            width: '600px',
-            buttons: {
-              'Schließen': function() {
-                me.$( this ).dialog( 'close' );
-              }
-            }
-        });
-        
+        me.appBase.UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
+
         return res;
     };
 

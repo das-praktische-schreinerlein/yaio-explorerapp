@@ -153,7 +153,7 @@
                     srcBase + 'yaio-explorerapp/js/exporter/OutputOptionsEditorFactory.js',
                     srcBase + 'yaio-explorerapp/js/explorer/NodeShowCtrl.js',
                     srcBase + 'yaio-explorerapp/js/search/NodeSearchCtrl.js',
-                    srcBase + 'yaio-explorerapp/js/sourceselector/SourceSelectorCtrl.js',
+                    srcBase + 'yaio-explorerapp/js/sourceselector/*.js',
                     // !!!! paging is vendor but patched :-(
                     vendorDestBase + 'js/angularjs/paging.js'
                 ],
