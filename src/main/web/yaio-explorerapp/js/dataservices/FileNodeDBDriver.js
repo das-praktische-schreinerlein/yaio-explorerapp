@@ -31,7 +31,6 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
-        me.connectPromise = undefined;
     };
 
     me.loadFile = function (file) {
@@ -77,12 +76,7 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
     me.connectService = function() {
         // return promise
         var dfd = me.createConnectPromise();
-        var res = dfd.promise();
-        
-        // initFileUploader
-        me.appBase.UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
-
-        return res;
+        return dfd.promise();
     };
 
     /*****************************************

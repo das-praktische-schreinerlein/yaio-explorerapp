@@ -91,11 +91,7 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
     me.connectService = function() {
         // return promise
         var dfd = me.createConnectPromise();
-        var res = dfd.promise();
-
-        me.appBase.UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonDownload');
-
-        return res;
+        return dfd.promise();
     };
 
     /*****************************************

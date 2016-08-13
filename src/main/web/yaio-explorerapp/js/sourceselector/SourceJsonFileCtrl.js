@@ -26,6 +26,10 @@ yaioApp.controller('SourceJsonFileCtrl', function($rootScope, $scope, $location,
     $scope._init = function () {
         // include utils
         $scope.yaioUtils = yaioUtils;
+
+        $scope.$on('SourceSelect_Enable_YaioFileNodeDBDriver', function() {
+            yaioUtils.getAppBase().UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
+        });
     };
 
     $scope.initForm = function() {

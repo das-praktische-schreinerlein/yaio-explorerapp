@@ -3465,6 +3465,7 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
+        me.connectPromise = undefined;
         me.AccessManager = null;
     };
 
@@ -3671,7 +3672,7 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
 
     me.createConnectPromise = function () {
         me.connectPromise = new $.Deferred();
-        return me.connectPromise;
+        return me.getConnectPromise();
     };
 
 
@@ -4004,7 +4005,6 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
-        me.connectPromise = undefined;
     };
 
     me.loadFile = function (file) {
@@ -4050,12 +4050,7 @@ Yaio.FileNodeDBDriver = function(appBase, config, defaultConfig) {
     me.connectService = function() {
         // return promise
         var dfd = me.createConnectPromise();
-        var res = dfd.promise();
-        
-        // initFileUploader
-        me.appBase.UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
-
-        return res;
+        return dfd.promise();
     };
 
     /*****************************************
@@ -6375,11 +6370,7 @@ Yaio.UrlDownloadNodeDBDriver = function(appBase, config, defaultConfig) {
     me.connectService = function() {
         // return promise
         var dfd = me.createConnectPromise();
-        var res = dfd.promise();
-
-        me.appBase.UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonDownload');
-
-        return res;
+        return dfd.promise();
     };
 
     /*****************************************
@@ -11140,6 +11131,10 @@ yaioApp.controller('SourceJsonDownloadCtrl', function($rootScope, $scope, $locat
     $scope._init = function () {
         // include utils
         $scope.yaioUtils = yaioUtils;
+
+        $scope.$on('SourceSelect_Enable_YaioUrlDownloadNodeDBDriver', function() {
+            yaioUtils.getAppBase().UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonDownload');
+        });
     };
 
     $scope.initForm = function() {
@@ -11255,6 +11250,10 @@ yaioApp.controller('SourceJsonFileCtrl', function($rootScope, $scope, $location,
     $scope._init = function () {
         // include utils
         $scope.yaioUtils = yaioUtils;
+
+        $scope.$on('SourceSelect_Enable_YaioFileNodeDBDriver', function() {
+            yaioUtils.getAppBase().UIToggler.toggleElement('#containerFormYaioSourceSelectorJsonFile');
+        });
     };
 
     $scope.initForm = function() {
@@ -11316,6 +11315,9 @@ yaioApp.controller('SourceSelectorCtrl', function($rootScope, $scope, $location,
      * @param {String} datasourceKey    servicename of the datasource
      */
     $scope.switchDataSource = function(datasourceKey) {
+        // enable source
+        $scope.$broadcast('SourceSelect_Enable_' + datasourceKey);
+
         // load data and open frontpage if succeed
         yaioUtils.getAppBase().YaioDataSourceManager.connectService(datasourceKey).done(function success() {
             console.log('success connectService:' + yaioUtils.getConfig().appFrontpageUrl);

@@ -31,6 +31,7 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
      * initialize the object
      */
     me._init = function() {
+        me.connectPromise = undefined;
         me.AccessManager = null;
     };
 
@@ -237,7 +238,7 @@ Yaio.AbstractNodeDBDriver = function(appBase, config, defaultConfig) {
 
     me.createConnectPromise = function () {
         me.connectPromise = new $.Deferred();
-        return me.connectPromise;
+        return me.getConnectPromise();
     };
 
 

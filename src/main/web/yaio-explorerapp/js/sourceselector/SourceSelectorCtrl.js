@@ -39,6 +39,9 @@ yaioApp.controller('SourceSelectorCtrl', function($rootScope, $scope, $location,
      * @param {String} datasourceKey    servicename of the datasource
      */
     $scope.switchDataSource = function(datasourceKey) {
+        // enable source
+        $scope.$broadcast('SourceSelect_Enable_' + datasourceKey);
+
         // load data and open frontpage if succeed
         yaioUtils.getAppBase().YaioDataSourceManager.connectService(datasourceKey).done(function success() {
             console.log('success connectService:' + yaioUtils.getConfig().appFrontpageUrl);
