@@ -19,6 +19,13 @@
         "TaskNodeMetaNodeSubType.TODO": "Todo",
         "TaskNodeMetaNodeSubType.CONTAINER": "Container",
         "UrlResNodeMetaNodeSubType.RESOURCE": "Ressource",
+        "UrlResNodeMetaNodeSubType.URLRES": "Url",
+        "UrlResNodeMetaNodeSubType.FILERES": "Datei",
+        "UrlResNodeMetaNodeSubType.EMAILRES": "Email",
+        "UrlResNodeMetaNodeSubType.EMAILHEADERRES": "Email-Header",
+        "UrlResNodeMetaNodeSubType.EMAILTEXTRES": "Email-Text",
+        "UrlResNodeMetaNodeSubType.EMAILHTMLRES": "Email-HtmlText",
+        "UrlResNodeMetaNodeSubType.EMAILATTACHMENTRES": "Email-Anhang",
         "EventNode":"Termin",
         "InfoNode":"Informationen",
         "SymLinkNode":"Verknüpfung",
@@ -146,7 +153,11 @@
         ["^FILERES$", "", "lokale Datei"],
         ["^URLRES$", "", "Url"],
         ["^IMAGERES$", "", "Bild-Url"],
-        ["^EMAILRES$", "", "Email-Url"],
+        ["^EMAILRES$", "", "Email"],
+        ["^EMAILHEADERRES$", "", "Email-Header"],
+        ["^EMAILTEXTRES$", "", "Email-Text"],
+        ["^EMAILHTMLRES$", "", "Email-HtmlText"],
+        ["^EMAILATTACHMENTRES$", "", "Email-Anhang"],
         ["^DUMMYXXXX$", "", "DUMMYXXXX"]
     ]
 }

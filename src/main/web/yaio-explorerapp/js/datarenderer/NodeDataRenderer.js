@@ -451,28 +451,32 @@ Yaio.NodeDataRenderer = function(appBase) {
                 ' data-tooltip="tooltip.command.ToggleSys" lang="tech"></a>' +
                 '</div>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('edit', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('edit', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailOrChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioNodeEditor.openNodeEditorForNodeId(\'' + basenode.sysUID + '\', \'edit\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdEdit' + basenode.sysUID + '"' +
                 ' class="yaio-icon-edit"' +
                 ' lang="tech" data-tooltip="tooltip.command.NodeEdit"></a>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('create', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('create', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailOrChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioNodeEditor.openNodeEditorForNodeId(\'' + basenode.sysUID + '\', \'create\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdCreate' + basenode.sysUID + '"' +
                 ' class="yaio-icon-create"' +
                 ' lang="tech" data-tooltip="tooltip.command.NodeCreateChild"></a>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('createsymlink', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('createsymlink', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailOrChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioNodeEditor.openNodeEditorForNodeId(\'' + basenode.sysUID + '\', \'createsymlink\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdCreateSymLink' + basenode.sysUID + '"' +
                 ' class="yaio-icon-createsymlink"' +
                 ' lang="tech" data-tooltip="tooltip.command.NodeCreateSymLink"></a>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('remove', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('remove', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioExplorerCommands.doRemoveNodeByNodeId(\'' + basenode.sysUID + '\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdRemove' + basenode.sysUID + '"' +

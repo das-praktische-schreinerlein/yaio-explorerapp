@@ -202,6 +202,35 @@ Yaio.AccessManager = function(appBase, config, defaultConfig) {
         return me.availiableNodeActions[key];
     };
 
+    /**
+     * check that node is of type EMAILRES
+     * @param {Object} node           node to check (field type)
+     * @returns {Boolean} flag        true/false
+     */
+    me.isTypeEmailRes = function(node) {
+        return node.type === 'EMAILRES';
+    };
+
+    /**
+     * check that node is of type MAILHEADERRES/EMAILTEXTRES/EMAILHTMLRES/EMAILATTACHMENTRES
+     * @param {Object} node           node to check (field type)
+     * @returns {Boolean} flag        true/false
+     */
+    me.isTypeEmailChildType = function(node) {
+        return (node.type === 'EMAILHEADERRES' ||
+                    node.type === 'EMAILTEXTRES' || node.type === 'EMAILHTMLRES' ||
+                        node.type === 'EMAILATTACHMENTRES');
+    };
+
+    /**
+     * check that node is of type EMAILRES/MAILHEADERRES/EMAILTEXTRES/EMAILHTMLRES/EMAILATTACHMENTRES
+     * @param {Object} node           node to check (field type)
+     * @returns {Boolean} flag        true/false
+     */
+    me.isTypeEmailOrChildType = function(node) {
+        return me.isTypeEmailRes(node) || me.isTypeEmailChildType(node);
+    };
+
     me._init();
     
     return me;

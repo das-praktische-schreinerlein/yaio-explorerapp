@@ -2586,28 +2586,32 @@ Yaio.NodeDataRenderer = function(appBase) {
                 ' data-tooltip="tooltip.command.ToggleSys" lang="tech"></a>' +
                 '</div>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('edit', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('edit', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailOrChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioNodeEditor.openNodeEditorForNodeId(\'' + basenode.sysUID + '\', \'edit\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdEdit' + basenode.sysUID + '"' +
                 ' class="yaio-icon-edit"' +
                 ' lang="tech" data-tooltip="tooltip.command.NodeEdit"></a>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('create', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('create', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailOrChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioNodeEditor.openNodeEditorForNodeId(\'' + basenode.sysUID + '\', \'create\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdCreate' + basenode.sysUID + '"' +
                 ' class="yaio-icon-create"' +
                 ' lang="tech" data-tooltip="tooltip.command.NodeCreateChild"></a>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('createsymlink', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('createsymlink', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailOrChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioNodeEditor.openNodeEditorForNodeId(\'' + basenode.sysUID + '\', \'createsymlink\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdCreateSymLink' + basenode.sysUID + '"' +
                 ' class="yaio-icon-createsymlink"' +
                 ' lang="tech" data-tooltip="tooltip.command.NodeCreateSymLink"></a>';
         }
-        if (svcYaioAccessManager.getAvailiableNodeAction('remove', basenode.sysUID, false)) {
+        if (svcYaioAccessManager.getAvailiableNodeAction('remove', basenode.sysUID, false) &&
+            !svcYaioAccessManager.isTypeEmailChildType(basenode)) {
             clickHandler = yaioAppBaseVarName + '.YaioExplorerCommands.doRemoveNodeByNodeId(\'' + basenode.sysUID + '\'); return false;';
             actionHtml += '<a onclick="javascript: ' + clickHandler + '"' +
                 ' id="cmdRemove' + basenode.sysUID + '"' +
@@ -3879,6 +3883,35 @@ Yaio.AccessManager = function(appBase, config, defaultConfig) {
     me.setAvailiableNodeAction = function(key, url) {
         me.availiableNodeActions[key] = url;
         return me.availiableNodeActions[key];
+    };
+
+    /**
+     * check that node is of type EMAILRES
+     * @param {Object} node           node to check (field type)
+     * @returns {Boolean} flag        true/false
+     */
+    me.isTypeEmailRes = function(node) {
+        return node.type === 'EMAILRES';
+    };
+
+    /**
+     * check that node is of type MAILHEADERRES/EMAILTEXTRES/EMAILHTMLRES/EMAILATTACHMENTRES
+     * @param {Object} node           node to check (field type)
+     * @returns {Boolean} flag        true/false
+     */
+    me.isTypeEmailChildType = function(node) {
+        return (node.type === 'EMAILHEADERRES' ||
+                    node.type === 'EMAILTEXTRES' || node.type === 'EMAILHTMLRES' ||
+                        node.type === 'EMAILATTACHMENTRES');
+    };
+
+    /**
+     * check that node is of type EMAILRES/MAILHEADERRES/EMAILTEXTRES/EMAILHTMLRES/EMAILATTACHMENTRES
+     * @param {Object} node           node to check (field type)
+     * @returns {Boolean} flag        true/false
+     */
+    me.isTypeEmailOrChildType = function(node) {
+        return me.isTypeEmailRes(node) || me.isTypeEmailChildType(node);
     };
 
     me._init();
