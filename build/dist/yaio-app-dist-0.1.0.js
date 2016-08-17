@@ -1544,6 +1544,159 @@ Yaio.Layout = function(appBase) {
         window.lang.change(langKey);
     };
 
+
+    /**
+     * open the dmsdownloadwindow for the nodeId
+     * @param {Object} nodeId                 nodeId
+     */
+    me.openDMSDownloadWindowForNodeId = function(nodeId) {
+        me.appBase.YaioNodeRepository.getNodeById(nodeId, {})
+            .then(function sucess(angularResponse) {
+                // handle success
+                me.openDMSDownloadWindowForNode(angularResponse.data.node);
+            }, function error(angularResponse) {
+                // handle error
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading rootNodeHierarchy';
+                me.appBase.Logger.logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                me.appBase.Logger.logError(message, false);
+            });
+    };
+
+    /**
+     * open the dmsdownloadwindow for the node
+     * @param {Object} basenode                 node
+     */
+    me.openDMSDownloadWindowForNode = function(basenode) {
+        var svcLogger = me.appBase.Logger;
+
+        // check vars
+        if (! basenode) {
+            // basenode not found
+            svcLogger.logError('error openDMSDownloadWindowForNode: basenode required', false);
+            return null;
+        }
+
+        var embedUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsEmbed', basenode.sysUID, false);
+        if (!embedUrl) {
+            embedUrl = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsNo', basenode.sysUID, false);
+        }
+        embedUrl = embedUrl + basenode.sysUID;
+        var downloadUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsDownload', basenode.sysUID, false);
+        if (!downloadUrl) {
+            downloadUrl = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsNo', basenode.sysUID, false);
+        }
+        downloadUrl = downloadUrl + basenode.sysUID;
+
+        // set clipboard-content
+        me.$( '#download-iframe' ).attr('src', embedUrl);
+
+        // show message
+        me.$( '#download-box' ).dialog({
+            modal: true,
+            width: '700px',
+            buttons: {
+                Ok: function() {
+                    me.$( this ).dialog( 'close' );
+                },
+                'Download': function() {
+                    var helpFenster = window.open(downloadUrl, 'download', 'width=200,height=200,scrollbars=yes,resizable=yes');
+                    helpFenster.focus();
+                }
+            }
+        });
+    };
+
+    /**
+     * open the dmsdownloadwindow for the extracted metadata of the nodeId
+     * @param {Object} nodeId                 nodeId
+     */
+    me.openDMSIndexDownloadWindowForNodeId = function(nodeId) {
+        me.appBase.YaioNodeRepository.getNodeById(nodeId, {})
+            .then(function sucess(angularResponse) {
+                // handle success
+                me.openDMSIndexDownloadWindowForNode(angularResponse.data.node);
+            }, function error(angularResponse) {
+                // handle error
+                var data = angularResponse.data;
+                var header = angularResponse.header;
+                var config = angularResponse.config;
+                var message = 'error loading rootNodeHierarchy';
+                me.appBase.Logger.logError(message, true);
+                message = 'error data: ' + data + ' header:' + header + ' config:' + config;
+                me.appBase.Logger.logError(message, false);
+            });
+    };
+
+    /**
+     * open the dmsdownloadwindow for the extracted metadata of the node document
+     * @param {Object} basenode                 node
+     */
+    me.openDMSIndexDownloadWindowForNode = function(basenode) {
+        var svcLogger = me.appBase.Logger;
+
+        // check vars
+        if (! basenode) {
+            // basenode not found
+            svcLogger.logError('error openDMSIndexDownloadWindowForNode: basenode required', false);
+            return null;
+        }
+        var embedUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsIndexEmbed', basenode.sysUID, false);
+        if (!embedUrl) {
+            embedUrl = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsNo', basenode.sysUID, false);
+        }
+        embedUrl = embedUrl + basenode.sysUID;
+        var downloadUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsIndexDownload', basenode.sysUID, false);
+        if (!downloadUrl) {
+            downloadUrl = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsNo', basenode.sysUID, false);
+        }
+        downloadUrl = downloadUrl + basenode.sysUID;
+
+        $.getJSON( embedUrl, function(data) {
+            // set clipboard-content
+            var parent = me.$( '#downloadindex-content' );
+            parent.html('');
+            for (var key in data.versions) {
+                if (data.versions.hasOwnProperty(key)) {
+                    me._createDMSIndexDiv(key, data.versions[key], parent);
+                }
+            }
+        });
+
+
+        // show message
+        me.$( '#downloadindex-box' ).dialog({
+            modal: true,
+            width: '700px',
+            buttons: {
+                Ok: function() {
+                    me.$( this ).dialog( 'close' );
+                },
+                'Download': function() {
+                    var helpFenster = window.open(downloadUrl, 'download', 'width=200,height=200,scrollbars=yes,resizable=yes');
+                    helpFenster.focus();
+                }
+            }
+        });
+    };
+
+    /**
+     * create the dmsdownloadwindow for the extracted metadata of the node document
+     * @param {String} key                  id of the
+     * @param {Object} data                 data to show
+     * @param {String} parent               JQuery-Selector to append the download-window
+     */
+    me._createDMSIndexDiv = function (key, data, parent) {
+        var content = '' + data.content;
+        var name = '' + data.parserName;
+        content = me.appBase.DataUtils.htmlEscapeText(content);
+        content = content.replace(/\n/g, '<br />');
+        $(parent).append('<div class="downloadindex-container"><div class="downloadindex-name">' + name + '</div><br><pre>' + content + '<pre></div>');
+    };
+
     me.setupAppSize = function () {
         var height = window.innerHeight;
 
@@ -1708,6 +1861,42 @@ Yaio.MarkdownRenderer = function(appBase) {
 
 
     /**
+     * callback to render markdown "link"-blocks
+     * @param {string} href          href of the link
+     * @param {string} title         title
+     * @param {string} text          text
+     * @return {string}              rendered block
+     */
+    me._renderMarkdownLink = function (href, title, text) {
+        if (this.options.sanitize) {
+            var prot;
+            try {
+                prot = decodeURIComponent(href)
+                    .replace(/[^\w:]/g, '')
+                    .toLowerCase();
+            } catch (e) {
+                return '';
+            }
+            /*jshint scripturl: true */
+            if (prot && prot.indexOf('javascript:') === 0) {
+                return '';
+            }
+            /*jshint scripturl: false */
+        }
+        var js = me._parseJs(href);
+        var parsedHef = me._parseLinks(href, false);
+        var out = '<a href="' + parsedHef + '"' + this.genStyleClassAttrForTag('a');
+        if (js) {
+            out += ' onclick="' + js + '"';
+        }
+        if (title) {
+            out += ' title="' + title + '"';
+        }
+        out += '>' + text + '</a>';
+        return out;
+    };
+
+    /**
      * parse yaio-links like yaio:, yaiodmsdownload:, yaiodmsidxdownload:, yaiodmsembed:, yaiodmsidxembed: from href
      * and replace if exists with dms-urls...
      * @param {String} href          the url to parse
@@ -1715,24 +1904,70 @@ Yaio.MarkdownRenderer = function(appBase) {
      * @return  {String}             mapped url
      */
     me._parseLinks = function(href, dmsOnly) {
-        var sysUID;
+        var sysUID, newHref = href;
         if (!dmsOnly && href && href.indexOf('yaio:') === 0) {
             sysUID = href.substr(5);
-            href = '/yaio-explorerapp/yaio-explorerapp.html#/showByAllIds/' + sysUID;
-        } else if (href && href.indexOf('yaiodmsdownload:') === 0) {
+            newHref = '/yaio-explorerapp/yaio-explorerapp.html#/showByAllIds/' + sysUID;
+        } else {
+            newHref = me._parseDmsLinks(href, me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsNo', sysUID, false));
+        }
+        return newHref;
+    };
+
+    /**
+     * parse yaiodms-links like yaiodmsdownload:, yaiodmsidxdownload:, yaiodmsembed:, yaiodmsidxembed: from href
+     * and replace if exists with dms-urls or if not available with noDMSHref...
+     * @param {String} href          the url to parse
+     * @param {String} noDMSHref     link if dms not available
+     * @return  {String}             mapped url
+     */
+    me._parseDmsLinks = function(href, noDMSHref) {
+        var sysUID, newHref = href, dmsLink;
+        if (href && href.indexOf('yaiodmsdownload:') === 0) {
             sysUID = href.substr('yaiodmsdownload:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsDownload', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsDownload', sysUID, false);
+            dmsLink = true;
         } else if (href && href.indexOf('yaiodmsidxdownload:') === 0) {
             sysUID = href.substr('yaiodmsidxdownload:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexDownload', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexDownload', sysUID, false);
+            dmsLink = true;
         } else if (href && href.indexOf('yaiodmsembed:') === 0) {
             sysUID = href.substr('yaiodmsembed:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsEmbed', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsEmbed', sysUID, false);
+            dmsLink = true;
         } else if (href && href.indexOf('yaiodmsidxembed:') === 0) {
             sysUID = href.substr('yaiodmsidxembed:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexEmbed', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexEmbed', sysUID, false);
+            dmsLink = true;
         }
-        return href;
+
+        if (dmsLink) {
+            if (newHref) {
+                newHref = newHref + sysUID;
+            } else if (noDMSHref) {
+                newHref = noDMSHref;
+            }
+        }
+
+        return newHref;
+    };
+
+    me._parseJs = function(href) {
+        var sysUID, js;
+        if (href && href.indexOf('yaiodmsdownload:') === 0) {
+            sysUID = href.substr('yaiodmsdownload:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        } else if (href && href.indexOf('yaiodmsidxdownload:') === 0) {
+            sysUID = href.substr('yaiodmsidxdownload:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSIndexDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        } else if (href && href.indexOf('yaiodmsembed:') === 0) {
+            sysUID = href.substr('yaiodmsembed:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        } else if (href && href.indexOf('yaiodmsidxembed:') === 0) {
+            sysUID = href.substr('yaiodmsidxembed:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSIndexDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        }
+        return js;
     };
 
     me._init();
@@ -2859,7 +3094,7 @@ Yaio.NodeDataRenderer = function(appBase) {
         var resIndexDMSState = basenode.resIndexDMSState;
         var indexStateMapping = {'INDEX_DONE': 'Metadata', 'INDEX_OPEN': 'Indexing', 'INDEX_FAILED': 'Indexing Failed'};
         if (indexStateMapping[resIndexDMSState]
-            && me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsDownload', basenode.sysUID, false)) {
+            && me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexDownload', basenode.sysUID, false)) {
             // url
             stateBlock = svcDataUtils.htmlEscapeText(indexStateMapping[resIndexDMSState]);
             if (resIndexDMSState === 'INDEX_DONE' && !preventActionsColum) {
@@ -3721,6 +3956,8 @@ Yaio.AccessManager = function(appBase, config, defaultConfig) {
         me.availiableImportForms = {};
         me.availiableNodeActions = {};
         me.nodeActions = {};
+
+        me.setAvailiableNodeAction('dmsNo', me.appBase.config.resBaseUrl + 'static/NoDms.html?');
     };
 
 
@@ -6801,28 +7038,8 @@ Yaio.ExplorerCommands = function(appBase) {
             return null;
         }
         
-        // extract nodedata
         var basenode = treeNode.data.basenode;
-        var embedUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsEmbed', basenode.sysUID, false) + basenode.sysUID;
-        var downloadUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsDownload', basenode.sysUID, false) + basenode.sysUID;
-
-        // set clipboard-content
-        me.$( '#download-iframe' ).attr('src', embedUrl);
-        
-        // show message
-        me.$( '#download-box' ).dialog({
-            modal: true,
-            width: '700px',
-            buttons: {
-              Ok: function() {
-                me.$( this ).dialog( 'close' );
-              },
-              'Download': function() {
-                var helpFenster = window.open(downloadUrl, 'download', 'width=200,height=200,scrollbars=yes,resizable=yes');
-                helpFenster.focus();
-              }
-            }
-        });    
+        me.appBase.YaioLayout.openDMSDownloadWindowForNode(basenode);
     };
     
     /** 
@@ -6851,37 +7068,8 @@ Yaio.ExplorerCommands = function(appBase) {
             return null;
         }
         
-        // extract nodedata
         var basenode = treeNode.data.basenode;
-        var embedUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsIndexEmbed', basenode.sysUID, false) + basenode.sysUID;
-        var downloadUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsIndexDownload', basenode.sysUID, false) + basenode.sysUID;
-
-        $.getJSON( embedUrl, function(data) {
-            // set clipboard-content
-            var parent = me.$( '#downloadindex-content' );
-            parent.html('');
-            for (var key in data.versions) {
-                if (data.versions.hasOwnProperty(key)) {
-                    me._createDMSIndexDiv(key, data.versions[key], parent);
-                }
-            }
-        });
-        
-        
-        // show message
-        me.$( '#downloadindex-box' ).dialog({
-            modal: true,
-            width: '700px',
-            buttons: {
-              Ok: function() {
-                me.$( this ).dialog( 'close' );
-              },
-              'Download': function() {
-                var helpFenster = window.open(downloadUrl, 'download', 'width=200,height=200,scrollbars=yes,resizable=yes');
-                helpFenster.focus();
-              }
-            }
-        });    
+        me.appBase.YaioLayout.openDMSIndexDownloadWindowForNode(basenode);
     };
 
     /** 
@@ -6961,20 +7149,6 @@ Yaio.ExplorerCommands = function(appBase) {
             me.$('div.field_nodeSys').slideUp(1000);
             me.$('div.fieldtype_sysToggler > a').addClass('toggler_hidden').removeClass('toggler_show');
         }
-    };
-
-    /**
-     * create the dmsdownloadwindow for the extracted metadata of the node document
-     * @param {String} key                  id of the
-     * @param {Object} data                 data to show
-     * @param {String} parent               JQuery-Selector to append the download-window
-     */
-    me._createDMSIndexDiv = function (key, data, parent) {
-        var content = '' + data.content;
-        var name = '' + data.parserName;
-        content = me.appBase.DataUtils.htmlEscapeText(content);
-        content = content.replace(/\n/g, '<br />');
-        $(parent).append('<div class="downloadindex-container"><div class="downloadindex-name">' + name + '</div><br><pre>' + content + '<pre></div>');
     };
 
     /**

@@ -724,7 +724,7 @@ Yaio.NodeDataRenderer = function(appBase) {
         var resIndexDMSState = basenode.resIndexDMSState;
         var indexStateMapping = {'INDEX_DONE': 'Metadata', 'INDEX_OPEN': 'Indexing', 'INDEX_FAILED': 'Indexing Failed'};
         if (indexStateMapping[resIndexDMSState]
-            && me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsDownload', basenode.sysUID, false)) {
+            && me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexDownload', basenode.sysUID, false)) {
             // url
             stateBlock = svcDataUtils.htmlEscapeText(indexStateMapping[resIndexDMSState]);
             if (resIndexDMSState === 'INDEX_DONE' && !preventActionsColum) {

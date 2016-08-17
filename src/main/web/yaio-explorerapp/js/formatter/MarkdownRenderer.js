@@ -33,6 +33,42 @@ Yaio.MarkdownRenderer = function(appBase) {
 
 
     /**
+     * callback to render markdown "link"-blocks
+     * @param {string} href          href of the link
+     * @param {string} title         title
+     * @param {string} text          text
+     * @return {string}              rendered block
+     */
+    me._renderMarkdownLink = function (href, title, text) {
+        if (this.options.sanitize) {
+            var prot;
+            try {
+                prot = decodeURIComponent(href)
+                    .replace(/[^\w:]/g, '')
+                    .toLowerCase();
+            } catch (e) {
+                return '';
+            }
+            /*jshint scripturl: true */
+            if (prot && prot.indexOf('javascript:') === 0) {
+                return '';
+            }
+            /*jshint scripturl: false */
+        }
+        var js = me._parseJs(href);
+        var parsedHef = me._parseLinks(href, false);
+        var out = '<a href="' + parsedHef + '"' + this.genStyleClassAttrForTag('a');
+        if (js) {
+            out += ' onclick="' + js + '"';
+        }
+        if (title) {
+            out += ' title="' + title + '"';
+        }
+        out += '>' + text + '</a>';
+        return out;
+    };
+
+    /**
      * parse yaio-links like yaio:, yaiodmsdownload:, yaiodmsidxdownload:, yaiodmsembed:, yaiodmsidxembed: from href
      * and replace if exists with dms-urls...
      * @param {String} href          the url to parse
@@ -40,24 +76,70 @@ Yaio.MarkdownRenderer = function(appBase) {
      * @return  {String}             mapped url
      */
     me._parseLinks = function(href, dmsOnly) {
-        var sysUID;
+        var sysUID, newHref = href;
         if (!dmsOnly && href && href.indexOf('yaio:') === 0) {
             sysUID = href.substr(5);
-            href = '/yaio-explorerapp/yaio-explorerapp.html#/showByAllIds/' + sysUID;
-        } else if (href && href.indexOf('yaiodmsdownload:') === 0) {
+            newHref = '/yaio-explorerapp/yaio-explorerapp.html#/showByAllIds/' + sysUID;
+        } else {
+            newHref = me._parseDmsLinks(href, me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsNo', sysUID, false));
+        }
+        return newHref;
+    };
+
+    /**
+     * parse yaiodms-links like yaiodmsdownload:, yaiodmsidxdownload:, yaiodmsembed:, yaiodmsidxembed: from href
+     * and replace if exists with dms-urls or if not available with noDMSHref...
+     * @param {String} href          the url to parse
+     * @param {String} noDMSHref     link if dms not available
+     * @return  {String}             mapped url
+     */
+    me._parseDmsLinks = function(href, noDMSHref) {
+        var sysUID, newHref = href, dmsLink;
+        if (href && href.indexOf('yaiodmsdownload:') === 0) {
             sysUID = href.substr('yaiodmsdownload:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsDownload', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsDownload', sysUID, false);
+            dmsLink = true;
         } else if (href && href.indexOf('yaiodmsidxdownload:') === 0) {
             sysUID = href.substr('yaiodmsidxdownload:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexDownload', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexDownload', sysUID, false);
+            dmsLink = true;
         } else if (href && href.indexOf('yaiodmsembed:') === 0) {
             sysUID = href.substr('yaiodmsembed:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsEmbed', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsEmbed', sysUID, false);
+            dmsLink = true;
         } else if (href && href.indexOf('yaiodmsidxembed:') === 0) {
             sysUID = href.substr('yaiodmsidxembed:'.length);
-            href = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexEmbed', sysUID, false) + sysUID;
+            newHref = me.appBase.get('YaioAccessManager').getAvailiableNodeAction('dmsIndexEmbed', sysUID, false);
+            dmsLink = true;
         }
-        return href;
+
+        if (dmsLink) {
+            if (newHref) {
+                newHref = newHref + sysUID;
+            } else if (noDMSHref) {
+                newHref = noDMSHref;
+            }
+        }
+
+        return newHref;
+    };
+
+    me._parseJs = function(href) {
+        var sysUID, js;
+        if (href && href.indexOf('yaiodmsdownload:') === 0) {
+            sysUID = href.substr('yaiodmsdownload:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        } else if (href && href.indexOf('yaiodmsidxdownload:') === 0) {
+            sysUID = href.substr('yaiodmsidxdownload:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSIndexDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        } else if (href && href.indexOf('yaiodmsembed:') === 0) {
+            sysUID = href.substr('yaiodmsembed:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        } else if (href && href.indexOf('yaiodmsidxembed:') === 0) {
+            sysUID = href.substr('yaiodmsidxembed:'.length);
+            js = 'yaioAppBase.YaioLayout.openDMSIndexDownloadWindowForNodeId(\'' + sysUID + '\'); return false;';
+        }
+        return js;
     };
 
     me._init();

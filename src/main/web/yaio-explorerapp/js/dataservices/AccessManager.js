@@ -38,6 +38,8 @@ Yaio.AccessManager = function(appBase, config, defaultConfig) {
         me.availiableImportForms = {};
         me.availiableNodeActions = {};
         me.nodeActions = {};
+
+        me.setAvailiableNodeAction('dmsNo', me.appBase.config.resBaseUrl + 'static/NoDms.html?');
     };
 
 

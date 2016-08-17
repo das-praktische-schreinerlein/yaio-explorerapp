@@ -369,28 +369,8 @@ Yaio.ExplorerCommands = function(appBase) {
             return null;
         }
         
-        // extract nodedata
         var basenode = treeNode.data.basenode;
-        var embedUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsEmbed', basenode.sysUID, false) + basenode.sysUID;
-        var downloadUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsDownload', basenode.sysUID, false) + basenode.sysUID;
-
-        // set clipboard-content
-        me.$( '#download-iframe' ).attr('src', embedUrl);
-        
-        // show message
-        me.$( '#download-box' ).dialog({
-            modal: true,
-            width: '700px',
-            buttons: {
-              Ok: function() {
-                me.$( this ).dialog( 'close' );
-              },
-              'Download': function() {
-                var helpFenster = window.open(downloadUrl, 'download', 'width=200,height=200,scrollbars=yes,resizable=yes');
-                helpFenster.focus();
-              }
-            }
-        });    
+        me.appBase.YaioLayout.openDMSDownloadWindowForNode(basenode);
     };
     
     /** 
@@ -419,37 +399,8 @@ Yaio.ExplorerCommands = function(appBase) {
             return null;
         }
         
-        // extract nodedata
         var basenode = treeNode.data.basenode;
-        var embedUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsIndexEmbed', basenode.sysUID, false) + basenode.sysUID;
-        var downloadUrl = me.appBase.YaioAccessManager.getAvailiableNodeAction('dmsIndexDownload', basenode.sysUID, false) + basenode.sysUID;
-
-        $.getJSON( embedUrl, function(data) {
-            // set clipboard-content
-            var parent = me.$( '#downloadindex-content' );
-            parent.html('');
-            for (var key in data.versions) {
-                if (data.versions.hasOwnProperty(key)) {
-                    me._createDMSIndexDiv(key, data.versions[key], parent);
-                }
-            }
-        });
-        
-        
-        // show message
-        me.$( '#downloadindex-box' ).dialog({
-            modal: true,
-            width: '700px',
-            buttons: {
-              Ok: function() {
-                me.$( this ).dialog( 'close' );
-              },
-              'Download': function() {
-                var helpFenster = window.open(downloadUrl, 'download', 'width=200,height=200,scrollbars=yes,resizable=yes');
-                helpFenster.focus();
-              }
-            }
-        });    
+        me.appBase.YaioLayout.openDMSIndexDownloadWindowForNode(basenode);
     };
 
     /** 
@@ -529,20 +480,6 @@ Yaio.ExplorerCommands = function(appBase) {
             me.$('div.field_nodeSys').slideUp(1000);
             me.$('div.fieldtype_sysToggler > a').addClass('toggler_hidden').removeClass('toggler_show');
         }
-    };
-
-    /**
-     * create the dmsdownloadwindow for the extracted metadata of the node document
-     * @param {String} key                  id of the
-     * @param {Object} data                 data to show
-     * @param {String} parent               JQuery-Selector to append the download-window
-     */
-    me._createDMSIndexDiv = function (key, data, parent) {
-        var content = '' + data.content;
-        var name = '' + data.parserName;
-        content = me.appBase.DataUtils.htmlEscapeText(content);
-        content = content.replace(/\n/g, '<br />');
-        $(parent).append('<div class="downloadindex-container"><div class="downloadindex-name">' + name + '</div><br><pre>' + content + '<pre></div>');
     };
 
     /**
