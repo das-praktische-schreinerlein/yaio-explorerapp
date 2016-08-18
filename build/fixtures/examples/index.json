@@ -1,0 +1,10 @@
+{
+  "smallCompany": {
+    "url": "example-small-business.json",
+    "name": "small company example: Umsatzsteuer, Aquise..."
+  },
+  "privateHealth": {
+    "url": "example-private-health.json",
+    "name": "private health example: doc, operations..."
+  }
+}
