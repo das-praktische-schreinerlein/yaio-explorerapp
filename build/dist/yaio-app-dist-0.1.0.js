@@ -6510,11 +6510,9 @@ Yaio.StaticNodeDataStore = function(appBase, config, defaultConfig) {
      * @param {Object} node                 node to cache the parentHierarchy
      */
     me._cacheParentHierarchy = function (node) {
-        if (!node.cachedParentHierarchy) {
-            node.cachedParentHierarchy = ',' + node.sysUID + ',';
-            if (node.parentId && me.nodeList.hasOwnProperty(node.parentId)) {
-                node.cachedParentHierarchy = me.nodeList[node.parentId].cachedParentHierarchy + node.cachedParentHierarchy;
-            }
+        node.cachedParentHierarchy = ',' + node.sysUID + ',';
+        if (node.parentId && me.nodeList.hasOwnProperty(node.parentId)) {
+            node.cachedParentHierarchy = me.nodeList[node.parentId].cachedParentHierarchy + node.cachedParentHierarchy;
         }
     };
 
