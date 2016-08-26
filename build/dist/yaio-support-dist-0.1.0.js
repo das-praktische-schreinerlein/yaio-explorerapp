@@ -9,8 +9,8 @@
     JMATPageLayout.prototype.appendFormrowToggler = function(parentId, togglerBaseId, toggleClassName, label) {
         var html = jMATService.getPageLayoutService().createFormrowToggler(
                 togglerBaseId, toggleClassName, 
-                label + '<span class="icon-formrowtoggler icon-formrowtoggleron">&nbsp;</span>',
-                label + '<span class="icon-formrowtoggler icon-formrowtoggleroff">&nbsp;</span>', '', '');
+                label + '<span class="icon-formrowtoggler fa fa-minus-square" aria-hidden="true">&nbsp;</span>',
+                label + '<span class="icon-formrowtoggler fa fa-plus-square" aria-hidden="true">&nbsp;</span>', '', '');
         jMATService.getJMSServiceObj().appendHtml(html,parentId, 'formrowToggler');
     };
 
@@ -99,8 +99,8 @@
       */
      JMATPageLayout.prototype.appendBlockToggler = function(parentId, toggleId) {
          var html = jMATService.getPageLayoutService().createBlockTogglerHtml(toggleId, toggleId, 
-                 '<span class="icon-formrowtoggler icon-formrowtoggleron">&nbsp;</span>',
-                 '<span class="icon-formrowtoggler icon-formrowtoggleroff">&nbsp;</span>', '', '');
+                 '<span class="icon-formrowtoggler fa fa-toggle-on" aria-hidden="true">&nbsp;</span>',
+                 '<span class="icon-formrowtoggler fa fa-toggle-off" aria-hidden="true">&nbsp;</span>', '', '');
          jMATService.getJMSServiceObj().appendHtml(html, parentId, 'blockToggler');
       };
      
@@ -1362,23 +1362,23 @@ Yaio.Layout = function(appBase) {
     me.addWysiwygToElements = function() {
         me.appBase.YmfMarkdownEditorServiceHelper.addWysiwygToElements('label[for="nodeDesc"');
     };
-    
-    /** 
+
+    /**
      * add speechRecognition to name+nodeDesc-Label if availiable
      * set the flg webkitSpeechRecognitionAdded on the element, so that there is no doubling
      */
     me.addSpeechRecognitionToElements = function() {
         me.appBase.SpeechServiceHelper.addSpeechRecognitionToElements('label[for="nodeDesc"], label[for="name"]');
     };
-    
-    /** 
+
+    /**
      * add speechSynth to nodeDesc-Label if availiable
      * set the flg speechSynthAdded on the element, so that there is no doubling
      */
     me.addSpeechSynthToElements = function() {
         me.appBase.SpeechServiceHelper.addSpeechSynthToElements('label[for="nodeDesc"]');
     };
-    
+
     /**
      * toggle printlayout depending on #checkboxPrintAll is checked or not
      */
@@ -1415,7 +1415,7 @@ Yaio.Layout = function(appBase) {
         me.$('input.inputtype_datetime').datetimepicker();
     };
 
-    /** 
+    /**
      * add styleselectbox to all input-elements with styleclass inputtype_docLayoutAddStyleClass
      */
     me.addDocLayoutStyleSelectorToElements = function() {
@@ -1427,7 +1427,7 @@ Yaio.Layout = function(appBase) {
             if (id) {
                 // add select
                 var $select = me.$('<select id="' + id + '_select" lang="tech" />');
-                
+
                 // append values
                 $select.append(me.$('<option value="">Standardstyle</option>'));
                 $select.append(me.$('<option value="row-label-value">row-label-value</option>'));
@@ -1435,32 +1435,32 @@ Yaio.Layout = function(appBase) {
                 $select.append(me.$('<option value="row-boldlabel-value">row-boldlabel-value</option>'));
                 $select.append(me.$('<option value="row-value-only-full">row-value-only-full</option>'));
                 $select.append(me.$('<option value="row-label-only-full">row-label-only-full</option>'));
-                
+
                 // add changehandler
                 $select.change(function() {
                     // set new value
                     var style = me.$(this).val();
                     me.$(ele).val(style);
-                    
+
                     // call updatetrigger
                     window.callUpdateTriggerForElement(ele);
                 });
-                
+
                 // insert select after input
                 me.$(ele).after($select);
             }
-            
+
         });
     };
-    
-    /** 
+
+    /**
      * init the multilanguage support for all tags with attribute <XX lang='de'>
      * @param {string} langKey                key of the preferred-language
      */
     me.initLanguageSupport = function(langKey) {
         // Create language switcher instance and set default language to tech
         window.lang = new Lang('tech');
-    
+
         //Define the de language pack as a dynamic pack to be loaded on demand
         //if the user asks to change to that language. We pass the two-letter language
         //code and the path to the language pack js file
@@ -1468,7 +1468,7 @@ Yaio.Layout = function(appBase) {
         window.lang.dynamic('en', me.appBase.config.resBaseUrl + 'lang/lang-tech-to-en.json');
         window.lang.loadPack('de');
         window.lang.loadPack('en');
-    
+
         // change to de
         window.lang.change(langKey);
     };
@@ -1735,7 +1735,7 @@ Yaio.Layout = function(appBase) {
         if (jMATService.getLayoutService().isInputRowsSet(className)) {
             // show all
             jMATService.getPageLayoutService().toggleFormrows(togglerId, className, true);
-            
+
             // hide toggler
             me.$('#' + togglerId + '_On').css('display', 'none');
             me.$('#' + togglerId + '_Off').css('display', 'none');
@@ -1746,22 +1746,55 @@ Yaio.Layout = function(appBase) {
             jMATService.getPageLayoutService().toggleFormrows(togglerId, className, state);
         }
     };
-     
+
     me.createTogglerIfNotExists = function(parentId, toggleId, className) {
         var $ele = me.$('#' + toggleId + '_On');
         if ($ele.length <= 0) {
             // create toggler
-            console.log('createTogglerIfNotExists link not exists: create new toggler parent=' + parentId 
+            console.log('createTogglerIfNotExists link not exists: create new toggler parent=' + parentId
                     + ' toggleEleId=' + toggleId
                     + ' className=' + className);
             jMATService.getPageLayoutService().appendFormrowToggler(parentId, toggleId, className, '&nbsp;');
         } else {
-            console.log('createTogglerIfNotExists link exists: skip new toggler parent=' + parentId 
+            console.log('createTogglerIfNotExists link exists: skip new toggler parent=' + parentId
                     + ' toggleEleId=' + toggleId
                     + ' className=' + className);
         }
     };
-     
+
+
+    me.showDiagramSpinner = function (htmlTarget) {
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 28, // The length of each line
+            width: 14, // The line thickness
+            radius: 22, // The radius of the inner circle
+            scale: 1, // Scales overall size of the spinner
+            corners: 1, // Corner roundness (0..1)
+            color: '#000', // #rgb or #rrggbb or array of colors
+            opacity: 0.25, // Opacity of the lines
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            fps: 20, // Frames per second when using setTimeout() as a fallback for CSS
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            className: 'spinner', // The CSS class to assign to the spinner
+            top: '50%', // Top position relative to parent
+            left: '50%', // Left position relative to parent
+            shadow: true, // Whether to render a shadow
+            hwaccel: true, // Whether to use hardware acceleration
+            position: 'absolute' // Element positioning
+        };
+        var spinner = new Spinner(opts).spin(htmlTarget);
+        htmlTarget.spinner = spinner;
+        return spinner;
+    };
+
+    me.hideDiagramSpinner = function (spinner) {
+        spinner.stop();
+    };
+
 
     me._init();
     

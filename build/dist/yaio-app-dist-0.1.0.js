@@ -9,8 +9,8 @@
     JMATPageLayout.prototype.appendFormrowToggler = function(parentId, togglerBaseId, toggleClassName, label) {
         var html = jMATService.getPageLayoutService().createFormrowToggler(
                 togglerBaseId, toggleClassName, 
-                label + '<span class="icon-formrowtoggler icon-formrowtoggleron">&nbsp;</span>',
-                label + '<span class="icon-formrowtoggler icon-formrowtoggleroff">&nbsp;</span>', '', '');
+                label + '<span class="icon-formrowtoggler fa fa-minus-square" aria-hidden="true">&nbsp;</span>',
+                label + '<span class="icon-formrowtoggler fa fa-plus-square" aria-hidden="true">&nbsp;</span>', '', '');
         jMATService.getJMSServiceObj().appendHtml(html,parentId, 'formrowToggler');
     };
 
@@ -99,8 +99,8 @@
       */
      JMATPageLayout.prototype.appendBlockToggler = function(parentId, toggleId) {
          var html = jMATService.getPageLayoutService().createBlockTogglerHtml(toggleId, toggleId, 
-                 '<span class="icon-formrowtoggler icon-formrowtoggleron">&nbsp;</span>',
-                 '<span class="icon-formrowtoggler icon-formrowtoggleroff">&nbsp;</span>', '', '');
+                 '<span class="icon-formrowtoggler fa fa-toggle-on" aria-hidden="true">&nbsp;</span>',
+                 '<span class="icon-formrowtoggler fa fa-toggle-off" aria-hidden="true">&nbsp;</span>', '', '');
          jMATService.getJMSServiceObj().appendHtml(html, parentId, 'blockToggler');
       };
      
@@ -1433,23 +1433,23 @@ Yaio.Layout = function(appBase) {
     me.addWysiwygToElements = function() {
         me.appBase.YmfMarkdownEditorServiceHelper.addWysiwygToElements('label[for="nodeDesc"');
     };
-    
-    /** 
+
+    /**
      * add speechRecognition to name+nodeDesc-Label if availiable
      * set the flg webkitSpeechRecognitionAdded on the element, so that there is no doubling
      */
     me.addSpeechRecognitionToElements = function() {
         me.appBase.SpeechServiceHelper.addSpeechRecognitionToElements('label[for="nodeDesc"], label[for="name"]');
     };
-    
-    /** 
+
+    /**
      * add speechSynth to nodeDesc-Label if availiable
      * set the flg speechSynthAdded on the element, so that there is no doubling
      */
     me.addSpeechSynthToElements = function() {
         me.appBase.SpeechServiceHelper.addSpeechSynthToElements('label[for="nodeDesc"]');
     };
-    
+
     /**
      * toggle printlayout depending on #checkboxPrintAll is checked or not
      */
@@ -1486,7 +1486,7 @@ Yaio.Layout = function(appBase) {
         me.$('input.inputtype_datetime').datetimepicker();
     };
 
-    /** 
+    /**
      * add styleselectbox to all input-elements with styleclass inputtype_docLayoutAddStyleClass
      */
     me.addDocLayoutStyleSelectorToElements = function() {
@@ -1498,7 +1498,7 @@ Yaio.Layout = function(appBase) {
             if (id) {
                 // add select
                 var $select = me.$('<select id="' + id + '_select" lang="tech" />');
-                
+
                 // append values
                 $select.append(me.$('<option value="">Standardstyle</option>'));
                 $select.append(me.$('<option value="row-label-value">row-label-value</option>'));
@@ -1506,32 +1506,32 @@ Yaio.Layout = function(appBase) {
                 $select.append(me.$('<option value="row-boldlabel-value">row-boldlabel-value</option>'));
                 $select.append(me.$('<option value="row-value-only-full">row-value-only-full</option>'));
                 $select.append(me.$('<option value="row-label-only-full">row-label-only-full</option>'));
-                
+
                 // add changehandler
                 $select.change(function() {
                     // set new value
                     var style = me.$(this).val();
                     me.$(ele).val(style);
-                    
+
                     // call updatetrigger
                     window.callUpdateTriggerForElement(ele);
                 });
-                
+
                 // insert select after input
                 me.$(ele).after($select);
             }
-            
+
         });
     };
-    
-    /** 
+
+    /**
      * init the multilanguage support for all tags with attribute <XX lang='de'>
      * @param {string} langKey                key of the preferred-language
      */
     me.initLanguageSupport = function(langKey) {
         // Create language switcher instance and set default language to tech
         window.lang = new Lang('tech');
-    
+
         //Define the de language pack as a dynamic pack to be loaded on demand
         //if the user asks to change to that language. We pass the two-letter language
         //code and the path to the language pack js file
@@ -1539,7 +1539,7 @@ Yaio.Layout = function(appBase) {
         window.lang.dynamic('en', me.appBase.config.resBaseUrl + 'lang/lang-tech-to-en.json');
         window.lang.loadPack('de');
         window.lang.loadPack('en');
-    
+
         // change to de
         window.lang.change(langKey);
     };
@@ -1806,7 +1806,7 @@ Yaio.Layout = function(appBase) {
         if (jMATService.getLayoutService().isInputRowsSet(className)) {
             // show all
             jMATService.getPageLayoutService().toggleFormrows(togglerId, className, true);
-            
+
             // hide toggler
             me.$('#' + togglerId + '_On').css('display', 'none');
             me.$('#' + togglerId + '_Off').css('display', 'none');
@@ -1817,22 +1817,55 @@ Yaio.Layout = function(appBase) {
             jMATService.getPageLayoutService().toggleFormrows(togglerId, className, state);
         }
     };
-     
+
     me.createTogglerIfNotExists = function(parentId, toggleId, className) {
         var $ele = me.$('#' + toggleId + '_On');
         if ($ele.length <= 0) {
             // create toggler
-            console.log('createTogglerIfNotExists link not exists: create new toggler parent=' + parentId 
+            console.log('createTogglerIfNotExists link not exists: create new toggler parent=' + parentId
                     + ' toggleEleId=' + toggleId
                     + ' className=' + className);
             jMATService.getPageLayoutService().appendFormrowToggler(parentId, toggleId, className, '&nbsp;');
         } else {
-            console.log('createTogglerIfNotExists link exists: skip new toggler parent=' + parentId 
+            console.log('createTogglerIfNotExists link exists: skip new toggler parent=' + parentId
                     + ' toggleEleId=' + toggleId
                     + ' className=' + className);
         }
     };
-     
+
+
+    me.showDiagramSpinner = function (htmlTarget) {
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 28, // The length of each line
+            width: 14, // The line thickness
+            radius: 22, // The radius of the inner circle
+            scale: 1, // Scales overall size of the spinner
+            corners: 1, // Corner roundness (0..1)
+            color: '#000', // #rgb or #rrggbb or array of colors
+            opacity: 0.25, // Opacity of the lines
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            fps: 20, // Frames per second when using setTimeout() as a fallback for CSS
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            className: 'spinner', // The CSS class to assign to the spinner
+            top: '50%', // Top position relative to parent
+            left: '50%', // Left position relative to parent
+            shadow: true, // Whether to render a shadow
+            hwaccel: true, // Whether to use hardware acceleration
+            position: 'absolute' // Element positioning
+        };
+        var spinner = new Spinner(opts).spin(htmlTarget);
+        htmlTarget.spinner = spinner;
+        return spinner;
+    };
+
+    me.hideDiagramSpinner = function (spinner) {
+        spinner.stop();
+    };
+
 
     me._init();
     
@@ -9039,6 +9072,7 @@ Yaio.NodeCharts = function(appBase) {
      * initialize the object
      */
     me._init = function() {
+        me._chartIdx = 1;
         me.chartDataConfigs = {
             istAufwandPerDay: { 'label': 'istAufwandPerDay', 'calltypes': {'statistic': 'istAufwandPerDay'}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 3},
             planAufwandPerDay: { 'label': 'planAufwandPerDay', 'calltypes': {'statistic': 'planAufwandPerDay'}, 'dateFilterGE': 'istEndeGE', 'dateFilterLE': 'istStartLE', 'strWorkflowStateFilter': '', 'statisticReturnIdx': 3},
@@ -9224,7 +9258,7 @@ Yaio.NodeCharts = function(appBase) {
      * @param {String} chartDivSelector   jquery-selector to add the chart on
      * @param {Array} dateDataColumns     preconfigured dataColumns for date-line: start with label
      * @param {Array} chartLines          array of objects with fields: dataColumn, chartConfig, dataPointState,
-     *                                    dataPointSearchOptions, timeOut, maxTries, cur
+     *                                    dataPointSearchOptions, timeOut, maxTries, cur, done
      * @param {function|string} xFormat   callback-function or formatstring for x-axis of c3.generate
      * @param {Object} options            additional options (interval...)
      */
@@ -9240,7 +9274,7 @@ Yaio.NodeCharts = function(appBase) {
             chartConfigs.push(chartConfig);
         });
 
-        var chartId = 'dateChart' + new Date().getTime();
+        var chartId = 'dateChart' + new Date().getTime() + '_' + (me._chartIdx++);
         $(chartDivSelector).children().remove();
         $(chartDivSelector).append('<div class="workboard-chart-instance" id="' + chartId + '"></div>');
 
@@ -9263,10 +9297,21 @@ Yaio.NodeCharts = function(appBase) {
             }
         });
         chart.chartLines = chartLines;
+        chart.chartConfigs = chartConfigs;
+
+        chart.failed = false;
+        chart.done = false;
+        chart.timeOut = 2000;
+        chart.maxTries = 30;
+        chart.cur = 0;
+
+        chart.spinner = me.appBase.YaioLayout.showDiagramSpinner(document.getElementById(chartId));
 
         for (var ci = 0; ci < chartConfigs.length; ci++) {
             var chartConfig = chartConfigs[ci];
             var chartLine = chartLines[chartConfig.label];
+            chartLine.done = false;
+            chartLine.failed = false;
 
             if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic) &&
                 me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false) &&
@@ -9278,8 +9323,9 @@ Yaio.NodeCharts = function(appBase) {
                 console.error('unknown calltype:', chartConfig);
                 return;
             }
-            me._updateLineChart(chart, chartLine);
+            me._updateLineChartLine(chart, chartLine);
         }
+        me._updateLineChart(chart);
     };
 
     /**
@@ -9295,13 +9341,18 @@ Yaio.NodeCharts = function(appBase) {
             .then(function(angularResponse) {
                 // success handler
                 var values = angularResponse.data.values;
+                // set values
                 values.map(function (element) {
                     idx = element[0]-1;
                     value = element[chartConfig.statisticReturnIdx];
                     value = (value === null ? 0 : Math.round(value * 100) / 100);
                     chartLine.dataColumn[idx+1] = value; // because of label as first element
-                    chartLine.dataPointState[idx] = 1;
                 });
+                // set all points to true
+                for (var di = 0; di < chartLine.dataPointSearchOptions.length; di++) {
+                    chartLine.dataPointState[di] = 1;
+                }
+                me._checkForLineChartUpdate(chart, chartLine);
             }, function(angularResponse) {
                 // error handler
                 var data = angularResponse.data;
@@ -9340,6 +9391,7 @@ Yaio.NodeCharts = function(appBase) {
                 // success handler
                 chartLine.dataColumn[dataPointSearchOptions.curIdx + 1] = angularResponse.data.count;  // because of label as first element
                 chartLine.dataPointState[dataPointSearchOptions.curIdx] = 1;
+                me._checkForLineChartUpdate(chart, chartLine);
             }, function(angularResponse) {
                 // error handler
                 var data = angularResponse.data;
@@ -9353,18 +9405,37 @@ Yaio.NodeCharts = function(appBase) {
     };
 
     /**
-     * update chart with chartLine.dataColumn
-     * recall itself every chartLine.timeOut ms till all chartLine.dataPointState == 1 or
-     * chartLine.cur >= chartLine.maxTries
+     * check if chart timed out chartLine.failed or chart.fauled is set -> recall updateFunctions
      * @param {Object} chart         chat-object generated by c3.generate
      * @param {Object} chartLine   object with fields: dataColumn, chartConfig, dataPointState,
      *                               dataPointSearchOptions, timeOut, maxTries, cur
      */
-    me._updateLineChart = function (chart, chartLine) {
+    me._checkForLineChartUpdate = function (chart, chartLine) {
+        // restart update for failed charts
+        if (chartLine.failed) {
+            me._updateLineChartLine(chart, chartLine);
+        }
+        if (chart.failed) {
+            me._updateLineChart(chart);
+        }
+    };
+
+    /**
+     * update chartline of chart with chartLine.dataColumn
+     * recall itself every chartLine.timeOut ms till all chartLine.dataPointState == 1 or
+     * chartLine.cur >= chartLine.maxTries
+     * @param {Object} chart         chat-object generated by c3.generate
+     * @param {Object} chartLine     object with fields: dataColumn, chartConfig, dataPointState,
+     *                               dataPointSearchOptions, timeOut, maxTries, cur, done
+     */
+    me._updateLineChartLine = function (chart, chartLine) {
+        chartLine.failed = false;
+
         var ready = true;
         for (var di = 0; di < chartLine.dataPointSearchOptions.length; di++) {
             if (chartLine.dataPointState[di] !== 1) {
                 ready = false;
+                di = chartLine.dataPointSearchOptions.length + 1;
             }
         }
 
@@ -9378,9 +9449,51 @@ Yaio.NodeCharts = function(appBase) {
         //
         chartLine.cur++;
         if (!ready && chartLine.cur < chartLine.maxTries) {
+            // retry
             setTimeout(function() {
-                me._updateLineChart(chart, chartLine);
+                me._updateLineChartLine(chart, chartLine);
             }, chartLine.timeOut);
+        } else if (ready) {
+            // we are ready
+            chartLine.done = true;
+        } else {
+            // failed: stop
+            chartLine.failed = true;
+        }
+    };
+
+    /**
+     * update chart
+     * recall itself every chart.timeOut ms till all chartLine.dome == true or
+     * chart.cur >= chart.maxTries
+     * @param {Object} chart         chat-object generated by c3.generate
+     */
+    me._updateLineChart = function (chart) {
+        chart.failed = false;
+
+        var ready = true;
+        for (var ci = 0; ci < chart.chartConfigs.length; ci++) {
+            var chartConfig = chart.chartConfigs[ci];
+            var chartLine = chart.chartLines[chartConfig.label];
+            if (!chartLine.done) {
+                ready = false;
+                ci = chart.chartConfigs.length +1;
+            }
+        }
+
+        chart.cur++;
+        if (!ready && chart.cur < chart.maxTries) {
+            // retry
+            setTimeout(function() {
+                me._updateLineChart(chart);
+            }, chart.timeOut);
+        } else if (ready) {
+            // we are ready
+            chart.done = true;
+            me.appBase.YaioLayout.hideDiagramSpinner(chart.spinner);
+        } else {
+            // failed: stop
+            chart.failed = true;
         }
     };
 
@@ -9449,7 +9562,11 @@ Yaio.NodeCharts = function(appBase) {
         var startYear = me.appBase.YaioBase.parseGermanDate(chartLine.start).getFullYear();
         var endYear = me.appBase.YaioBase.parseGermanDate(chartLine.end).getFullYear();
 
-        var svg = d3.select(chartDivSelector).selectAll('svg')
+        var chartId = 'calendarChart' + new Date().getTime() + '_' + (me._chartIdx++);
+        $(chartDivSelector).children().remove();
+        $(chartDivSelector).append('<div class="workboard-chart-instance" id="' + chartId + '" style="position: relative;"></div>');
+
+        var svg = d3.select('#' + chartId).selectAll('svg')
             .data(d3.range(startYear, endYear+1))
             .enter().append('svg')
             .attr('width', width)
@@ -9483,16 +9600,30 @@ Yaio.NodeCharts = function(appBase) {
             .attr('class', 'month')
             .attr('d', me._monthPath);
 
+        rect.chartLine = chartLine;
+
+        rect.done = false;
+        rect.failed = false;
+        rect.timeOut = 2000;
+        rect.maxTries = 30;
+        rect.cur = 0;
+        chartLine.done = false;
+        chartLine.failed = false;
+
+        rect.spinner = me.appBase.YaioLayout.showDiagramSpinner(document.getElementById(chartId));
+
         // search data
         if (!me.appBase.DataUtils.isUndefinedStringValue(chartConfig.calltypes.statistic) &&
             me.appBase.YaioAccessManager.getAvailiableNodeAction('statistics', null, false)) {
             me._doCalendarChartStatisticCall(rect, chartLine);
         } else if (chartConfig.calltypes.search === true) {
             me._doCalendarChartSearch(rect, chartLine);
+            me._updateCalendarChartLine(rect, chartLine);
         } else {
             console.error('unknown calltype:', chartConfig);
             return;
         }
+        me._updateCalendarChart(rect);
     };
 
     /**
@@ -9537,7 +9668,13 @@ Yaio.NodeCharts = function(appBase) {
                         .text(function(d) {
                             return d + ': ' + value + ' ' + dataPointSearchOptions.label + ' [click to search]';
                         });
+                    chartLine.done = true;
                 });
+                // set all points to true
+                for (var di = 0; di < chartLine.dataPointSearchOptions.length; di++) {
+                    chartLine.dataPointState[di] = 1;
+                }
+                me._checkForCalendarChartUpdate(chart, chartLine);
             }, function(angularResponse) {
                 // error handler
                 var data = angularResponse.data;
@@ -9581,6 +9718,7 @@ Yaio.NodeCharts = function(appBase) {
                     .attr('class', function(d) { return 'day ' + me._getColorStyle(angularResponse.data.count); })
                     .select('title')
                     .text(function(d) { return d + ': ' + angularResponse.data.count + ' ' + dataPointSearchOptions.label; });
+                me._checkForCalendarChartUpdate(chart, chartLine);
             }, function(angularResponse) {
                 // error handler
                 var data = angularResponse.data;
@@ -9591,6 +9729,82 @@ Yaio.NodeCharts = function(appBase) {
                 message = 'error data: ' + data + ' header:' + header + ' config:' + config;
                 me.appBase.Logger.logError(message, false);
             });
+    };
+
+    /**
+     * check if chart timed out chartLine.failed or chart.fauled is set -> recall updateFunctions
+     * @param {Object} chart         chat-object generated by c3.generate
+     * @param {Object} chartLine   object with fields: dataColumn, chartConfig, dataPointState,
+     *                               dataPointSearchOptions, timeOut, maxTries, cur
+     */
+    me._checkForCalendarChartUpdate = function (chart, chartLine) {
+        // restart update for failed charts
+        if (chartLine.failed) {
+            me._updateCalendarChartLine(chart, chartLine);
+        }
+        if (chart.failed) {
+            me._updateCalendarChart(chart);
+        }
+    };
+
+    /**
+     * update chartline of chart with chartLine.dataColumn
+     * recall itself every chartLine.timeOut ms till all chartLine.dataPointState == 1 or
+     * chartLine.cur >= chartLine.maxTries
+     * @param {Object} chart         chat-object generated by c3.generate
+     * @param {Object} chartLine     object with fields: dataColumn, chartConfig, dataPointState,
+     *                               dataPointSearchOptions, timeOut, maxTries, cur, done
+     */
+    me._updateCalendarChartLine = function (chart, chartLine) {
+        chartLine.failed = false;
+
+        var ready = true;
+        for (var di = 0; di < chartLine.dataPointSearchOptions.length; di++) {
+            if (chartLine.dataPointState[di] !== 1) {
+                ready = false;
+                di = chartLine.dataPointSearchOptions.length + 1;
+            }
+        }
+
+        chartLine.cur++;
+        if (!ready && chartLine.cur < chartLine.maxTries) {
+            // retry
+            setTimeout(function() {
+                me._updateCalendarChartLine(chart, chartLine);
+            }, chartLine.timeOut);
+        } else if (ready) {
+            // we are ready
+            chartLine.done = true;
+        } else {
+            // failed: stop
+            chartLine.failed = true;
+        }
+    };
+
+    /**
+     * update chart
+     * recall itself every chart.timeOut ms till all chartLine.dome == true or
+     * chart.cur >= chart.maxTries
+     * @param {Object} chart         chat-object generated by c3.generate
+     */
+    me._updateCalendarChart = function (chart) {
+        chart.failed = false;
+        var ready = chart.chartLine.done;
+
+        chart.cur++;
+        if (!ready && chart.cur < chart.maxTries) {
+            // retry
+            setTimeout(function() {
+                me._updateCalendarChart(chart);
+            }, chart.timeOut);
+        } else if (ready) {
+            // we are ready
+            chart.done = true;
+            me.appBase.YaioLayout.hideDiagramSpinner(chart.spinner);
+        } else {
+            // failed: stop
+            chart.failed = true;
+        }
     };
 
     /**
