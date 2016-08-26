@@ -104,6 +104,7 @@
         "mermaid": true,
         "speechSynthesis": true,
         "SpeechSynthesisUtterance": true,
+        "Spinner": true,
         "toastr": true,
         "webkitSpeechRecognition": true,
         // ms-tools
