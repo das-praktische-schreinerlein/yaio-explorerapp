@@ -88,6 +88,7 @@ yaioApp.controller('SourceJsonDownloadCtrl', function($rootScope, $scope, $locat
             },
             url: url,
             type: 'GET',
+            dataType: 'json',
             error: function (jqXHR, textStatus, errorThrown) {
                 // log the error to the console
                 svcLogger.logError('ERROR  ' + msg + ' The following error occured: ' + textStatus + ' ' + errorThrown, false);
