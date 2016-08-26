@@ -16,8 +16,8 @@
     JMATPageLayout.prototype.appendFormrowToggler = function(parentId, togglerBaseId, toggleClassName, label) {
         var html = jMATService.getPageLayoutService().createFormrowToggler(
                 togglerBaseId, toggleClassName, 
-                label + '<span class="icon-formrowtoggler icon-formrowtoggleron">&nbsp;</span>',
-                label + '<span class="icon-formrowtoggler icon-formrowtoggleroff">&nbsp;</span>', '', '');
+                label + '<span class="icon-formrowtoggler fa fa-minus-square" aria-hidden="true">&nbsp;</span>',
+                label + '<span class="icon-formrowtoggler fa fa-plus-square" aria-hidden="true">&nbsp;</span>', '', '');
         jMATService.getJMSServiceObj().appendHtml(html,parentId, 'formrowToggler');
     };
 
@@ -106,8 +106,8 @@
       */
      JMATPageLayout.prototype.appendBlockToggler = function(parentId, toggleId) {
          var html = jMATService.getPageLayoutService().createBlockTogglerHtml(toggleId, toggleId, 
-                 '<span class="icon-formrowtoggler icon-formrowtoggleron">&nbsp;</span>',
-                 '<span class="icon-formrowtoggler icon-formrowtoggleroff">&nbsp;</span>', '', '');
+                 '<span class="icon-formrowtoggler fa fa-toggle-on" aria-hidden="true">&nbsp;</span>',
+                 '<span class="icon-formrowtoggler fa fa-toggle-off" aria-hidden="true">&nbsp;</span>', '', '');
          jMATService.getJMSServiceObj().appendHtml(html, parentId, 'blockToggler');
       };
      
