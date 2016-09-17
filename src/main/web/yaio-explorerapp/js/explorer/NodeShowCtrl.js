@@ -211,6 +211,15 @@ yaioApp.controller('NodeShowCtrl', function($rootScope, $scope, $location, $rout
     };
 
     /**
+     * buttoncommand to export visible nodehirarchy as commands to create mailqueuedir into clipboardwindow
+     */
+    $scope.exportAsMailQueueCreateCommands = function() {
+        console.log('exportAsOverview');
+        yaioUtils.getService('YaioExplorerCommands').openClipBoardWithCurrentViewAsMailQueueCreateCommands();
+        return false;
+    };
+
+    /**
      * buttoncommand to open nodeeditor with the visible nodehirarchy as snaphot
      */
     $scope.snapshot = function() {

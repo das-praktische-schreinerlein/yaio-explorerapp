@@ -300,7 +300,34 @@ Yaio.ExplorerCommands = function(appBase) {
             }
         });    
     };
-    
+
+    /**
+     * opens clipboard window with commands to create mailqueuedir
+     */
+    me.openClipBoardWithCurrentViewAsMailQueueCreateCommands
+        = function() {
+        var svcDataUtils = me.appBase.DataUtils;
+        var svcYaioExplorerConverter = me.appBase.YaioExplorerConverter;
+
+        // convert and secure
+        var queueCommandListSrc = svcYaioExplorerConverter.convertExplorerLinesAsMailQueueCreateCommands();
+        queueCommandListSrc = svcDataUtils.htmlEscapeText(queueCommandListSrc);
+
+        // set clipboard-content
+        me.$( '#clipboard-content' ).html(queueCommandListSrc + '\n\n');
+
+        // show message
+        me.$( '#clipboard-box' ).dialog({
+            modal: true,
+            width: '700px',
+            buttons: {
+                Ok: function() {
+                    me.$( this ).dialog( 'close' );
+                }
+            }
+        });
+    };
+
     /** 
      * open the nodeeditor with a new infornode with snaphot of current gui: checklist and gantt-markdown
      * @param {Object} parentNode     parentNode to get the content from

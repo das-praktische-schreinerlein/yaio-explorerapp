@@ -114,6 +114,7 @@ Yaio.ExplorerConverter = function(appBase) {
         return checkList;
     };
 
+
     /**
      * extract data from explorerlines (table.fancytree-ext-table tr) and format
      * them as mermaid-gantt-markdown
@@ -160,6 +161,50 @@ Yaio.ExplorerConverter = function(appBase) {
         ganttMarkdown += ganttMarkdownPlan + ganttMarkdownIst  + '```\n';
 
         return ganttMarkdown;
+    };
+
+    /**
+     * extract data from explorerlines (table.fancytree-ext-table tr) and format
+     * them mkdir mailqueue-directories
+     * @return {String}             commandlist
+     */
+    me.convertExplorerLinesAsMailQueueCreateCommands = function() {
+        var commandList = '\n\n';
+
+        // iterate all nodelines
+        var parents = [];
+        me.$('table.fancytree-ext-table tr').each(function(i, line) {
+            // extract data
+            var titleSpan = me.$(line).find('span.fancytree-title2');
+            var levelSpan = me.$(line).find('span.fancytree-node');
+
+            // extract content
+            var level = 0;
+            var title = null;
+            var sysUID = null;
+            if (me.$(levelSpan).size() > 0) {
+                // extract level from intend
+                var intend = me.$(levelSpan).css('margin-left').replace('px', '');
+                level = parseInt(intend, 10) / 20;
+            }
+            if (me.$(titleSpan).size() > 0) {
+                title = me.$(titleSpan).text();
+                sysUID = me.$(titleSpan).attr('id').replace('title', '');
+            }
+
+            // if all set: generate commandList
+            if (title && sysUID) {
+                var path = title;
+                path = path.replace(/[^A-Za-z0-9_]/g, '_');
+                if (level > 0 && parents[level-1]) {
+                    path = parents[level-1] + '_' + path;
+                }
+                commandList += 'mkdir ' + path + '---' + sysUID + '\n';
+                parents[level] = path;
+            }
+        });
+
+        return commandList;
     };
 
     /**

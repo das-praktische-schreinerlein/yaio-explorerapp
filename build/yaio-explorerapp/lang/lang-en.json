@@ -46,6 +46,7 @@
     "common.command.Print": "Print",
     "common.command.Snapshot": "Snapshot",
     "common.command.DashboardMoreResults": "Show all",
+    "common.command.ExportAsMailQueueCreateCommands": "mkdir MailQueue",
     "common.select.all": "show all",
     "common.select.className.EventNode": "event",
     "common.select.className.InfoNode": "information",
