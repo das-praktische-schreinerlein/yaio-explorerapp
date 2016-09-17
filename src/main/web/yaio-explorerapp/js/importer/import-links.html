@@ -17,6 +17,10 @@
                <li class="importtype" data-tooltip="tooltip.command.{{key}}" lang="tech">
                  <a ng-click="showImportEditor(node.sysUID, yaioUtils.getService('YaioAccessManager').getAvailiableImportForm(key) + node.sysUID, '_blank');" class="button import import{{key}}" target="_blank" translate="common.command.{{key}}" target="_blank" translate="common.command.{{key}}">{{key}}</a></li>
             </ul>
+            <ul class="importtypelist" ng-if="yaioUtils.getService('YaioAccessManager').getAvailiableNodeAction('urlResFileUploadAvailable', node.sysUID) == true">
+               <li class="command" data-tooltip='tooltip.command.ExportAsMailQueueCreateCommands' lang="tech">
+                  <a href="" ng-click="exportAsMailQueueCreateCommands()" class="button command_exportasmailqeuecreatecommands" translate="common.command.ExportAsMailQueueCreateCommands">Export MailQueueCreateCommands</a></li>
+            </ul>
           </div>
         </li>
       </ul>

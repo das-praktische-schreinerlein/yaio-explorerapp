@@ -76,6 +76,15 @@ yaioApp.controller('ImporterCtrl', function($rootScope, $scope, $location, $rout
         return false;
     };
 
+    /**
+     * buttoncommand to export visible nodehirarchy as commands to create mailqueuedir into clipboardwindow
+     */
+    $scope.exportAsMailQueueCreateCommands = function() {
+        console.log('exportAsMailQueueCreateCommands');
+        yaioUtils.getService('YaioExplorerCommands').openClipBoardWithCurrentViewAsMailQueueCreateCommands();
+        return false;
+    };
+
     // init
     $scope._init();
 });
