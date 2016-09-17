@@ -4780,6 +4780,7 @@ Yaio.ServerAccessManager = function(appBase, config, defaultConfig) {
         // import-forms
         me.setAvailiableImportForm('ImportWiki', '/imports/wiki/');
         me.setAvailiableImportForm('ImportJson', '/imports/json/');
+        me.setAvailiableImportForm('ImportMail', '/imports/mail/');
 
         // export-forms
         me.setAvailiableExportForm('ExportWiki', me.config.restExportsBaseUrl + 'wikiuseoptions/');

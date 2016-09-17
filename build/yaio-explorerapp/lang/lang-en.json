@@ -33,6 +33,7 @@
     "common.command.ExportStaticJsonDirect": "JSON",
     "common.command.Import": "Imports...",
     "common.command.ImportJson": "JSON-Import",
+    "common.command.ImportMail": "Mail-Import",
     "common.command.ImportWiki": "Wiki-Import",
     "common.command.Logout": "Logout",
     "common.command.OpenDashboard": "Dashboard",
