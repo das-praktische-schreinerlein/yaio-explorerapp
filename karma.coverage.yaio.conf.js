@@ -120,6 +120,7 @@
                     { type: 'html', subdir: 'report-html' },
                     // reporters supporting the `file` property, use `subdir` to directly
                     // output them in the `dir` directory
+                    { type: 'lcov', subdir: 'report-lcov' },
                     { type: 'cobertura', subdir: '.', file: 'cobertura.xml' }
                 ]
             },
