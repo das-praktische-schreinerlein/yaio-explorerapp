@@ -241,8 +241,9 @@
         grunt.registerTask('vendorsfull', ['clean:bower', 'bower', 'vendorslocal']);
         grunt.registerTask('distyaio', ['images', 'concat', 'copy:yaiores2dist', 'replace:versionOnDist', 'replace:versionOnRes', 'copy:dist2archiv']);
         grunt.registerTask('distlocal', ['vendorslocal', 'copy:vendors2dist', 'distyaio']);
-        grunt.registerTask('distfull', ['vendorsfull', 'clean:dist', 'copy:archiv2dist', 'images', 'concat', 'copy:vendors2dist', 'copy:yaiores2dist', 'replace:versionOnDist', 'replace:versionOnRes', 'copy:dist2archiv']);
+        grunt.registerTask('distfull', ['vendorsfull', 'clean:dist', 'copy:archiv2dist', 'images', 'concat', 'copy:vendors2dist', 'copy:yaiores2dist', 'replace:versionOnDist', 'replace:versionOnRes', 'copy:dist2archiv', 'karma:unit', 'karma:coverage', 'jshint']);
         grunt.registerTask('dist', ['distfull']);
+        grunt.registerTask('coverage',     ['karma:coverage']);
         grunt.registerTask('unit-test', ['dist', 'karma:continuous:start', 'watch:karma']);
         grunt.registerTask('e2e-test', ['dist', 'protractor:continuous', 'watch:protractor']);
 

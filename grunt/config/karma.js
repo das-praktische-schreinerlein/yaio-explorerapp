@@ -10,6 +10,10 @@
         unit: {
             singleRun: true
         },
+        coverage: {
+            singleRun: true,
+            configFile: 'karma.coverage.yaio.conf.js'
+        },
         // testmodus: continous
         continuous: {
             // keep karma running in the background
