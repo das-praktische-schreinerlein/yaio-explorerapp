@@ -7006,8 +7006,7 @@ Yaio.ExplorerCommands = function(appBase) {
     /**
      * opens clipboard window with commands to create mailqueuedir
      */
-    me.openClipBoardWithCurrentViewAsMailQueueCreateCommands
-        = function() {
+    me.openClipBoardWithCurrentViewAsMailQueueCreateCommands = function() {
         var svcDataUtils = me.appBase.DataUtils;
         var svcYaioExplorerConverter = me.appBase.YaioExplorerConverter;
 
