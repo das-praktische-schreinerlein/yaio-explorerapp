@@ -24,7 +24,7 @@ label {
 }
 /* extend width for nodeDesc */
 label[for="nodeDesc"] {
-    width: 470px;
+    width: 770px;
 }
 .inputtype_name {
     width: 500px;
