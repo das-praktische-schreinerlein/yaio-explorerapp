@@ -3,4 +3,5 @@ bower/
 coverage/
 vendors/
 build/dist/vendors*
+devserver/*
 .project

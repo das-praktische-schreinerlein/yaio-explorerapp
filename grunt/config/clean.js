@@ -3,7 +3,8 @@
 
     module.exports = {
         bower: ['bower/_dest', 'vendors/js', 'vendors/css'],
-    dist:  ['<%= destBase%>']
+        dist:  ['<%= destBase%>'],
+        devserver: ['<%= devserverBase%>']
     };
 })();
 

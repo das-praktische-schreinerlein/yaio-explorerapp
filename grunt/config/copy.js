@@ -158,6 +158,11 @@
                 {expand: true, cwd: '<%= resSrcBase %>static/', src: ['images/**/*.*'], dest: '<%= destBase %>', flatten: false},
                 {expand: true, cwd: '<%= resSrcBase %>fixtures/', src: ['**/*.*'], dest: '<%= destBase %>/fixtures/', flatten: false}
             ]
+        },
+        devserver: {
+            files: [
+                {expand: true, cwd: '<%= destBase %>', src: ['yaio-explorerapp/yaio-explorerapp.html'], dest: '<%= devserverBase %>', flatten: false}
+            ]
         }
     };
 

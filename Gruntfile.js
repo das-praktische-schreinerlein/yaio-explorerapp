@@ -36,6 +36,12 @@
     var vendorDestBase = 'vendors/';
     var archivSrcBase = 'vendors/archiv/';
     var testSrcBase = 'src/test/javascript/';
+    var devserverBase = 'devserver/';
+
+    // configure server and port for devserver
+    var devserverRest = 'http://localhost:8083';  // use this instance of yaio-server for restcalls
+    var devserverPort = 8502;
+    var devserverInstance = 'http://localhost:' + devserverPort;
 
     /**
      * configure tasks
@@ -58,6 +64,10 @@
                 vendorDestBase: vendorDestBase,
                 archivSrcBase: archivSrcBase,
                 testSrcBase: testSrcBase,
+                devserverBase: devserverBase,
+                devserverRest: devserverRest,
+                devserverInstance: devserverInstance,
+                devserverPort: devserverPort,
 
                 // define files
                 vendorJsFiles: [
@@ -232,20 +242,21 @@
         // register tasks
         grunt.registerTask('default', ['distfull']);
 
-        grunt.registerTask('css-images', ['css_image']);
-        grunt.registerTask('sprites', ['sprite']);
-        grunt.registerTask('data-uri', ['dataUri']);
-        grunt.registerTask('images', ['sprites', 'css-images', 'data-uri']);
+        grunt.registerTask('css-images',   ['css_image']);
+        grunt.registerTask('sprites',      ['sprite']);
+        grunt.registerTask('data-uri',     ['dataUri']);
+        grunt.registerTask('images',       ['sprites', 'css-images', 'data-uri']);
 
         grunt.registerTask('vendorslocal', ['copy:bower2vendors', 'copy:bowerbin2vendors']);
-        grunt.registerTask('vendorsfull', ['clean:bower', 'bower', 'vendorslocal']);
-        grunt.registerTask('distyaio', ['images', 'concat', 'copy:yaiores2dist', 'replace:versionOnDist', 'replace:versionOnRes', 'copy:dist2archiv']);
-        grunt.registerTask('distlocal', ['vendorslocal', 'copy:vendors2dist', 'distyaio']);
-        grunt.registerTask('distfull', ['vendorsfull', 'clean:dist', 'copy:archiv2dist', 'images', 'concat', 'copy:vendors2dist', 'copy:yaiores2dist', 'replace:versionOnDist', 'replace:versionOnRes', 'copy:dist2archiv', 'karma:unit', 'karma:coverage', 'jshint']);
-        grunt.registerTask('dist', ['distfull']);
+        grunt.registerTask('vendorsfull',  ['clean:bower', 'bower', 'vendorslocal']);
+        grunt.registerTask('distyaio',     ['images', 'concat', 'copy:yaiores2dist', 'replace:versionOnDist', 'replace:versionOnRes', 'copy:dist2archiv']);
+        grunt.registerTask('distlocal',    ['vendorslocal', 'copy:vendors2dist', 'distyaio']);
+        grunt.registerTask('distfull',     ['vendorsfull', 'clean:dist', 'copy:archiv2dist', 'images', 'concat', 'copy:vendors2dist', 'copy:yaiores2dist', 'replace:versionOnDist', 'replace:versionOnRes', 'copy:dist2archiv', 'karma:unit', 'karma:coverage', 'jshint']);
+        grunt.registerTask('dist',         ['distfull']);
         grunt.registerTask('coverage',     ['karma:coverage']);
-        grunt.registerTask('unit-test', ['dist', 'karma:continuous:start', 'watch:karma']);
-        grunt.registerTask('e2e-test', ['dist', 'protractor:continuous', 'watch:protractor']);
+        grunt.registerTask('unit-test',    ['dist', 'karma:continuous:start', 'watch:karma']);
+        grunt.registerTask('e2e-test',     ['dist', 'protractor:continuous', 'watch:protractor']);
+        grunt.registerTask('devserver',    ['clean:devserver', 'copy:devserver', 'replace:devserver', 'http-server:devserver']);
 
         // load grunt tasks
         grunt.loadNpmTasks('grunt-bower-task');
@@ -256,6 +267,7 @@
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-data-uri');
+        grunt.loadNpmTasks('grunt-http-server');
         grunt.loadNpmTasks('grunt-jsdoc');
         grunt.loadNpmTasks('grunt-karma');
         grunt.loadNpmTasks('grunt-protractor-runner');

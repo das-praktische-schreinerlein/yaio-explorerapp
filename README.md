@@ -23,9 +23,16 @@ cd yaio-explorerapp
 npm install
 grunt dist
 ```
+- configure your devserver and a your [Yaio-instance](https://github.com/das-praktische-schreinerlein/your-all-in-one) to send the restcalls to in Gruntfile.js
+```
+    var devserverRest = 'http://localhost:8083';  // use this instance of yaio-server for restcalls
+    var devserverPort = 8502;
+    var devserverInstance = 'http://localhost:' + devserverPort;
+```
 - start
 ```
-firefox build/yaio-explorerapp/yaio-explorerapp.html
+grunt devserver
+firefox http://localhost:5802/
 ```
 
 # Todos for me

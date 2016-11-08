@@ -88,6 +88,30 @@
                     src: ['resources/projektplan-export-header.html'],
                     dest: '', flatten: false}
             ]
+        },
+        devserver: {
+            // replace all version-placeholders in static resourcefolder
+            options: {
+                patterns: [
+                    {
+                        match: /\/\/ CONFIGUREDATASOURCES_SNIP/g,
+                        replacement: 'yaioAppBase.configureService("Yaio.ServerNodeDBDriver_dev", function() { return Yaio.ServerNodeDBDriver(yaioAppBase, Yaio.ServerNodeDBDriverConfig("<%= devserverInstance %>", "Server: dev",  "Meine Dev-Instanz unter <%= devserverRest %>")); }); ' +
+                            'yaioAppBase.configureService("YaioServerNodeDBDriver_dev", function() { return yaioAppBase.get("Yaio.ServerNodeDBDriver_dev"); }); ' +
+                            'yaioAppBase.config.datasources.push("YaioServerNodeDBDriver_dev"); ' +
+                            'yaioAppBase.get("YaioDataSourceManager").addConnection("YaioServerNodeDBDriver_dev", function () { return yaioAppBase.get("YaioServerNodeDBDriver_dev"); });'
+                    },
+                    {
+                        match: /var datasourceKey = 'YaioStaticNodeDBDriver';/g,
+                        replacement: 'var datasourceKey = "YaioServerNodeDBDriver_dev";'
+                    }
+                ]
+            },
+            files: [
+                {   expand: true,
+                    cwd: '<%= devserverBase %>',
+                    src: ['yaio-explorerapp/yaio-explorerapp.html'],
+                    dest: '<%= devserverBase %>', flatten: false}
+            ]
         }
     };
 })();
