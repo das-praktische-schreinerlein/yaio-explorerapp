@@ -112,7 +112,6 @@ Yaio.NodeEditor = function(appBase) {
         var svcLogger = me.appBase.get('Logger');
         var svcDataUtils = me.appBase.get('DataUtils');
         var svcYaioLayout = me.appBase.get('YaioLayout');
-        var svcYaioMarkdownEditorController = me.appBase.get('YaioMarkdownEditorController');
 
         // reset editor
         console.log('yaioOpenNodeEditor: reset editor');
@@ -285,12 +284,12 @@ Yaio.NodeEditor = function(appBase) {
         svcYaioLayout.hideFormRowTogglerIfSet('filterMetaSymLinkForm', 'filter_MetaSymLinkNode', false);
 
         // create nodeDesc-editor
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescTaskNode', 'inputNodeDescTaskNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescEventNode', 'inputNodeDescEventNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescInfoNode', 'inputNodeDescInfoNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescUrlResNode', 'inputNodeDescUrlResNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescSymLinkNode', 'inputNodeDescSymLinkNode');
-        
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescTaskNode', 'inputNodeDescTaskNode', 'toolbarInputNodeDescTaskNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescEventNode', 'inputNodeDescEventNode', 'toolbarInputNodeDescEventNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescInfoNode', 'inputNodeDescInfoNode', 'toolbarInputNodeDescInfoNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescUrlResNode', 'inputNodeDescUrlResNode', 'toolbarInputNodeDescUrlResNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescSymLinkNode', 'inputNodeDescSymLinkNode', 'toolbarInputNodeDescSymLinkNode');
+
         // update appsize
         svcYaioLayout.setupAppSize();
 

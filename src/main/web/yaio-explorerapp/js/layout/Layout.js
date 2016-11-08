@@ -33,6 +33,24 @@ Yaio.Layout = function(appBase) {
     };
 
     /**
+     * create an markdowneditor
+     * @param editorId            id of the html-element to create the editor on
+     * @param textAreaId          id of the textarea to get value and sync
+     * @param toolbarContainerId  id the of the toolbarCobtainer to add the toolbar to
+     * @return {ace.Editor}       the editor-instance
+     */
+    me.createMarkdownEditorForTextarea = function(editorId, textAreaId, toolbarContainerId) {
+        var svcYaioMarkdownEditorController = me.appBase.get('YaioMarkdownEditorController');
+        var svcYaioMarkdownEditorFactory = me.appBase.get('YaioMarkdownEditorFactory');
+
+        var editor = svcYaioMarkdownEditorController.createMarkdownEditorForTextarea(editorId, textAreaId);
+        me.$('#' + toolbarContainerId).find('.ymf-toolbar').remove();
+        svcYaioMarkdownEditorFactory.createEditorToolbar(editor, '#' + toolbarContainerId);
+
+        return editor;
+    };
+
+    /**
      * add preview-link to label of input-elements if availiable<br>
      * set the flg previewAdded on the element, so that there is no doubling
      * @param {Object} filter                 selector to filter label elements (used as jquery-filter)
@@ -41,7 +59,6 @@ Yaio.Layout = function(appBase) {
         var ymfAppBaseVarName = me.appBase.config.appBaseVarName;
 
         // add setAuto to nodeDesc
-        console.error('addSetAutoGenerateNodeDescToElements: start: ');
         me.$(filter).append(function (idx) {
             var link = '';
             var label = this;

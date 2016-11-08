@@ -42,6 +42,9 @@ window.YaioAppBase = function() {
         me.configureService('JsHelferlein.MarkdownRenderer', function () {
             return Yaio.MarkdownRenderer(me);
         });
+        me.configureService('Ymf.MarkdownEditorFactory', function () {
+            return Ymf.MarkdownEditorFactory(me);
+        });
         me.configureService('Ymf.MarkdownEditorController', function () {
             var config = new JsHelferlein.ConfigBase();
             config.usePrintWidget = false;
@@ -56,11 +59,9 @@ window.YaioAppBase = function() {
         me.configureService('Yaio.NodeEditor', function() { return Yaio.NodeEditor(me); });
         me.configureService('Yaio.NodeSearch', function() { return Yaio.NodeSearch(me); });
         me.configureService('Yaio.NodeCharts', function() { return Yaio.NodeCharts(me); });
-        me.configureService('Yaio.MarkdownConverter', function() { return Yaio.MarkdownConverter(me); });
         me.configureService('Yaio.MarkdownRenderer', function() { return Yaio.MarkdownRenderer(me); });
         me.configureService('Yaio.ExplorerConverter', function() { return Yaio.ExplorerConverter(me); });
         me.configureService('Yaio.Formatter', function() { return Yaio.Formatter(me); });
-        me.configureService('Yaio.MarkdownEditorController', function() { return Yaio.MarkdownEditorController(me); });
         me.configureService('Yaio.DataSourceManager', function() { return Yaio.DataSourceManager(me); });
         me.configureService('Yaio.ServerNodeDBDriver_Local', function() { return Yaio.ServerNodeDBDriver(me, Yaio.ServerNodeDBDriverConfig()); });
         me.configureService('Yaio.StaticNodeDataStore', function() { return Yaio.StaticNodeDataStore(me); });
@@ -87,6 +88,9 @@ window.YaioAppBase = function() {
         me.configureService('YmfRenderer', function () {
             return me.get('JsHelferlein.Renderer');
         });
+        me.configureService('YmfMarkdownEditorFactory', function () {
+            return me.get('Ymf.MarkdownEditorFactory');
+        });
         me.configureService('YmfMarkdownEditorController', function () {
             return me.get('Ymf.MarkdownEditorController');
         });
@@ -102,6 +106,7 @@ window.YaioAppBase = function() {
         me.configureService('YaioExplorerConverter', function() { return me.get('Yaio.ExplorerConverter'); });
         me.configureService('YaioFormatter', function() { return me.get('YmfRenderer'); });
         me.configureService('YaioMarkdownEditorController', function() { return me.get('YmfMarkdownEditorController'); });
+        me.configureService('YaioMarkdownEditorFactory', function() { return me.get('YmfMarkdownEditorFactory'); });
 
         me.configureService('YaioStaticNodeDataStore', function() { return me.get('Yaio.StaticNodeDataStore'); });
         me.configureService('YaioStaticNodeDBDriver', function() { return me.get('Yaio.StaticNodeDBDriver'); });
