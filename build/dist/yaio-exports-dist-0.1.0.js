@@ -301,6 +301,9 @@ window.YaioAppBase = function() {
         me.configureService('JsHelferlein.MarkdownRenderer', function () {
             return Yaio.MarkdownRenderer(me);
         });
+        me.configureService('Ymf.MarkdownEditorFactory', function () {
+            return Ymf.MarkdownEditorFactory(me);
+        });
         me.configureService('Ymf.MarkdownEditorController', function () {
             var config = new JsHelferlein.ConfigBase();
             config.usePrintWidget = false;
@@ -315,11 +318,9 @@ window.YaioAppBase = function() {
         me.configureService('Yaio.NodeEditor', function() { return Yaio.NodeEditor(me); });
         me.configureService('Yaio.NodeSearch', function() { return Yaio.NodeSearch(me); });
         me.configureService('Yaio.NodeCharts', function() { return Yaio.NodeCharts(me); });
-        me.configureService('Yaio.MarkdownConverter', function() { return Yaio.MarkdownConverter(me); });
         me.configureService('Yaio.MarkdownRenderer', function() { return Yaio.MarkdownRenderer(me); });
         me.configureService('Yaio.ExplorerConverter', function() { return Yaio.ExplorerConverter(me); });
         me.configureService('Yaio.Formatter', function() { return Yaio.Formatter(me); });
-        me.configureService('Yaio.MarkdownEditorController', function() { return Yaio.MarkdownEditorController(me); });
         me.configureService('Yaio.DataSourceManager', function() { return Yaio.DataSourceManager(me); });
         me.configureService('Yaio.ServerNodeDBDriver_Local', function() { return Yaio.ServerNodeDBDriver(me, Yaio.ServerNodeDBDriverConfig()); });
         me.configureService('Yaio.StaticNodeDataStore', function() { return Yaio.StaticNodeDataStore(me); });
@@ -346,6 +347,9 @@ window.YaioAppBase = function() {
         me.configureService('YmfRenderer', function () {
             return me.get('JsHelferlein.Renderer');
         });
+        me.configureService('YmfMarkdownEditorFactory', function () {
+            return me.get('Ymf.MarkdownEditorFactory');
+        });
         me.configureService('YmfMarkdownEditorController', function () {
             return me.get('Ymf.MarkdownEditorController');
         });
@@ -361,6 +365,7 @@ window.YaioAppBase = function() {
         me.configureService('YaioExplorerConverter', function() { return me.get('Yaio.ExplorerConverter'); });
         me.configureService('YaioFormatter', function() { return me.get('YmfRenderer'); });
         me.configureService('YaioMarkdownEditorController', function() { return me.get('YmfMarkdownEditorController'); });
+        me.configureService('YaioMarkdownEditorFactory', function() { return me.get('YmfMarkdownEditorFactory'); });
 
         me.configureService('YaioStaticNodeDataStore', function() { return me.get('Yaio.StaticNodeDataStore'); });
         me.configureService('YaioStaticNodeDBDriver', function() { return me.get('Yaio.StaticNodeDBDriver'); });
@@ -830,7 +835,6 @@ Yaio.NodeEditor = function(appBase) {
         var svcLogger = me.appBase.get('Logger');
         var svcDataUtils = me.appBase.get('DataUtils');
         var svcYaioLayout = me.appBase.get('YaioLayout');
-        var svcYaioMarkdownEditorController = me.appBase.get('YaioMarkdownEditorController');
 
         // reset editor
         console.log('yaioOpenNodeEditor: reset editor');
@@ -1003,12 +1007,12 @@ Yaio.NodeEditor = function(appBase) {
         svcYaioLayout.hideFormRowTogglerIfSet('filterMetaSymLinkForm', 'filter_MetaSymLinkNode', false);
 
         // create nodeDesc-editor
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescTaskNode', 'inputNodeDescTaskNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescEventNode', 'inputNodeDescEventNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescInfoNode', 'inputNodeDescInfoNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescUrlResNode', 'inputNodeDescUrlResNode');
-        svcYaioMarkdownEditorController.createMarkdownEditorForTextarea('editorInputNodeDescSymLinkNode', 'inputNodeDescSymLinkNode');
-        
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescTaskNode', 'inputNodeDescTaskNode', 'toolbarInputNodeDescTaskNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescEventNode', 'inputNodeDescEventNode', 'toolbarInputNodeDescEventNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescInfoNode', 'inputNodeDescInfoNode', 'toolbarInputNodeDescInfoNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescUrlResNode', 'inputNodeDescUrlResNode', 'toolbarInputNodeDescUrlResNode');
+        svcYaioLayout.createMarkdownEditorForTextarea('editorInputNodeDescSymLinkNode', 'inputNodeDescSymLinkNode', 'toolbarInputNodeDescSymLinkNode');
+
         // update appsize
         svcYaioLayout.setupAppSize();
 
@@ -1208,7 +1212,7 @@ Yaio.NodeEditor = function(appBase) {
     };
 
     /**
-     * set nodesc to autogenerate
+     * preset nodedesc with autogenerate
      */
     me.setAutoGenerateNodeDesc = function(elementId) {
         var element = $('#' + elementId);
@@ -1359,6 +1363,24 @@ Yaio.Layout = function(appBase) {
     };
 
     /**
+     * create an markdowneditor
+     * @param editorId            id of the html-element to create the editor on
+     * @param textAreaId          id of the textarea to get value and sync
+     * @param toolbarContainerId  id the of the toolbarCobtainer to add the toolbar to
+     * @return {ace.Editor}       the editor-instance
+     */
+    me.createMarkdownEditorForTextarea = function(editorId, textAreaId, toolbarContainerId) {
+        var svcYaioMarkdownEditorController = me.appBase.get('YaioMarkdownEditorController');
+        var svcYaioMarkdownEditorFactory = me.appBase.get('YaioMarkdownEditorFactory');
+
+        var editor = svcYaioMarkdownEditorController.createMarkdownEditorForTextarea(editorId, textAreaId);
+        me.$('#' + toolbarContainerId).find('.ymf-toolbar').remove();
+        svcYaioMarkdownEditorFactory.createEditorToolbar(editor, '#' + toolbarContainerId);
+
+        return editor;
+    };
+
+    /**
      * add preview-link to label of input-elements if availiable<br>
      * set the flg previewAdded on the element, so that there is no doubling
      * @param {Object} filter                 selector to filter label elements (used as jquery-filter)
@@ -1367,7 +1389,6 @@ Yaio.Layout = function(appBase) {
         var ymfAppBaseVarName = me.appBase.config.appBaseVarName;
 
         // add setAuto to nodeDesc
-        console.error('addSetAutoGenerateNodeDescToElements: start: ');
         me.$(filter).append(function (idx) {
             var link = '';
             var label = this;
