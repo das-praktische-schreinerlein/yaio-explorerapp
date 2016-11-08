@@ -1,7 +1,7 @@
 {
   "name": "yaio-explorerapp",
   "description": "YourAllInOne D'Artagnan",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "authors": [
     {
       "name": "Michael Schreiner",
@@ -26,7 +26,7 @@
     "select2": "4.0.0",
     "spin.js": "2.3.2",
     "ui-contextmenu": "1.7.0",
-    "ymf": "das-praktische-schreinerlein/your-markdown-fellow#0.1.6"
+    "ymf": "das-praktische-schreinerlein/your-markdown-fellow#0.2.1"
   },
   "exportsOverride": {
     "x": {
